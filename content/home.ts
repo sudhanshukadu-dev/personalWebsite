@@ -136,14 +136,17 @@ export const experience = {
 };
 
 export const featuredWork = {
-  linkLabel: "Read the case study",
-  // TODO: real project images (about 4:5 portrait) and the case study pages behind href.
+  linkLabel: "Open project",
+  // TODO: real project images (about 4:5 portrait) and the case study pages behind href
+  // (only the Expense Management System page exists so far).
+  // `color` is the project's theme; it tints the CTA's hover circle.
   projects: [
     {
       tag: "01",
       title: "Expense Management System",
-      summary:
-        "One designer. Four kinds of users. 500+ enterprise clients running on it, from Adani to Toyota. Took a 4-step process down to 1, built for a sub-30-second capture. Won Employee of the Quarter twice for it.",
+      summary: "A corporate expense platform built solo, end to end.",
+      chips: ["Solo designer", "500+ enterprise clients", "4 steps to 1", "Employee of the Quarter × 2"],
+      color: "blue" as const,
       href: "/work/expense-management-system",
       image: {
         src: "https://picsum.photos/seed/sk-expense-system/1200/1560",
@@ -153,8 +156,9 @@ export const featuredWork = {
     {
       tag: "02",
       title: "Shriram Life Insurance",
-      summary:
-        "Built the design system from scratch, then the payment and verification flows people actually had to trust.",
+      summary: "Payment and verification flows people had to trust.",
+      chips: ["Design system from scratch", "Payment & KYC flows", "Client work"],
+      color: "yellow" as const,
       href: "/work/shriram-life-insurance",
       image: {
         src: "https://picsum.photos/seed/sk-shriram-life/1200/1560",
@@ -164,8 +168,9 @@ export const featuredWork = {
     {
       tag: "03",
       title: "Knode",
-      summary:
-        "Built solo in two weeks for my own team. It replaced our spreadsheet, and 12 people still use it every day.",
+      summary: "A team availability tool I built for my own team.",
+      chips: ["Built in 2 weeks", "Live, 12 daily users", "Solo build"],
+      color: "purple" as const,
       href: "/work/knode",
       image: {
         src: "https://picsum.photos/seed/sk-knode/1200/1560",
@@ -174,12 +179,14 @@ export const featuredWork = {
     },
     {
       tag: "04",
-      title: "Personal Expense Tracker",
-      summary: "My money, my rules, no bank login required.",
-      href: "/work/personal-expense-tracker",
+      title: "Networth",
+      summary: "My own expense log, built exactly how I wanted it.",
+      chips: ["Side project", "No bank linking", "Vibe coded"],
+      color: "green" as const,
+      href: "/work/networth",
       image: {
         src: "https://picsum.photos/seed/sk-expense-tracker/1200/1560",
-        alt: "Placeholder image for the Personal Expense Tracker project",
+        alt: "Placeholder image for the Networth project",
       },
     },
   ],
@@ -252,6 +259,14 @@ export const contact = {
     failure: "Something went wrong while sending. Try again, or email me instead.",
     tooQuick: "That was quick. Give it a few seconds and send again.",
   },
+};
+
+// One-line intros shown in the arc transition panel before each section.
+export const sectionIntros = {
+  about: "A little about the engineer who became a designer",
+  experience: "Where I've actually shown up and done the work",
+  work: "A few things I've actually built and shipped",
+  photos: "What I get up to when I step away from the screen",
 };
 
 export const footer = {

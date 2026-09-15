@@ -4,7 +4,8 @@ import { Experience } from "@/components/home/Experience";
 import { FeaturedWork } from "@/components/home/FeaturedWork";
 import { BeyondTheScreen } from "@/components/home/BeyondTheScreen";
 import { LetsTalk } from "@/components/home/LetsTalk";
-import { PixelatedScrollTransition } from "@/components/effects/PixelatedScrollTransition";
+import { ArcTransition } from "@/components/effects/ArcTransition";
+import { sectionIntros } from "@/content/home";
 
 export default function Home() {
   return (
@@ -12,15 +13,14 @@ export default function Home() {
     // viewport, where it stops clipping (the loader briefly scales the hero to 110%).
     <main id="main" className="overflow-x-clip">
       <Hero />
-      <PixelatedScrollTransition />
+      <ArcTransition text={sectionIntros.about} />
       <About />
-      <PixelatedScrollTransition />
+      <ArcTransition text={sectionIntros.experience} />
       <Experience />
-      <PixelatedScrollTransition />
+      <ArcTransition text={sectionIntros.work} />
       <FeaturedWork />
-      <PixelatedScrollTransition />
+      <ArcTransition text={sectionIntros.photos} />
       <BeyondTheScreen />
-      <PixelatedScrollTransition />
       <LetsTalk />
     </main>
   );

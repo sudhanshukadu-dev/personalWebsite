@@ -13,18 +13,12 @@ const TONES: CardTone[] = ["blue", "tint", "ink", "card"];
 export function Experience() {
   return (
     <section id="experience" aria-labelledby="experience-title" className="w-full px-4 sm:px-12">
-      <DroppingStack
-        prevLabel="Previous role"
-        nextLabel="Next role"
-        heading={
-          <h2
-            id="experience-title"
-            className="text-balance text-center text-[28px] font-medium leading-none tracking-[-0.04em] text-bento-ink sm:text-[36px] lg:text-[44px]"
-          >
-            {experience.heading}
-          </h2>
-        }
-      >
+      {/* No visible title: the arc transition before this section introduces it. */}
+      <h2 id="experience-title" className="sr-only">
+        {experience.heading}
+      </h2>
+
+      <DroppingStack prevLabel="Previous role" nextLabel="Next role">
         {experience.roles.map((role, index) => (
           <li key={role.title} data-dropping-stack-item className="dropping-stack__item">
             <div data-tone={TONES[index % TONES.length]} className="case-card dropping-stack-card">

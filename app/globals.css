@@ -650,55 +650,56 @@
   }
 }
 
-/* Pixelated scroll transition between home page sections, ported from Sudhanshu's
-   reference (PixelatedScrollTransition). A zero-height marker at each boundary: the
-   cover band rises over the section above, the reveal band hangs over the section
-   below. Above the section content, below the floating nav. The pixels take the
-   background colour of the section below (the page colour by default), so the
-   section above dissolves into the one that follows. */
-.pixel-transition {
+/* Arc scroll transition panels between home sections, ported from Sudhanshu's
+   reference (ArcTransition). A full-screen white panel (the card colour, so it
+   follows dark mode) with a one-line intro; its cover arc sits over the section
+   above and its reveal arc over the section below, both one screen tall. Above
+   the section content, below the floating nav. */
+.arc-transition {
   position: relative;
   z-index: 10;
-  height: 0;
-  color: var(--bento-page);
+}
+
+.arc-transition__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: 4rem 1.5rem calc(6.5rem + env(safe-area-inset-bottom));
+  background-color: var(--bento-card);
+}
+
+.arc-transition__text {
+  max-width: 18ch;
+  margin: 0;
+  color: var(--bento-ink);
+  font-size: clamp(2.25rem, 5.5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.arc-transition__shape {
+  position: absolute;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100svh;
   pointer-events: none;
 }
 
-.pixel-transition__band {
-  position: absolute;
-  right: 0;
-  left: 0;
+.arc-transition__shape.is--cover {
+  bottom: 100%;
 }
 
-.pixel-transition__band.is--cover {
-  bottom: 0;
+.arc-transition__shape.is--reveal {
+  top: 100%;
 }
 
-.pixel-transition__band.is--reveal {
-  top: 0;
-}
-
-.pixel-transition__panel {
-  display: flex;
-  width: 100%;
-}
-
-.pixel-transition__col {
-  display: flex;
-  flex: 1 1 0%;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-width: 0;
-}
-
-/* The hairline shadow closes sub-pixel seams between neighbouring squares. */
-.pixel-transition__pixel {
-  width: 100%;
-  aspect-ratio: 1;
-  background-color: currentColor;
-  box-shadow: 0 0 0 0.5px currentColor;
-  backface-visibility: hidden;
-  will-change: opacity;
+.arc-transition__shape path {
+  fill: var(--bento-card);
 }
 
 .pixel-card:focus-visible {
@@ -1471,10 +1472,10 @@
 .sticky-features__container {
   display: flex;
   justify-content: center;
-  align-items: stretch;
-  gap: 1.25em;
+  align-items: center;
+  gap: 3em;
   width: 100%;
-  max-width: 70em;
+  max-width: 76em;
   margin-inline: auto;
 }
 
@@ -1483,7 +1484,9 @@
   flex: 1;
 }
 
+/* The image takes the larger share, capped to the screen height so the pinned block fits. */
 .sticky-features__col.is--img {
+  flex: 1.3;
   overflow: hidden;
   border-radius: 0.75em;
 }
@@ -1508,20 +1511,40 @@
 .sticky-features__img-list {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1.3;
+  aspect-ratio: 4 / 5;
+  max-height: calc(100svh - 6rem);
   background-color: var(--bento-line);
 }
 
+/* Only the current image is visible; StickyFeatures swaps them under the pixel grid. */
 .sticky-features__img-item {
   position: absolute;
   inset: 0;
-  -webkit-clip-path: inset(50% round 0.75em);
-  clip-path: inset(50% round 0.75em);
+  visibility: hidden;
 }
 
 [data-sticky-feature-visual-wrap]:first-of-type {
-  -webkit-clip-path: inset(0% round 0.75em);
-  clip-path: inset(0% round 0.75em);
+  visibility: visible;
+}
+
+/* Pixelated image change, ported from Sudhanshu's reference: a grid of square pixels
+   over the image, anchored to its bottom, in the incoming project's colour
+   ([data-project-color] sets --project-color). StickyFeatures builds and scrubs it. */
+.sticky-features__pixels {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--pixel-columns, 12), minmax(0, 1fr));
+  align-content: end;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sticky-features__pixel {
+  aspect-ratio: 1;
+  background-color: var(--project-color, var(--bento-blue));
+  box-shadow: 0 0 0 0.5px var(--project-color, var(--bento-blue));
+  opacity: 0;
 }
 
 .sticky-features__text-list {
@@ -1555,23 +1578,74 @@
 .sticky-features__heading {
   margin: 0;
   color: var(--bento-ink);
-  font-size: 3.75em;
+  font-size: 2.5em;
   font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.04em;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 
 .sticky-features__p {
   margin: 0;
   color: var(--bento-muted);
   font-size: 1.25em;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
-.sticky-features__p.is--link {
+.sticky-features__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.sticky-features__chip {
+  padding: 0.55em 0.85em;
+  border-radius: 999px;
   color: var(--bento-ink);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+  background-color: color-mix(in oklab, var(--bento-ink) 6%, transparent);
+  font-size: 0.875em;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Bubble arrow CTA on the page background (Featured Work): an ink label pill, a
+   soft grey resting circle, and a hover circle in the project's theme colour. */
+[data-project-color="blue"] {
+  --project-color: var(--bento-blue);
+  --project-ink: var(--bento-on-blue);
+}
+
+[data-project-color="yellow"] {
+  --project-color: #f5c542;
+  --project-ink: #0f1012;
+}
+
+[data-project-color="purple"] {
+  --project-color: #8b5cf6;
+  --project-ink: #f7f8fa;
+}
+
+[data-project-color="green"] {
+  --project-color: var(--bento-accent);
+  --project-ink: #0f1012;
+}
+
+.btn-bubble-arrow.is--on-page .btn-bubble-arrow__content {
+  color: var(--bento-page);
+  background-color: var(--bento-ink);
+}
+
+.btn-bubble-arrow.is--on-page .btn-bubble-arrow__arrow.is--duplicate {
+  color: var(--bento-ink);
+  background-color: var(--bento-line);
+}
+
+.btn-bubble-arrow.is--on-page[data-project-color] .btn-bubble-arrow__arrow:not(.is--duplicate) {
+  color: var(--project-ink);
+  background-color: var(--project-color);
+}
+
+.btn-bubble-arrow.is--on-page:focus-visible {
+  outline-color: var(--bento-blue);
 }
 
 .sticky-features__tag {
@@ -1594,29 +1668,35 @@
     padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
   }
 
+  /* Stretch the stacked columns to full width; centring would collapse the image. */
   .sticky-features__container {
     flex-direction: column;
     justify-content: flex-start;
+    align-items: stretch;
     gap: 1.25em;
+  }
+
+  .sticky-features__col.is--img {
+    flex: none;
   }
 
   .sticky-features__img-list {
     aspect-ratio: 4 / 3;
-    max-height: 30svh;
+    max-height: 34svh;
   }
 
   .sticky-features__text-list {
-    min-height: 20em;
+    min-height: 22em;
     max-height: none;
   }
 
   .sticky-features__text-item {
     max-width: none;
-    gap: 1.25em;
+    gap: 1em;
   }
 
   .sticky-features__heading {
-    font-size: 2.25em;
+    font-size: 1.75em;
   }
 
   .sticky-features__p {

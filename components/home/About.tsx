@@ -58,9 +58,13 @@ function renderParagraph(paragraph: string, nextHighlight: () => number) {
     });
 }
 
-// About: the story as large h3 paragraphs, filled in by one continuous wave as they
-// scroll in, with the portrait chip opening the first line. Key phrases are bold, and
-// their underlines draw in one after another once the wave has finished.
+// About: the story as large h3 paragraphs, filled in by one continuous wave, with the
+// portrait chip opening the first line. Key phrases are bold, and their underlines draw
+// in once the wave has finished.
+//
+// The section is two screens tall with its content pinned in the middle (sticky), so it
+// holds fully in view for a screen of scroll between the arc transitions either side
+// instead of being covered straight away. The wave runs during that hold.
 export function About() {
   let highlightCount = 0;
   const nextHighlight = () => highlightCount++;
@@ -69,21 +73,26 @@ export function About() {
     <section
       id="about"
       aria-labelledby="about-title"
-      className="mx-auto flex min-h-[100svh] w-full max-w-[1320px] flex-col justify-center px-6 py-16 text-center sm:px-12 lg:px-24 xl:px-36"
+      className="relative mx-auto min-h-[200svh] w-full max-w-[1320px] px-6 text-center sm:px-12 lg:px-24 xl:px-36"
     >
       {/* Keeps the heading outline valid (h1 hero, h2 section, h3 content) without a visible label. */}
       <h2 id="about-title" className="sr-only">
         About
       </h2>
 
-      <GradientWaveText
-        as="div"
-        className="space-y-6 text-[20px] font-normal leading-[1.45] tracking-[-0.01em] text-bento-ink sm:space-y-8 sm:text-[24px]"
-      >
-        {about.paragraphs.map((paragraph) => (
-          <h3 key={paragraph}>{renderParagraph(paragraph, nextHighlight)}</h3>
-        ))}
-      </GradientWaveText>
+      {/* On phones the text scales with the screen height so the pinned block always fits. */}
+      <div className="sticky top-0 flex min-h-[100svh] flex-col justify-center py-8 sm:py-16">
+        <GradientWaveText
+          as="div"
+          scrollStart="top 40%"
+          scrollEnd="+=90%"
+          className="space-y-6 text-[length:clamp(16px,2.25svh,20px)] font-normal leading-[1.45] tracking-[-0.01em] text-bento-ink sm:space-y-8 sm:text-[24px]"
+        >
+          {about.paragraphs.map((paragraph) => (
+            <h3 key={paragraph}>{renderParagraph(paragraph, nextHighlight)}</h3>
+          ))}
+        </GradientWaveText>
+      </div>
 
       <PixelatedImageReveal />
     </section>
