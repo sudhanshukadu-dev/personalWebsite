@@ -6,3 +6,8 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Declared explicitly (and installed as a dev dependency): uploads through the API
+# don't get the runtime added automatically, and without it nothing is served.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
