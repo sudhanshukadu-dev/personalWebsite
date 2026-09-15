@@ -1,0 +1,8 @@
+# Netlify build settings. Netlify's Next.js runtime picks up the .next output and
+# serves pages, images and routes from it.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
