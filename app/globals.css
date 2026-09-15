@@ -1,0 +1,1816 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Design tokens: black, white and blue.
+   One theme strategy: CSS variables. Light lives on :root, dark
+   follows the system unless the visitor picked light, and an
+   explicit [data-theme="dark"] wins so the nav toggle works both ways.
+   Blue is the same in both modes.
+---------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --bento-page: #f2f3f5;
+  --bento-card: #fcfcfd;
+  --bento-ink: #0f1012;
+  --bento-muted: #62666d;
+  --bento-line: #e2e4e8;
+  --bento-blue: #2f63db;
+  --bento-on-blue: #f7f8fa;
+  /* Accent: a mint green paired with the blue, for small highlights like the CTA hover circle. */
+  --bento-accent: #3ddc97;
+  --bento-on-accent: #0f1012;
+  --bento-inverse: #131417;
+  --bento-on-inverse: #eef0f2;
+
+  /* Gradient wave text: ghost colour before reveal, and the flash colour. */
+  --wave-start: rgba(15, 16, 18, 0.18);
+  --wave-color: var(--bento-blue);
+
+  /* z-index scale. Every layer is declared here, nowhere else. */
+  --z-nav: 50;
+  --z-skip: 60;
+  --z-cursor: 70;
+  --z-loader: 100;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bento-page: #0d0e10;
+    --bento-card: #16171a;
+    --bento-ink: #edeef0;
+    --bento-muted: #9a9fa7;
+    --bento-line: #26282c;
+    --bento-inverse: #edeef0;
+    --bento-on-inverse: #0f1012;
+    --wave-start: rgba(237, 238, 240, 0.2);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bento-page: #0d0e10;
+  --bento-card: #16171a;
+  --bento-ink: #edeef0;
+  --bento-muted: #9a9fa7;
+  --bento-line: #26282c;
+  --bento-inverse: #edeef0;
+  --bento-on-inverse: #0f1012;
+  --wave-start: rgba(237, 238, 240, 0.2);
+}
+
+@theme inline {
+  --color-bento-page: var(--bento-page);
+  --color-bento-card: var(--bento-card);
+  --color-bento-ink: var(--bento-ink);
+  --color-bento-muted: var(--bento-muted);
+  --color-bento-line: var(--bento-line);
+  --color-bento-blue: var(--bento-blue);
+  --color-bento-on-blue: var(--bento-on-blue);
+  --color-bento-inverse: var(--bento-inverse);
+  --color-bento-on-inverse: var(--bento-on-inverse);
+  --font-bento: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-hand: var(--font-poor-story), cursive;
+}
+
+/* Shape rule: cards 28px, buttons and nav full pill. */
+@theme {
+  --radius-card: 28px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    background-color: var(--bento-page);
+    color: var(--bento-ink);
+    scroll-padding-top: 1rem;
+  }
+
+  body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--bento-blue) 28%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--bento-blue);
+    outline-offset: 3px;
+  }
+}
+
+/* Theme toggle icons follow the same resolution rules as the tokens. */
+.theme-dark-only {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-dark-only {
+    display: block;
+  }
+  :root:not([data-theme="light"]) .theme-light-only {
+    display: none;
+  }
+}
+
+:root[data-theme="dark"] .theme-dark-only {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-light-only {
+  display: none;
+}
+
+/* Theme switch: grey track with the thumb left in light, blue track with the thumb right in dark. */
+.theme-switch {
+  background-color: var(--bento-line);
+}
+
+.theme-switch-thumb {
+  translate: 0 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-switch {
+    background-color: var(--bento-blue);
+  }
+  :root:not([data-theme="light"]) .theme-switch-thumb {
+    translate: 20px 0;
+  }
+}
+
+:root[data-theme="dark"] .theme-switch {
+  background-color: var(--bento-blue);
+}
+
+:root[data-theme="dark"] .theme-switch-thumb {
+  translate: 20px 0;
+}
+
+/* Hero: solid blue at the top (where the text sits), fading into the page colour. */
+.hero-gradient {
+  background: linear-gradient(180deg, var(--bento-blue) 0%, var(--bento-blue) 55%, var(--bento-page) 100%);
+  background: linear-gradient(in oklab 180deg, var(--bento-blue) 0%, var(--bento-blue) 55%, var(--bento-page) 100%);
+}
+
+/* Home hero: soft pools of deeper and lighter blue drift slowly over the
+   gradient. Mostly darker than the base blue so white text keeps its contrast,
+   and masked to fade out with the gradient. Sits under the grain and content. */
+.hero-drift::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 22% 30%, color-mix(in oklab, var(--bento-blue) 82%, white) 0%, transparent 70%),
+    radial-gradient(42% 48% at 78% 26%, color-mix(in oklab, var(--bento-blue) 70%, black) 0%, transparent 70%),
+    radial-gradient(46% 40% at 50% 58%, color-mix(in oklab, var(--bento-blue) 80%, black) 0%, transparent 72%);
+  opacity: 0.6;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 47%, transparent 67%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 47%, transparent 67%);
+}
+
+@keyframes hero-drift {
+  0% {
+    transform: translate3d(-3%, -2%, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(3%, 2%, 0) rotate(3deg);
+  }
+  100% {
+    transform: translate3d(-2%, 3%, 0) rotate(-2deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-drift::before {
+    animation: hero-drift 24s ease-in-out infinite alternate;
+  }
+}
+
+/* Headline record deck (VinylPlayer). Sized in em so it scales with the headline.
+   The record has a mint label with one pale segment so the spin is visible; a
+   static sheen sits on top, and the tonearm swings onto the outer grooves while
+   playing. Deck colours are fixed, like real hardware. */
+.vinyl {
+  position: relative;
+  display: inline-block;
+  width: 1.35em;
+  height: 0.85em;
+  translate: 0 0.08em;
+  vertical-align: baseline;
+  border-radius: 10em;
+  background-color: #0f1012;
+  box-shadow: inset 0 0 0 0.02em rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: scale 0.3s var(--ease-out-expo);
+}
+
+.vinyl:hover {
+  scale: 1.06;
+}
+
+.vinyl:focus-visible {
+  outline-color: var(--bento-on-blue);
+}
+
+/* Static light sheen over the record. */
+.vinyl::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0.08em;
+  width: 0.7em;
+  height: 0.7em;
+  margin-top: -0.35em;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 20deg,
+    transparent 0 12%,
+    rgba(255, 255, 255, 0.16) 18%,
+    transparent 26% 60%,
+    rgba(255, 255, 255, 0.1) 68%,
+    transparent 76%
+  );
+  pointer-events: none;
+}
+
+.vinyl-disc {
+  position: absolute;
+  top: 50%;
+  left: 0.08em;
+  width: 0.7em;
+  height: 0.7em;
+  margin-top: -0.35em;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, #1c1d21 0 0.018em, #2a2c31 0.018em 0.032em);
+  box-shadow: 0 0 0 0.012em rgba(255, 255, 255, 0.1);
+  animation: vinyl-spin 1.8s linear infinite paused;
+}
+
+/* The label: mint with a pale segment, and the spindle hole in the middle. */
+.vinyl-disc::before {
+  content: "";
+  position: absolute;
+  inset: 32%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #0f1012 0 16%, transparent 18%),
+    conic-gradient(var(--bento-accent) 0 72%, var(--bento-on-blue) 72% 100%);
+}
+
+.vinyl-arm {
+  position: absolute;
+  top: 0.12em;
+  right: 0.12em;
+  width: 0.05em;
+  height: 0.55em;
+  border-radius: 0.03em;
+  background-color: #c9ccd2;
+  rotate: 6deg;
+  transform-origin: 50% 0.03em;
+  transition: rotate 0.6s var(--ease-out-expo);
+}
+
+/* Pivot at the top, needle head at the bottom. */
+.vinyl-arm::before,
+.vinyl-arm::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  background-color: #c9ccd2;
+  translate: -50% 0;
+}
+
+.vinyl-arm::before {
+  top: -0.04em;
+  width: 0.13em;
+  height: 0.13em;
+  border-radius: 50%;
+}
+
+.vinyl-arm::after {
+  bottom: -0.02em;
+  width: 0.09em;
+  height: 0.07em;
+  border-radius: 0.015em;
+}
+
+.vinyl[data-playing="true"] .vinyl-arm {
+  rotate: 48deg;
+}
+
+.vinyl[data-playing="true"] .vinyl-disc {
+  animation-play-state: running;
+}
+
+@keyframes vinyl-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyl,
+  .vinyl-arm {
+    transition: none;
+  }
+
+  /* The swung-in tonearm still shows it's playing. */
+  .vinyl[data-playing="true"] .vinyl-disc {
+    animation-play-state: paused;
+  }
+}
+
+/* Pixelated image reveal (About portrait chip), ported from Sudhanshu's reference.
+   A square chip sized in em so it scales with the copy: the sketch by default,
+   the photo underneath, and a 7x7 grid of blue pixels that flicks on and off in
+   random order to swap them (PixelatedImageReveal drives it). */
+/* Big and editorial: it opens the paragraph and rises above the first line,
+   with its bottom edge sitting on that line's baseline. */
+.pixel-card {
+  position: relative;
+  display: inline-block;
+  width: 7em;
+  aspect-ratio: 5 / 6;
+  margin-right: 0.3em;
+  overflow: hidden;
+  vertical-align: baseline;
+  border-radius: 0.25em;
+  color: var(--bento-blue);
+  background-color: var(--bento-line);
+  cursor: pointer;
+}
+
+@media (max-width: 639px) {
+  .pixel-card {
+    width: 5.5em;
+  }
+}
+
+/* About highlights: bold phrases with a blue brush-stroke underline, a single
+   tapered swoosh that is fullest in the middle and lifts slightly to the right.
+   It draws in left to right, one phrase after another, once GradientWaveText
+   flags the wave as complete (data-wave-complete), and withdraws on scroll back.
+   A background image so it survives the wave recolouring each character, and
+   cloned per line so wrapped phrases stay underlined. */
+.about-highlight {
+  padding-bottom: 0.16em;
+  font-weight: 700;
+  color: inherit;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M1 9.8C60 6.5 130 4.8 199 6.2C140 10.5 60 12.5 1 9.8Z' fill='%232f63db'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 0.36em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 0.4s var(--ease-out-expo);
+}
+
+[data-wave-complete] .about-highlight {
+  background-size: 100% 0.36em;
+  transition-duration: 0.9s;
+  transition-delay: calc(var(--i, 0) * 160ms);
+}
+
+/* No wave under reduced motion, so the underlines are simply there. */
+@media (prefers-reduced-motion: reduce) {
+  .about-highlight {
+    background-size: 100% 0.36em;
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Experience dropping card stack, ported from Sudhanshu's reference and
+   driven by scroll (DroppingStack): the stack pins while each scroll step
+   drops the top card away and steps the rest forward, then the page moves
+   on after the last card. The collection's right and bottom padding sets
+   how far each card behind is offset. Cards use the case-card tones, the
+   floating nav's corner radius and the hero's film grain.
+---------------------------------------------------------------- */
+/* Exactly one screen: the heading, then the stack with its controls either side,
+   and nothing else in view. The bottom padding keeps it clear of the floating nav. */
+.dropping-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  height: 100svh;
+  padding-top: 2rem;
+  padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+}
+
+/* Prev | stack | next on wider screens; the buttons drop below the stack on phones. */
+.dropping-stack__stage {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-areas: "prev stack next";
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.dropping-stack__stage .is--prev {
+  grid-area: prev;
+}
+
+.dropping-stack__stage .dropping-stack__collection {
+  grid-area: stack;
+}
+
+.dropping-stack__stage .dropping-stack__control:not(.is--prev) {
+  grid-area: next;
+}
+
+.dropping-stack__collection {
+  padding-right: 5rem;
+  padding-bottom: 5rem;
+}
+
+/* Isolated, so the cards' stacking z-indexes never rise above the floating nav. */
+.dropping-stack__list {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+}
+
+.dropping-stack__item {
+  position: absolute;
+  will-change: transform, opacity;
+  user-select: none;
+}
+
+.dropping-stack__item:first-child {
+  position: relative;
+}
+
+/* Sized to fit the screen height as well as its width (the heading, gaps and stack
+   offsets take about 23.5rem of height; the side controls about 20rem of width),
+   so the pinned screen is never cut off. */
+.dropping-stack-card {
+  position: relative;
+  width: min(42rem, 100vw - 20rem, (100svh - 23.5rem) * 1.6);
+  overflow: hidden;
+}
+
+/* The floating nav's corner radius, a hairline edge in the card's own colour and
+   a soft, low shadow for a quieter, more premium finish. Doubled up to win over
+   .case-card, which the CSS bundle emits later. */
+.case-card.dropping-stack-card {
+  border-radius: 0.5rem;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, currentColor 9%, transparent),
+    0 28px 56px -36px rgba(15, 16, 18, 0.45);
+}
+
+/* Film grain, like the hero, kept faint under the card content. */
+.dropping-stack-card::before {
+  content: "";
+  position: absolute;
+  inset: -1rem;
+  pointer-events: none;
+  background: url("/images/noise.png") 50% 50% / 7.8125rem repeat;
+  opacity: 0.22;
+  filter: contrast(125%);
+  mix-blend-mode: overlay;
+}
+
+/* The spacer that sets the card's height doubles as the backdrop: a soft light
+   sheen from the top-left, plus very faint concentric rings and a halftone dot
+   screen in the card's own text colour, fading out from the bottom-right corner.
+   It paints under the grain and the content. */
+.dropping-stack-card__before {
+  padding-top: 62.5%;
+  background-image:
+    repeating-radial-gradient(
+      circle at 100% 100%,
+      transparent 0 1.5rem,
+      color-mix(in oklab, currentColor 6%, transparent) 1.5rem calc(1.5rem + 1px)
+    ),
+    radial-gradient(color-mix(in oklab, currentColor 9%, transparent) 1px, transparent 1.6px);
+  background-size:
+    100% 100%,
+    10px 10px;
+  -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 55%);
+  mask-image: radial-gradient(circle at 100% 100%, #000 0%, transparent 55%);
+}
+
+.dropping-stack-card__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.dropping-stack-card__start {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.75rem;
+}
+
+.dropping-stack-card__visual {
+  position: relative;
+  flex: none;
+  width: 52%;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background-color: var(--card-soft);
+}
+
+.dropping-stack-card__visual-before {
+  padding-top: 66%;
+}
+
+.dropping-stack-card__words {
+  width: 42%;
+}
+
+.dropping-stack-card__h {
+  font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.dropping-stack__control {
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dropping-stack__control:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.dropping-stack__control-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  color: var(--bento-page);
+  background-color: var(--bento-ink);
+  transform: translateY(0) rotate(0.001deg);
+  transition: transform 0.3s ease;
+}
+
+.dropping-stack__control:not(:disabled):hover .dropping-stack__control-circle {
+  transform: translateY(-0.25rem) rotate(0.001deg);
+}
+
+.dropping-stack__control-circle.is--prev {
+  color: var(--bento-ink);
+  background-color: var(--bento-line);
+}
+
+.dropping-stack__control.is--prev {
+  transform: scaleX(-1);
+}
+
+@media screen and (max-width: 991px) {
+  .dropping-stack__stage {
+    gap: 1.5rem;
+  }
+
+  .dropping-stack-card {
+    width: min(42rem, 100vw - 16rem, (100svh - 23.5rem) * 1.28);
+  }
+
+  .dropping-stack-card__before {
+    padding-top: 78%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .dropping-stack {
+    gap: 2rem;
+  }
+
+  .dropping-stack__stage {
+    grid-template-columns: auto auto;
+    grid-template-areas:
+      "stack stack"
+      "prev next";
+    gap: 1.5rem 1rem;
+  }
+
+  .dropping-stack__stage .is--prev {
+    justify-self: end;
+  }
+
+  .dropping-stack__stage .dropping-stack__control:not(.is--prev) {
+    justify-self: start;
+  }
+
+  .dropping-stack__collection {
+    padding-right: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .dropping-stack-card {
+    width: min(42rem, 100vw - 5rem, (100svh - 21rem) * 0.625);
+  }
+
+  .dropping-stack-card__before {
+    padding-top: 160%;
+  }
+
+  .dropping-stack-card__content {
+    padding: 6vw;
+  }
+
+  .dropping-stack-card__start {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .dropping-stack-card__h {
+    font-size: 7.5vw;
+  }
+
+  .dropping-stack-card__visual,
+  .dropping-stack-card__words {
+    width: 100%;
+  }
+
+  .dropping-stack-card__visual-before {
+    padding-top: 56%;
+  }
+}
+
+/* Pixelated scroll transition between home page sections, ported from Sudhanshu's
+   reference (PixelatedScrollTransition). A zero-height marker at each boundary: the
+   cover band rises over the section above, the reveal band hangs over the section
+   below. Above the section content, below the floating nav. The pixels take the
+   background colour of the section below (the page colour by default), so the
+   section above dissolves into the one that follows. */
+.pixel-transition {
+  position: relative;
+  z-index: 10;
+  height: 0;
+  color: var(--bento-page);
+  pointer-events: none;
+}
+
+.pixel-transition__band {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+.pixel-transition__band.is--cover {
+  bottom: 0;
+}
+
+.pixel-transition__band.is--reveal {
+  top: 0;
+}
+
+.pixel-transition__panel {
+  display: flex;
+  width: 100%;
+}
+
+.pixel-transition__col {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+/* The hairline shadow closes sub-pixel seams between neighbouring squares. */
+.pixel-transition__pixel {
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: currentColor;
+  box-shadow: 0 0 0 0.5px currentColor;
+  backface-visibility: hidden;
+  will-change: opacity;
+}
+
+.pixel-card:focus-visible {
+  outline-offset: 4px;
+}
+
+.pixel-card__default,
+.pixel-card__active,
+.pixel-card__pixels {
+  position: absolute;
+  inset: 0;
+}
+
+.pixel-card__active {
+  display: none;
+}
+
+.pixel-card__pixel {
+  position: absolute;
+  display: none;
+  width: calc(100% / 7 + 0.5px);
+  height: calc(100% / 7 + 0.5px);
+  background-color: currentColor;
+}
+
+/* Hero film grain, adapted from the reference Sudhanshu shared.
+   Lives inside the hero (clipped by the section) and fades out with the
+   blue gradient, so the hero's bottom edge still melts into the page.
+   The jitter moves the layer with transform instead of repainting the
+   background, and the layer overhangs by 1em so no edge ever shows.
+   The noise tile is generated locally in /public. */
+.grain {
+  position: absolute;
+  inset: -1em;
+  pointer-events: none;
+  background: url("/images/noise.png") 50% 50% / 7.8125em repeat;
+  opacity: 0.5;
+  filter: contrast(125%) brightness(60%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+}
+
+@keyframes grain {
+  0% {
+    transform: translate(0em, 0em);
+  }
+  20% {
+    transform: translate(-0.5em, 0.3em);
+  }
+  40% {
+    transform: translate(0.4em, -0.2em);
+  }
+  60% {
+    transform: translate(-0.3em, -0.4em);
+  }
+  80% {
+    transform: translate(0.2em, 0.5em);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .grain[data-grain-animate="true"] {
+    animation: grain 0.6s steps(1, end) infinite;
+  }
+}
+
+/* Grain variants: fading in with the Let's Talk gradient, and solid under the footer. */
+.grain.is--fade-in {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--contact-fade));
+  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--contact-fade));
+}
+
+.grain.is--solid {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* Light text on blue: the default blue focus ring would vanish, so it turns white. */
+.on-blue :focus-visible {
+  outline-color: var(--bento-on-blue);
+}
+
+/* ---------------------------------------------------------------
+   Let's Talk: the hero's blue and grain, flipped. The page colour
+   fades into blue over --contact-fade, and the blue runs on through
+   the footer, so the page ends the way it starts.
+---------------------------------------------------------------- */
+.contact-gradient {
+  --contact-fade: clamp(7rem, 20vh, 12rem);
+  background: linear-gradient(180deg, var(--bento-page) 0, var(--bento-blue) var(--contact-fade));
+  background: linear-gradient(in oklab 180deg, var(--bento-page) 0, var(--bento-blue) var(--contact-fade));
+}
+
+/* Error colour: form validation only, never decoration. */
+:root {
+  --bento-danger: #c4271b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bento-danger: #ff6b5e;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bento-danger: #ff6b5e;
+}
+
+/* Contact form, ported from the reference: soft filled inputs, a status icon
+   tucked into the right of each field, and tinted notifications. Success
+   uses the site blue instead of green. */
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75em;
+}
+
+.contact-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  appearance: none;
+  margin: 0;
+  padding: 0.9em 3.5em 0.9em 1em;
+  color: var(--bento-ink);
+  background-color: var(--bento-page);
+  border: 1px solid var(--bento-page);
+  border-radius: 0.75rem;
+  font: inherit;
+  font-size: 1.125em;
+  font-weight: 500;
+  line-height: 1.2;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.contact-input.is--textarea {
+  resize: vertical;
+  min-height: 9em;
+}
+
+.contact-input::placeholder {
+  color: color-mix(in oklab, var(--bento-ink) 40%, transparent);
+}
+
+.contact-input:focus {
+  outline: none;
+  border-color: var(--bento-blue);
+  box-shadow: 0 0 0 0.25rem color-mix(in oklab, var(--bento-blue) 16%, transparent);
+}
+
+[data-status="error"] .contact-input {
+  border-color: var(--bento-danger);
+}
+
+[data-status="error"] .contact-input:focus {
+  box-shadow: 0 0 0 0.25rem color-mix(in oklab, var(--bento-danger) 16%, transparent);
+}
+
+.contact-field-icon {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.5em;
+  max-height: 3.5em;
+  padding: 0 1em;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.2s;
+}
+
+.contact-field-icon.is--success {
+  color: var(--bento-blue);
+}
+
+.contact-field-icon.is--error {
+  color: var(--bento-danger);
+}
+
+[data-status="success"] .contact-field-icon.is--success,
+[data-status="error"] .contact-field-icon.is--error {
+  opacity: 1;
+}
+
+.contact-notification {
+  position: relative;
+  width: 100%;
+  padding: 1.125em 3.5em 1.125em 1.125em;
+  color: var(--bento-blue);
+  border: 1px solid currentColor;
+  border-radius: 0.75rem;
+}
+
+.contact-notification[data-tone="error"] {
+  color: var(--bento-danger);
+}
+
+.contact-notification::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: currentColor;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.contact-notification-p {
+  position: relative;
+  margin: 0;
+  color: var(--bento-ink);
+  font-size: 1.125em;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.contact-notification-icon {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  display: flex;
+  width: 3.5em;
+  padding: 0 1em;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Case study device showcase: the swapped-in device rises and settles. */
+@keyframes device-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .device-in {
+    animation: device-in 0.6s var(--ease-out-expo) both;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Case study cards, after the Aboard reference's coloured tiles:
+   one shape, four tones in black, white and blue. Each tone sets
+   --card-muted (secondary text that stays readable on it),
+   --card-accent (icons) and --card-soft (inset panels).
+---------------------------------------------------------------- */
+:root {
+  --bento-tint: color-mix(in oklab, var(--bento-blue) 12%, var(--bento-card));
+}
+
+.case-card {
+  border-radius: var(--radius-card);
+}
+
+.case-card[data-tone="card"] {
+  --card-muted: var(--bento-muted);
+  --card-accent: var(--bento-blue);
+  --card-soft: var(--bento-page);
+  background-color: var(--bento-card);
+  color: var(--bento-ink);
+  box-shadow: inset 0 0 0 1px var(--bento-line);
+}
+
+.case-card[data-tone="tint"] {
+  --card-muted: var(--bento-muted);
+  --card-accent: var(--bento-blue);
+  --card-soft: var(--bento-card);
+  background-color: var(--bento-tint);
+  color: var(--bento-ink);
+}
+
+/* Small text on blue stays full strength: anything lighter drops below 4.5:1. */
+.case-card[data-tone="blue"] {
+  --card-muted: var(--bento-on-blue);
+  --card-accent: var(--bento-on-blue);
+  --card-soft: color-mix(in oklab, var(--bento-on-blue) 14%, transparent);
+  background-color: var(--bento-blue);
+  color: var(--bento-on-blue);
+}
+
+.case-card[data-tone="ink"] {
+  --card-muted: color-mix(in oklab, var(--bento-on-inverse) 72%, transparent);
+  --card-accent: var(--bento-on-inverse);
+  --card-soft: color-mix(in oklab, var(--bento-on-inverse) 10%, transparent);
+  background-color: var(--bento-inverse);
+  color: var(--bento-on-inverse);
+}
+
+.case-card[data-tone="blue"] :focus-visible,
+.case-card[data-tone="ink"] :focus-visible {
+  outline-color: currentColor;
+}
+
+/* Dot grid behind image placeholders. */
+.visual-placeholder {
+  background-image: radial-gradient(color-mix(in oklab, currentColor 45%, transparent) 1px, transparent 1.5px);
+  background-size: 18px 18px;
+  opacity: 0.5;
+}
+
+/* Scroll-driven rise-in for case study cards. Browsers without scroll timelines
+   simply show the content, so nothing is ever left hidden. */
+@keyframes case-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: case-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%;
+    }
+  }
+}
+
+/* Case study section nav: slides down into view past the hero and back up at
+   the end. Focus inside it (a keyboard user tabbing in) always shows it. */
+.section-nav {
+  transition:
+    translate 0.5s var(--ease-out-expo),
+    opacity 0.3s ease;
+}
+
+.section-nav[data-visible="false"]:not(:focus-within) {
+  translate: 0 calc(-100% - 1.5rem);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The blue highlight behind the active link; SectionNav sets --x and --w. */
+.section-nav-indicator {
+  width: var(--w, 0px);
+  translate: var(--x, 0px) 0;
+  transition:
+    translate 0.45s var(--ease-out-expo),
+    width 0.45s var(--ease-out-expo);
+}
+
+@keyframes section-nav-panel {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
+.section-nav-panel {
+  animation: section-nav-panel 0.25s var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-nav {
+    transition: opacity 0.2s ease;
+  }
+
+  .section-nav[data-visible="false"]:not(:focus-within) {
+    translate: none;
+  }
+
+  .section-nav-indicator {
+    transition: none;
+  }
+
+  .section-nav-panel {
+    animation: none;
+  }
+}
+
+/* Bubble arrow button (hero primary CTA), ported from Sudhanshu's reference.
+   At rest the arrow sits on the right; on hover or keyboard focus it shrinks
+   away, a twin grows in on the left, the label slides right and the arrow
+   turns. Sized in em off 0.8rem so the button stays 48px tall. */
+.btn-bubble-arrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10em;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.btn-bubble-arrow__arrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.75em;
+  height: 3.75em;
+  border-radius: 10em;
+  /* The circle that grows in on hover wears the green accent; the resting one stays black. */
+  color: var(--bento-on-accent);
+  background-color: var(--bento-accent);
+  transform: scale(0) rotate(0.001deg);
+  transform-origin: left;
+  transition: transform 0.735s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+.btn-bubble-arrow__arrow.is--duplicate {
+  color: var(--bento-on-blue);
+  background-color: #0f1012;
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  transform: scale(1) rotate(0.001deg);
+  transform-origin: right;
+}
+
+.btn-bubble-arrow__arrow-svg {
+  transform: rotate(0.001deg);
+  transition: transform 0.735s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+.btn-bubble-arrow__content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.75em;
+  padding-inline: 2em;
+  border-radius: 10em;
+  color: var(--bento-blue);
+  background-color: var(--bento-on-blue);
+  transform: translateX(-3.75em) rotate(0.001deg);
+  transition: transform 0.735s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+.btn-bubble-arrow__content-text {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.btn-bubble-arrow:hover .btn-bubble-arrow__content,
+.btn-bubble-arrow:focus-visible .btn-bubble-arrow__content {
+  transform: translateX(0em) rotate(0.001deg);
+}
+
+.btn-bubble-arrow:hover .btn-bubble-arrow__arrow-svg,
+.btn-bubble-arrow:focus-visible .btn-bubble-arrow__arrow-svg {
+  transform: rotate(-45deg);
+}
+
+.btn-bubble-arrow:hover .btn-bubble-arrow__arrow,
+.btn-bubble-arrow:focus-visible .btn-bubble-arrow__arrow {
+  transform: scale(1) rotate(0.001deg);
+}
+
+.btn-bubble-arrow:hover .btn-bubble-arrow__arrow.is--duplicate,
+.btn-bubble-arrow:focus-visible .btn-bubble-arrow__arrow.is--duplicate {
+  transform: scale(0) rotate(0.001deg);
+}
+
+.btn-bubble-arrow:focus-visible {
+  outline-color: var(--bento-on-blue);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-bubble-arrow__arrow,
+  .btn-bubble-arrow__arrow-svg,
+  .btn-bubble-arrow__content {
+    transition: none;
+  }
+}
+
+/* Draggable stickers over the hero, ported from Sudhanshu's reference. The wrap
+   covers the hero but lets clicks through; only the stickers catch the pointer. */
+.sticker-img-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.sticker-item {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10vw;
+  max-width: 9rem;
+  height: 12vw;
+  max-height: 10rem;
+  cursor: grab;
+  pointer-events: auto;
+}
+
+.sticker-item:active {
+  cursor: grabbing;
+}
+
+.sticker-item.is--1 {
+  top: 14%;
+  left: 10%;
+}
+
+.sticker-item.is--2 {
+  top: 18%;
+  right: 12%;
+}
+
+.sticker-item.is--3 {
+  bottom: 16%;
+  left: 15%;
+}
+
+.sticker-item.is--4 {
+  bottom: 22%;
+  right: 16%;
+}
+
+@media screen and (max-width: 767px) {
+  .sticker-item {
+    width: 20vw;
+    height: 24vw;
+  }
+}
+
+/* Resting shadow (a soft contact shadow plus a tighter one) so stickers read as
+   objects, and a very slight idle float. Each sticker drifts on its own timing. */
+.sticker-float {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 8px 10px rgba(15, 16, 18, 0.18)) drop-shadow(0 2px 3px rgba(15, 16, 18, 0.14));
+}
+
+@keyframes sticker-float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  50% {
+    translate: 0 -5px;
+    rotate: var(--float-rotate, 1.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sticker-float {
+    animation: sticker-float 5.2s ease-in-out infinite;
+  }
+
+  .sticker-item.is--2 .sticker-float {
+    --float-rotate: -1.5deg;
+    animation-duration: 6.1s;
+    animation-delay: -1.4s;
+  }
+
+  .sticker-item.is--3 .sticker-float {
+    --float-rotate: -1deg;
+    animation-duration: 5.7s;
+    animation-delay: -2.6s;
+  }
+
+  .sticker-item.is--4 .sticker-float {
+    --float-rotate: 1deg;
+    animation-duration: 6.6s;
+    animation-delay: -3.8s;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Polaroid photos (Experience), ported from the reference CodePen.
+   Items rest at 80% with one of four tilts (data-tilt, the reference's
+   nth-of-type pattern made explicit) and a curled corner shadow
+   (.polaroid::before); hover brings them upright, full size and, where
+   hover exists, from greyscale into colour. Touch screens can't hover,
+   so they show the photos in colour.
+---------------------------------------------------------------- */
+.polaroid-item {
+  display: inline-block;
+  transition:
+    transform 0.35s,
+    filter 0.35s;
+}
+
+.polaroid {
+  background: #fcfcfd;
+  padding: 0.6rem;
+  box-shadow: 0 0.2rem 1.2rem rgba(0, 0, 0, 0.2);
+}
+
+.polaroid img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.polaroid-caption {
+  color: #0f1012;
+  font-family: var(--font-poor-story), cursive;
+  font-size: 1.25rem;
+  line-height: 2em;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .polaroid {
+    padding: 1rem;
+  }
+  .polaroid-caption {
+    font-size: 1.8rem;
+  }
+}
+
+.polaroid-item .polaroid::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  transition: all 0.35s;
+}
+
+.polaroid-item[data-tilt="1"] {
+  transform: scale(0.8, 0.8) rotate(5deg);
+}
+
+.polaroid-item[data-tilt="1"] .polaroid::before {
+  transform: rotate(6deg);
+  height: 20%;
+  width: 47%;
+  bottom: 30px;
+  right: 12px;
+  box-shadow: 0 2.1rem 2rem rgba(0, 0, 0, 0.4);
+}
+
+.polaroid-item[data-tilt="2"] {
+  transform: scale(0.8, 0.8) rotate(-5deg);
+}
+
+.polaroid-item[data-tilt="2"] .polaroid::before {
+  transform: rotate(-6deg);
+  height: 20%;
+  width: 47%;
+  bottom: 30px;
+  left: 12px;
+  box-shadow: 0 2.1rem 2rem rgba(0, 0, 0, 0.4);
+}
+
+.polaroid-item[data-tilt="4"] {
+  transform: scale(0.8, 0.8) rotate(3deg);
+}
+
+.polaroid-item[data-tilt="4"] .polaroid::before {
+  transform: rotate(4deg);
+  height: 20%;
+  width: 47%;
+  bottom: 30px;
+  right: 12px;
+  box-shadow: 0 2.1rem 2rem rgba(0, 0, 0, 0.3);
+}
+
+.polaroid-item[data-tilt="3"] {
+  transform: scale(0.8, 0.8) rotate(-3deg);
+}
+
+.polaroid-item[data-tilt="3"] .polaroid::before {
+  transform: rotate(-4deg);
+  height: 20%;
+  width: 47%;
+  bottom: 30px;
+  left: 12px;
+  box-shadow: 0 2.1rem 2rem rgba(0, 0, 0, 0.3);
+}
+
+@media (hover: hover) {
+  .polaroid-item {
+    filter: grayscale(100%);
+  }
+
+  .polaroid-item:hover {
+    z-index: 2;
+    filter: none;
+    transform: scale(1, 1) rotate(0deg);
+  }
+
+  .polaroid-item:hover .polaroid::before {
+    transform: rotate(0deg);
+    height: 90%;
+    width: 90%;
+    bottom: 0%;
+    right: 5%;
+    left: auto;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .polaroid-item,
+  .polaroid-item .polaroid::before {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Step timeline (Experience), adapted from the reference.
+   components/effects/StepTimeline.tsx sets data-status and
+   data-current on each [data-step-timeline-item] as the line fills.
+---------------------------------------------------------------- */
+.step-marker {
+  transition:
+    background-color 0.4s cubic-bezier(0.645, 0.045, 0.355, 1),
+    color 0.4s cubic-bezier(0.645, 0.045, 0.355, 1),
+    border-color 0.4s cubic-bezier(0.645, 0.045, 0.355, 1),
+    box-shadow 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+[data-step-timeline-item][data-status="active"] .step-marker {
+  background-color: var(--bento-blue);
+  color: var(--bento-on-blue);
+  border-color: var(--bento-blue);
+}
+
+[data-step-timeline-item][data-current] .step-marker {
+  box-shadow: 0 0 0 0.5em color-mix(in oklab, var(--bento-blue) 16%, transparent);
+}
+
+[data-step-timeline-item] .step-content {
+  opacity: 0.25;
+  transition: opacity 0.25s;
+}
+
+[data-step-timeline-item][data-status="active"] .step-content {
+  opacity: 0.5;
+}
+
+[data-step-timeline-item][data-current] .step-content {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-marker,
+  [data-step-timeline-item] .step-content {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Sticky features (Featured Work), adapted from the reference.
+   Only the first image and text item show until
+   components/effects/StickyFeatures.tsx takes over.
+---------------------------------------------------------------- */
+.sticky-features__wrap {
+  position: relative;
+  width: 100%;
+}
+
+.sticky-features__scroll {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100svh;
+}
+
+.sticky-features__container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.25em;
+  width: 100%;
+  max-width: 70em;
+  margin-inline: auto;
+}
+
+.sticky-features__col {
+  position: relative;
+  flex: 1;
+}
+
+.sticky-features__col.is--img {
+  overflow: hidden;
+  border-radius: 0.75em;
+}
+
+.sticky-features__progress-w {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0.25em;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sticky-features__progress-bar {
+  width: 100%;
+  height: 100%;
+  background-color: #fcfcfd;
+  transform: scale3d(0, 1, 1);
+  transform-origin: 0% 50%;
+}
+
+.sticky-features__img-list {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.3;
+  background-color: var(--bento-line);
+}
+
+.sticky-features__img-item {
+  position: absolute;
+  inset: 0;
+  -webkit-clip-path: inset(50% round 0.75em);
+  clip-path: inset(50% round 0.75em);
+}
+
+[data-sticky-feature-visual-wrap]:first-of-type {
+  -webkit-clip-path: inset(0% round 0.75em);
+  clip-path: inset(0% round 0.75em);
+}
+
+.sticky-features__text-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  max-height: 100%;
+}
+
+.sticky-features__text-item {
+  position: absolute;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.5em;
+  width: 100%;
+  max-width: 27.5em;
+  margin-left: auto;
+  visibility: hidden;
+}
+
+[data-sticky-feature-item]:first-of-type {
+  visibility: visible;
+}
+
+.sticky-features__heading {
+  margin: 0;
+  color: var(--bento-ink);
+  font-size: 3.75em;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.sticky-features__p {
+  margin: 0;
+  color: var(--bento-muted);
+  font-size: 1.25em;
+  line-height: 1.3;
+}
+
+.sticky-features__p.is--link {
+  color: var(--bento-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.sticky-features__tag {
+  margin-bottom: 1.5em;
+  padding: 0.5em 0.625em;
+  border-radius: 0.25em;
+  background-color: color-mix(in oklab, var(--bento-ink) 8%, transparent);
+  color: var(--bento-ink);
+  font-size: 1em;
+  line-height: 1;
+}
+
+/* Mobile: image above text. The image is capped so the pinned block fits short
+   phones, and the bottom padding keeps the link clear of the floating nav. */
+@media screen and (max-width: 767px) {
+  .sticky-features__scroll {
+    height: auto;
+    min-height: 100svh;
+    padding-top: 0.75em;
+    padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+  }
+
+  .sticky-features__container {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.25em;
+  }
+
+  .sticky-features__img-list {
+    aspect-ratio: 4 / 3;
+    max-height: 30svh;
+  }
+
+  .sticky-features__text-list {
+    min-height: 20em;
+    max-height: none;
+  }
+
+  .sticky-features__text-item {
+    max-width: none;
+    gap: 1.25em;
+  }
+
+  .sticky-features__heading {
+    font-size: 2.25em;
+  }
+
+  .sticky-features__p {
+    font-size: 1em;
+  }
+
+  .sticky-features__tag {
+    margin-bottom: 0;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Interactive collage (Beyond the Screen), adapted from the reference.
+   Everything is in em off a vw font size, so the layout scales with
+   the viewport; on smaller screens it grows past the edges and the
+   section clips it. The focused card is raised above its neighbours.
+---------------------------------------------------------------- */
+.collage-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1vw;
+}
+
+@media screen and (max-width: 991px) {
+  .collage-stage {
+    font-size: 2.125vw;
+  }
+}
+
+.interactive-collage {
+  flex: none;
+  width: 63.75em;
+  height: 37em;
+}
+
+.interactive-collage__list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.interactive-collage__item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.interactive-collage__item.is--1 {
+  top: 6em;
+}
+
+.interactive-collage__item.is--2 {
+  top: 17em;
+  left: 5em;
+}
+
+.interactive-collage__item.is--3 {
+  z-index: 1;
+  top: 14em;
+  left: 13.5em;
+}
+
+.interactive-collage__item.is--4 {
+  left: 24em;
+}
+
+.interactive-collage__item.is--5 {
+  z-index: 3;
+  top: auto;
+  bottom: 0;
+  left: 26em;
+}
+
+.interactive-collage__item.is--6 {
+  z-index: 2;
+  top: 9em;
+  left: 31.5em;
+}
+
+.interactive-collage__item.is--7 {
+  z-index: 1;
+  top: 16em;
+  left: 39em;
+}
+
+.interactive-collage__item.is--8 {
+  top: 5em;
+  left: auto;
+  right: 0;
+}
+
+.interactive-collage__item[data-interactive-collage-focus] {
+  z-index: 10;
+}
+
+.collage-card {
+  position: relative;
+  width: 16.25em;
+  aspect-ratio: 1;
+  background-color: var(--bento-line);
+}
+
+.collage-card.is--landscape {
+  width: 20em;
+  aspect-ratio: 4 / 3;
+}
+
+.collage-card.is--portrait {
+  width: 15em;
+  aspect-ratio: 3 / 4;
+}
+
+/* ---------------------------------------------------------------
+   Dynamic text cursor (components/cursor/CursorBubble.tsx).
+   The pill flips left at the right edge and above the pointer at
+   the bottom edge; both offsets feed one transform.
+---------------------------------------------------------------- */
+.cursor-follower {
+  --bubble-x: 0%;
+  --bubble-y: 0%;
+}
+
+.cursor-follower[data-cursor="active-edge"] {
+  --bubble-x: -100%;
+}
+
+.cursor-follower[data-cursor-flip="true"] {
+  --bubble-y: calc(-100% - 2em);
+}
+
+.cursor-bubble {
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cursor-follower .cursor-bubble {
+    transition:
+      transform 0.4s cubic-bezier(0.625, 0.05, 0, 1),
+      opacity 0.4s cubic-bezier(0.625, 0.05, 0, 1);
+    transform: translate(var(--bubble-x), var(--bubble-y)) scale(0.9) rotate(0.001deg);
+  }
+
+  .cursor-follower:is([data-cursor="active"], [data-cursor="active-edge"]) .cursor-bubble {
+    opacity: 1;
+    transform: translate(var(--bubble-x), var(--bubble-y)) scale(1) rotate(0.001deg);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .cursor-follower {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-follower .cursor-bubble {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Intro loader. data-intro keeps the overlay rendered for the whole
+   animation; data-loading holds the page still and unscrollable until
+   the background starts sliding away.
+---------------------------------------------------------------- */
+html:not([data-intro]) .intro {
+  display: none;
+}
+
+html[data-loading] {
+  overflow: hidden;
+}
+
+html[data-loading] .rise {
+  animation-play-state: paused;
+}
+
+/* ---------------------------------------------------------------
+   Motion. Entry choreography is CSS so content paints before
+   hydration. Skipped under reduced motion.
+---------------------------------------------------------------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* No `scroll-behavior: smooth` on html: it fights ScrollTrigger's refresh and
+   leaves pinned pages drifting. Same-page links scroll smoothly via SmoothAnchors. */
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 0.9s var(--ease-out-expo) calc(120ms + var(--i, 0) * 90ms) backwards;
+  }
+}
