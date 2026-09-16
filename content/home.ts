@@ -44,6 +44,8 @@ export const navLinks = [
   { href: "/#work", label: "Work" },
   { href: "/#about", label: "About" },
   { href: "/#photos", label: "Photos" },
+  // TODO: add Sudhanshu's resume at public/resume.pdf; until then this link opens a "Page not found".
+  { href: "/resume.pdf", label: "Resume", newTab: true },
   { href: "/#contact", label: "Say hello", cta: true },
 ];
 
@@ -109,7 +111,7 @@ export const experience = {
     {
       title: "MET College",
       meta: "Guest Lecturer",
-      summary: "Taught one Figma session, loved it.",
+      summary: "Taught 4 to 5 Figma sessions as a one time guest lecturer, loved it.",
       polaroid: {
         src: "/images/experience/teaching-figma-met.jpg",
         alt: "Sudhanshu teaching a Figma session to a class at MET College",

@@ -36,12 +36,12 @@ export function Footer() {
                 <p className="font-mono text-[12px] uppercase leading-none tracking-[0.04em]">{group.label}</p>
                 <ul className="flex flex-col gap-2.5">
                   {group.links.map((link) => {
-                    const external = link.href.startsWith("http");
+                    const newTab = link.href.startsWith("http") || ("newTab" in link && link.newTab);
                     return (
                       <li key={link.label}>
                         <a
                           href={link.href}
-                          {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                          {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                           className="text-[17px] font-medium underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-200 hover:decoration-bento-on-blue"
                         >
                           {link.label}

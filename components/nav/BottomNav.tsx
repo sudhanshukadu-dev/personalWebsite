@@ -250,6 +250,7 @@ export function BottomNav() {
               <li key={link.href} data-bottom-nav-reveal className="block">
                 <a
                   href={link.href}
+                  {...(link.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className={cn(
                     "flex items-center gap-1 py-[0.2em] text-[2em] font-medium leading-none tracking-[-0.05em]",
                     link.cta ? "text-bento-blue" : "text-bento-ink",
