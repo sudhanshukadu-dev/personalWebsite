@@ -31,6 +31,7 @@
   --z-skip: 60;
   --z-cursor: 70;
   --z-lightbox: 90;
+  --z-page-transition: 95;
   --z-loader: 100;
 }
 
@@ -460,6 +461,7 @@
   position: relative;
   width: min(42rem, 100vw - 20rem, (100svh - 23.5rem) * 1.6);
   overflow: hidden;
+  container-type: inline-size;
 }
 
 /* The floating nav's corner radius, a hairline edge in the card's own colour and
@@ -519,17 +521,19 @@
   gap: 1.75rem;
 }
 
+/* The photo frame takes the photo's own ratio (--ratio, set per card), so the photo is
+   never cropped or letterboxed. It's as wide as its column allows but no taller than
+   the space above the title, measured from the card's width (the card is an
+   inline-size container; desktop cards are 62.5cqi tall). */
 .dropping-stack-card__visual {
   position: relative;
   flex: none;
-  width: 52%;
+  align-self: flex-start;
+  width: min(52%, (62.5cqi - 10rem) * (var(--ratio, 4 / 3)));
+  aspect-ratio: var(--ratio, 4 / 3);
   overflow: hidden;
   border-radius: 0.5rem;
   background-color: var(--card-soft);
-}
-
-.dropping-stack-card__visual-before {
-  padding-top: 66%;
 }
 
 .dropping-stack-card__words {
@@ -592,6 +596,10 @@
   .dropping-stack-card__before {
     padding-top: 78%;
   }
+
+  .dropping-stack-card__visual {
+    width: min(52%, (78cqi - 10rem) * (var(--ratio, 4 / 3)));
+  }
 }
 
 @media screen and (max-width: 767px) {
@@ -645,13 +653,14 @@
     font-size: clamp(1.5rem, 7vw, 2rem);
   }
 
-  .dropping-stack-card__visual,
   .dropping-stack-card__words {
     width: 100%;
   }
 
-  .dropping-stack-card__visual-before {
-    padding-top: 50%;
+  /* Full width, unless that would make the frame taller than the card has room for:
+     the card's height (as set on __before) less about 17rem for padding, text and title. */
+  .dropping-stack-card__visual {
+    width: min(100%, (min(160cqi, 100svh - 14.5rem) - 17rem) * (var(--ratio, 4 / 3)));
   }
 }
 
@@ -1797,6 +1806,37 @@
   .click-zoom__lightbox {
     padding: 1rem;
   }
+}
+
+/* Pixel page transition (PageTransition), adapted from Sudhanshu's reference: lines of
+   square pixels in the project's colour (set as color on the wrap). While active it
+   blocks clicks. */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-page-transition);
+  display: none;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.page-transition[data-active] {
+  display: flex;
+  pointer-events: auto;
+}
+
+.page-transition__line {
+  display: flex;
+  flex: 1 1 0;
+  justify-content: center;
+}
+
+.page-transition__pixel {
+  flex: none;
+  aspect-ratio: 1;
+  background-color: currentColor;
+  box-shadow: 0 0 0 0.5px currentColor;
+  opacity: 0;
 }
 
 .photo-bento__media {

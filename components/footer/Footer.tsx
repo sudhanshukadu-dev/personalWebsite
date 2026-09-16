@@ -1,11 +1,13 @@
+import Image from "next/image";
 import { ArrowUp } from "@phosphor-icons/react/ssr";
 import { footer, hero, navLinks, navSecondary, site } from "@/content/home";
 import { cn } from "@/lib/cn";
 
 const linkGroups = [{ label: footer.pagesLabel, links: navLinks.filter((link) => !link.cta) }, ...navSecondary];
 
-// Site footer: carries on the Let's Talk blue and grain, with the links, a giant
-// wordmark and the small print. The bottom padding keeps it clear of the floating nav.
+// Site footer: carries on the Let's Talk blue and grain, with the links, Sudhanshu's name
+// spelled out in satellite imagery, and the small print. The bottom padding keeps it
+// clear of the floating nav.
 export function Footer() {
   const year = new Date().getFullYear();
 
@@ -53,11 +55,16 @@ export function Footer() {
           </nav>
         </div>
 
-        {/* Decorative wordmark, sized in container units so it spans the content width exactly. */}
-        <div aria-hidden className="@container mt-20 select-none sm:mt-28">
-          <p className="whitespace-nowrap text-[length:14.2cqi] font-medium leading-[0.8] tracking-[-0.06em]">
-            {site.name}
-          </p>
+        {/* "SUDHANSHU" spelled out in satellite images of rivers and landforms, spanning the content width. */}
+        <div className="mt-20 sm:mt-28">
+          <Image
+            src="/images/footer/sudhanshu-earth.jpg"
+            alt="SUDHANSHU spelled out in nine satellite images of rivers and landforms"
+            width={3200}
+            height={794}
+            sizes="(min-width: 1320px) 1032px, 100vw"
+            className="h-auto w-full rounded-[0.5rem]"
+          />
         </div>
 
         <div className="mt-8 flex flex-col-reverse gap-4 border-t border-bento-on-blue/25 pt-6 text-[15px] sm:flex-row sm:items-center sm:justify-between">

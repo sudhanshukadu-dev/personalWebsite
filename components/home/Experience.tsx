@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { DroppingStack } from "@/components/effects/DroppingStack";
 import type { CardTone } from "@/components/work/CaseCard";
@@ -32,8 +33,11 @@ export function Experience() {
                     tabIndex={0}
                     aria-label={`Enlarge photo: ${role.polaroid?.alt ?? role.title}`}
                     className="dropping-stack-card__visual"
+                    // The frame takes the photo's own ratio, so it's never cropped or letterboxed.
+                    style={
+                      { "--ratio": role.polaroid ? `${role.polaroid.width} / ${role.polaroid.height}` : "4 / 3" } as CSSProperties
+                    }
                   >
-                    <div className="dropping-stack-card__visual-before" />
                     {role.polaroid ? (
                       <Image
                         src={role.polaroid.src}
@@ -41,7 +45,7 @@ export function Experience() {
                         fill
                         draggable={false}
                         sizes="(max-width: 767px) 80vw, 380px"
-                        className="object-cover object-[50%_35%]"
+                        className="object-cover"
                       />
                     ) : null}
                   </div>

@@ -6,6 +6,7 @@ import { CursorBubble } from "@/components/cursor/CursorBubble";
 import { Footer } from "@/components/footer/Footer";
 import { SmoothAnchors } from "@/components/nav/SmoothAnchors";
 import { ClickZoom } from "@/components/effects/ClickZoom";
+import { PageTransition } from "@/components/effects/PageTransition";
 import { Loader } from "@/components/loader/Loader";
 import { hero, site } from "@/content/home";
 import "./globals.css";
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <CursorBubble />
         <SmoothAnchors />
         <ClickZoom />
+        <PageTransition />
       </body>
     </html>
   );

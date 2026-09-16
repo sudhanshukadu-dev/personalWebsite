@@ -251,8 +251,10 @@ export function StickyFeatures({ items, linkLabel }: Props) {
                       ))}
                     </ul>
                     {/* The hero's bubble arrow CTA; its hover circle takes the project's colour. */}
+                    {/* data-page-transition: PageTransition covers the screen in the project's colour before navigating. */}
                     <a
                       data-sticky-feature-text
+                      data-page-transition
                       data-project-color={item.color}
                       href={item.href}
                       aria-label={`${linkLabel}: ${item.title}`}
