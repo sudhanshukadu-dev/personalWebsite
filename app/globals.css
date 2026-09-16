@@ -30,6 +30,7 @@
   --z-nav: 50;
   --z-skip: 60;
   --z-cursor: 70;
+  --z-lightbox: 90;
   --z-loader: 100;
 }
 
@@ -340,7 +341,7 @@
   margin-right: 0.3em;
   overflow: hidden;
   vertical-align: baseline;
-  border-radius: 0.25em;
+  border-radius: 0.5rem;
   color: var(--bento-blue);
   background-color: var(--bento-line);
   cursor: pointer;
@@ -523,7 +524,7 @@
   flex: none;
   width: 52%;
   overflow: hidden;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   background-color: var(--card-soft);
 }
 
@@ -614,30 +615,34 @@
     justify-self: start;
   }
 
+  /* Phones: tighter stack offsets, and cards that always span the width. Their height is
+     as tall as the screen allows (up to 1.6x the width), after the controls, the offsets
+     and the floating nav's clearance (about 14.5rem), so short phones get shorter cards
+     instead of narrower ones. */
   .dropping-stack__collection {
-    padding-right: 3rem;
-    padding-bottom: 3rem;
+    padding-right: 1.5rem;
+    padding-bottom: 1.5rem;
   }
 
   .dropping-stack-card {
-    width: min(42rem, 100vw - 5rem, (100svh - 21rem) * 0.625);
+    width: min(42rem, 100vw - 3.5rem);
   }
 
   .dropping-stack-card__before {
-    padding-top: 160%;
+    padding-top: min(160%, 100svh - 14.5rem);
   }
 
   .dropping-stack-card__content {
-    padding: 6vw;
+    padding: 1.25rem;
   }
 
   .dropping-stack-card__start {
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   .dropping-stack-card__h {
-    font-size: 7.5vw;
+    font-size: clamp(1.5rem, 7vw, 2rem);
   }
 
   .dropping-stack-card__visual,
@@ -646,7 +651,7 @@
   }
 
   .dropping-stack-card__visual-before {
-    padding-top: 56%;
+    padding-top: 50%;
   }
 }
 
@@ -667,6 +672,22 @@
   min-height: 100svh;
   padding: 4rem 1.5rem calc(6.5rem + env(safe-area-inset-bottom));
   background-color: var(--bento-card);
+}
+
+/* The line and its sticker, stacked and rising in together. */
+.arc-transition__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+/* The sticker reuses the hero's .sticker-float (soft shadow and slight idle float). */
+.arc-transition__sticker {
+  position: relative;
+  display: block;
+  width: clamp(7rem, 13vw, 11rem);
+  aspect-ratio: 1;
 }
 
 .arc-transition__text {
@@ -828,7 +849,7 @@
   color: var(--bento-ink);
   background-color: var(--bento-page);
   border: 1px solid var(--bento-page);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   font: inherit;
   font-size: 1.125em;
   font-weight: 500;
@@ -897,7 +918,7 @@
   padding: 1.125em 3.5em 1.125em 1.125em;
   color: var(--bento-blue);
   border: 1px solid currentColor;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
 }
 
 .contact-notification[data-tone="error"] {
@@ -1488,7 +1509,7 @@
 .sticky-features__col.is--img {
   flex: 1.3;
   overflow: hidden;
-  border-radius: 0.75em;
+  border-radius: 0.5rem;
 }
 
 .sticky-features__progress-w {
@@ -1709,106 +1730,99 @@
 }
 
 /* ---------------------------------------------------------------
-   Interactive collage (Beyond the Screen), adapted from the reference.
-   Everything is in em off a vw font size, so the layout scales with
-   the viewport; on smaller screens it grows past the edges and the
-   section clips it. The focused card is raised above its neighbours.
+   Beyond the Screen bento grid: square cells sized from the container's
+   width (container query units), so the grid always closes into a clean
+   rectangle. Desktop: 6 x 4, with the rowing clip (2 x 2) and the gym photo
+   (1 x 2) placed by --col / --row and every other photo packed into the
+   remaining cells. Phones: 2 columns with --mcol / --mrow spans. Tiles use
+   the floating nav's corner radius.
 ---------------------------------------------------------------- */
-.collage-stage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1vw;
+.photo-bento {
+  container-type: inline-size;
 }
 
-@media screen and (max-width: 991px) {
-  .collage-stage {
-    font-size: 2.125vw;
-  }
+.photo-bento__grid {
+  --gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: calc((100cqi - 5 * var(--gap)) / 6);
+  grid-auto-flow: row dense;
+  gap: var(--gap);
 }
 
-.interactive-collage {
-  flex: none;
-  width: 63.75em;
-  height: 37em;
-}
-
-.interactive-collage__list {
+.photo-bento__item {
   position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.interactive-collage__item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
-
-.interactive-collage__item.is--1 {
-  top: 6em;
-}
-
-.interactive-collage__item.is--2 {
-  top: 17em;
-  left: 5em;
-}
-
-.interactive-collage__item.is--3 {
-  z-index: 1;
-  top: 14em;
-  left: 13.5em;
-}
-
-.interactive-collage__item.is--4 {
-  left: 24em;
-}
-
-.interactive-collage__item.is--5 {
-  z-index: 3;
-  top: auto;
-  bottom: 0;
-  left: 26em;
-}
-
-.interactive-collage__item.is--6 {
-  z-index: 2;
-  top: 9em;
-  left: 31.5em;
-}
-
-.interactive-collage__item.is--7 {
-  z-index: 1;
-  top: 16em;
-  left: 39em;
-}
-
-.interactive-collage__item.is--8 {
-  top: 5em;
-  left: auto;
-  right: 0;
-}
-
-.interactive-collage__item[data-interactive-collage-focus] {
-  z-index: 10;
-}
-
-.collage-card {
-  position: relative;
-  width: 16.25em;
-  aspect-ratio: 1;
+  grid-column: var(--col, auto);
+  grid-row: var(--row, auto);
+  overflow: hidden;
+  border-radius: 0.5rem;
   background-color: var(--bento-line);
 }
 
-.collage-card.is--landscape {
-  width: 20em;
-  aspect-ratio: 4 / 3;
+/* Click to zoom (ClickZoom), ported from Sudhanshu's reference: a fixed backdrop that
+   the enlarged image is animated into. */
+[data-click-zoom],
+[data-click-zoom] img,
+[data-click-zoom] video {
+  cursor: zoom-in;
 }
 
-.collage-card.is--portrait {
-  width: 15em;
-  aspect-ratio: 3 / 4;
+.click-zoom__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-lightbox);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background-color: rgba(0, 0, 0, 0.9);
+  cursor: zoom-out;
+}
+
+.click-zoom__lightbox:focus {
+  outline: none;
+}
+
+[data-click-zoom-lightbox] > img,
+[data-click-zoom-lightbox] > video {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 0.5rem;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media screen and (max-width: 767px) {
+  .click-zoom__lightbox {
+    padding: 1rem;
+  }
+}
+
+.photo-bento__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-bento__media.is--mono {
+  filter: grayscale(1);
+}
+
+@media screen and (max-width: 767px) {
+  .photo-bento__grid {
+    --gap: 0.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: calc((100cqi - var(--gap)) / 2);
+    grid-auto-flow: row dense;
+  }
+
+  .photo-bento__item {
+    grid-column: span var(--mcol, 1);
+    grid-row: span var(--mrow, 1);
+  }
 }
 
 /* ---------------------------------------------------------------

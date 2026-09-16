@@ -192,51 +192,135 @@ export const featuredWork = {
   ],
 };
 
-// Collage slots, in order: 1, 3, 6, 7 are landscape (4:3), 4 is portrait (3:4), 2, 5, 8 are square.
+// Bento grid of square cells. Desktop: 6 columns by 4 rows; the rowing clip (2 x 2, centre)
+// and the gym photo (1 x 2) are placed with `col` / `row` (CSS grid values), and every
+// other photo fills the remaining cells in this order. Phones: 2 columns in this order,
+// with `mobileCol` / `mobileRow` spans (default 1). `focus` sets the crop's
+// object-position; `mono` shows the photo in black and white.
 export const beyondTheScreen = {
   heading: "Beyond the screen",
-  line: "Phone in hand, not a fancy camera. A beach run, a gym day, a moment too good to skip.",
-  photos: [
+  items: [
     {
-      src: "/images/intro/beach-waves.jpg",
-      alt: "Waves rolling onto a dark sand beach under a long bank of clouds",
-      shape: "landscape" as const,
+      type: "video" as const,
+      src: "/video/clip.mp4",
+      alt: "Sudhanshu rowing on an indoor rowing machine",
+      col: "3 / span 2",
+      row: "2 / span 2",
+      mobileCol: 2,
     },
     {
-      src: "/images/intro/mirror-portrait.jpg",
-      alt: "Mirror selfie behind a potted plant, against a colourful abstract painting",
-      shape: "square" as const,
+      type: "image" as const,
+      src: "/images/photos/gym-mirror.jpg",
+      alt: "Mirror selfie in a white vest after a workout, in black and white",
+      col: "1",
+      row: "2 / span 2",
+      mobileRow: 2,
+      focus: "50% 25%",
+      mono: true,
     },
     {
-      src: "/images/intro/trees-and-moon.jpg",
-      alt: "Wind-blown trees in golden light with the moon in a blue sky",
-      shape: "landscape" as const,
+      type: "image" as const,
+      src: "/images/photos/trees-backlit.jpg",
+      alt: "Sun breaking through a row of tall trees, their long shadows across the grass",
+      focus: "50% 40%",
     },
     {
+      type: "image" as const,
+      src: "/images/photos/odd-eyed-cat.jpg",
+      alt: "A white cat with one amber eye and one blue eye, being petted",
+      focus: "50% 45%",
+    },
+    {
+      type: "image" as const,
       src: "/images/intro/hilltop-fog.jpg",
       alt: "Standing on a rock at a hilltop, looking over a forested valley in fog",
-      shape: "portrait" as const,
+      focus: "50% 45%",
     },
     {
+      type: "image" as const,
+      src: "/images/photos/carpenter-bee.jpg",
+      alt: "A carpenter bee in a lilac flower wet with rain",
+      focus: "50% 55%",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/kids-at-sunset.jpg",
+      alt: "Two kids playing in the shallows at sunset, a footprint in the sand up close",
+      focus: "50% 45%",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/windmill-at-night.jpg",
+      alt: "A wind turbine lit up against a starry night sky above the trees",
+      focus: "50% 55%",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/sea-foam.jpg",
+      alt: "A wave's foam sliding up dark sand",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/stormy-beach.jpg",
+      alt: "Storm clouds rolling over a wide, empty beach lined with trees",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/palm-trees.jpg",
+      alt: "Coconut palms under a clear blue sky",
+      focus: "50% 85%",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/rowing-monitor.jpg",
+      alt: "A rowing machine display after a 30-minute, 7,762-metre row",
+      focus: "50% 35%",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/wispy-clouds.jpg",
+      alt: "Wispy clouds streaking across a deep blue sky at golden hour",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/laptop-palettes.jpg",
+      alt: "A laptop showing colour palettes on a bed in a sunlit room",
+      focus: "50% 60%",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/dog-in-sand.jpg",
+      alt: "A black dog resting its head in the sand",
+      focus: "50% 55%",
+    },
+    {
+      type: "image" as const,
+      src: "/images/photos/museum-sculpture.jpg",
+      alt: "A yellow stone sculpture on a wooden plinth against a brick and stone wall",
+      focus: "50% 60%",
+    },
+    {
+      type: "image" as const,
       src: "/images/intro/beach-sunset.jpg",
-      alt: "Sun setting over the sea, its reflection running across wet sand and footprints",
-      shape: "square" as const,
-    },
-    // TODO: replace the three placeholders below with more of Sudhanshu's phone photos.
-    {
-      src: "https://picsum.photos/seed/sk-photo-slot-6/1600/1200",
-      alt: "Placeholder photo",
-      shape: "landscape" as const,
+      alt: "Sun setting over the sea, its reflection running across wet sand",
+      focus: "50% 55%",
     },
     {
-      src: "https://picsum.photos/seed/sk-photo-slot-7/1600/1200",
-      alt: "Placeholder photo",
-      shape: "landscape" as const,
+      type: "image" as const,
+      src: "/images/photos/dog-on-beach.jpg",
+      alt: "A dog sitting alone on a wide, grey beach",
+      focus: "50% 55%",
     },
     {
-      src: "https://picsum.photos/seed/sk-photo-slot-8/1200/1200",
-      alt: "Placeholder photo",
-      shape: "square" as const,
+      type: "image" as const,
+      src: "/images/intro/trees-and-moon.jpg",
+      alt: "Wind-blown trees in golden light with the moon in a blue sky",
+    },
+    {
+      type: "image" as const,
+      src: "/images/intro/mirror-portrait.jpg",
+      alt: "Mirror selfie behind a potted plant, against a colourful abstract painting",
+      focus: "50% 40%",
     },
   ],
 };
@@ -244,8 +328,6 @@ export const beyondTheScreen = {
 export const contact = {
   question: "Designing something interesting? Building something weird?",
   cta: "Let's talk.",
-  // Followed by site.email as a mailto link.
-  emailPrompt: "Not a form person? Email me at",
   form: {
     fields: {
       name: { label: "Name", placeholder: "Your name", error: "Add your name" },
@@ -261,12 +343,14 @@ export const contact = {
   },
 };
 
-// One-line intros shown in the arc transition panel before each section.
+// One-line intros shown in the arc transition panel before each section, each with a
+// sticker below it.
 export const sectionIntros = {
-  about: "A little about the engineer who became a designer",
-  experience: "Where I've actually shown up and done the work",
-  work: "A few things I've actually built and shipped",
-  photos: "What I get up to when I step away from the screen",
+  about: { text: "A little about the engineer who became a designer", sticker: "/images/stickers/brain.png" },
+  experience: { text: "Where I've actually shown up and done the work", sticker: "/images/stickers/heart.png" },
+  work: { text: "A few things I've actually built and shipped", sticker: "/images/stickers/keyboard.png" },
+  photos: { text: "What I get up to when I step away from the screen", sticker: "/images/stickers/camera.png" },
+  contact: { text: `${contact.question} ${contact.cta}`, sticker: "/images/stickers/mailbox.png" },
 };
 
 export const footer = {

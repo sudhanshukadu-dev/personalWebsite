@@ -13,14 +13,15 @@ export default function Home() {
     // viewport, where it stops clipping (the loader briefly scales the hero to 110%).
     <main id="main" className="overflow-x-clip">
       <Hero />
-      <ArcTransition text={sectionIntros.about} />
+      <ArcTransition {...sectionIntros.about} />
       <About />
-      <ArcTransition text={sectionIntros.experience} />
+      <ArcTransition {...sectionIntros.experience} />
       <Experience />
-      <ArcTransition text={sectionIntros.work} />
+      <ArcTransition {...sectionIntros.work} />
       <FeaturedWork />
-      <ArcTransition text={sectionIntros.photos} />
+      <ArcTransition {...sectionIntros.photos} />
       <BeyondTheScreen />
+      <ArcTransition {...sectionIntros.contact} />
       <LetsTalk />
     </main>
   );

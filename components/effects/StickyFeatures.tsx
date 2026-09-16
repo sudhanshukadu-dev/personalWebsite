@@ -206,6 +206,10 @@ export function StickyFeatures({ items, linkLabel }: Props) {
                     key={item.title}
                     data-sticky-feature-visual-wrap
                     data-project-color={item.color}
+                    data-click-zoom
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Enlarge image: ${item.image.alt}`}
                     className="sticky-features__img-item"
                   >
                     {/* Eager: all four share one spot and are revealed within a few screens of scroll. */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -9,7 +10,8 @@ gsap.registerPlugin(ScrollTrigger);
 /*
   Arc scroll transition, ported from the reference Sudhanshu shared and used as a
   full-screen panel between home sections, carrying a one-line intro to the next
-  section. As the panel scrolls in, an arc in its colour rises over the section
+  section and a sticker below it (with the hero stickers' soft shadow and slight
+  float). As the panel scrolls in, an arc in its colour rises over the section
   above (cover) and bulges as it goes; as the panel scrolls out, a second arc over
   the section below pulls back up (reveal). Both are scrubbed, so they reverse on
   the way back. Under reduced motion the arcs are skipped and the panel just
@@ -22,17 +24,22 @@ const SCRUB = 0.3;
 
 type Mode = "cover" | "reveal";
 
+type ArcTransitionProps = {
+  text: string;
+  sticker?: string;
+};
+
 const round = (value: number) => Math.round(value * 100) / 100;
 
-export function ArcTransition({ text }: { text: string }) {
+export function ArcTransition({ text, sticker }: ArcTransitionProps) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const root = rootRef.current;
     const coverPath = root?.querySelector<SVGPathElement>("[data-arc-cover] path");
     const revealPath = root?.querySelector<SVGPathElement>("[data-arc-reveal] path");
-    const textEl = root?.querySelector<HTMLElement>("[data-arc-text]");
-    if (!root || !coverPath || !revealPath || !textEl) return;
+    const introEl = root?.querySelector<HTMLElement>("[data-arc-text]");
+    if (!root || !coverPath || !revealPath || !introEl) return;
 
     const mm = gsap.matchMedia();
 
@@ -98,9 +105,9 @@ export function ArcTransition({ text }: { text: string }) {
         },
       });
 
-      // The line rises gently into place as the panel arrives.
+      // The line and sticker rise gently into place as the panel arrives.
       gsap.fromTo(
-        textEl,
+        introEl,
         { y: 60, autoAlpha: 0 },
         {
           y: 0,
@@ -126,9 +133,16 @@ export function ArcTransition({ text }: { text: string }) {
       </svg>
 
       <div className="arc-transition__panel">
-        <p data-arc-text className="arc-transition__text">
-          {text}
-        </p>
+        <div data-arc-text className="arc-transition__intro">
+          <p className="arc-transition__text">{text}</p>
+          {sticker ? (
+            <span aria-hidden className="arc-transition__sticker">
+              <span className="sticker-float">
+                <Image src={sticker} alt="" fill sizes="136px" className="object-contain" />
+              </span>
+            </span>
+          ) : null}
+        </div>
       </div>
 
       <svg data-arc-reveal aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="arc-transition__shape is--reveal">
