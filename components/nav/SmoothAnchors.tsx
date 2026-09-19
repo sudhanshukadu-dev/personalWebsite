@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { scrollToTarget } from "@/lib/smooth-scroll";
 
 /*
   Smooth scrolling for same-page hash links (See the work, Say hello, Back to top).
@@ -26,8 +27,7 @@ export function SmoothAnchors() {
       if (!target) return;
 
       event.preventDefault();
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      scrollToTarget(target);
       if (location.hash !== url.hash) history.pushState(history.state, "", url.hash);
 
       // Keep keyboard users where they jumped to, as a native anchor would.

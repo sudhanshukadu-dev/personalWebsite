@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CaretRight } from "@phosphor-icons/react";
+import { scrollToTarget } from "@/lib/smooth-scroll";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
@@ -129,7 +130,7 @@ export function DroppingStack({ heading, prevLabel, nextLabel, children }: Dropp
       if (!trigger) return;
       const target = Math.max(0, Math.min(total - 1, index));
       const y = trigger.start + (trigger.end - trigger.start) * ((target + 0.5) / total);
-      window.scrollTo({ top: y, behavior: reduceMotion ? "auto" : "smooth" });
+      scrollToTarget(y);
     };
 
     const onPrev = () => goTo(activeIndex - 1);

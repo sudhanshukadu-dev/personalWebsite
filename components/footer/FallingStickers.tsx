@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { scrollToTarget } from "@/lib/smooth-scroll";
 import type { Body, Engine as MatterEngine, Render as MatterRender, Runner as MatterRunner } from "matter-js";
 
 /*
@@ -42,8 +43,7 @@ const goTo = (id: string, push: (href: string) => void) => {
     push(`/#${id}`);
     return;
   }
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  scrollToTarget(target);
   if (location.hash !== `#${id}`) history.pushState(history.state, "", `#${id}`);
 };
 

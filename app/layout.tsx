@@ -6,6 +6,7 @@ import { CursorBubble } from "@/components/cursor/CursorBubble";
 import { DotCursor } from "@/components/cursor/DotCursor";
 import { Footer } from "@/components/footer/Footer";
 import { SmoothAnchors } from "@/components/nav/SmoothAnchors";
+import { SmoothScroll } from "@/components/nav/SmoothScroll";
 import { ClickZoom } from "@/components/effects/ClickZoom";
 import { PageTransition } from "@/components/effects/PageTransition";
 import { Loader } from "@/components/loader/Loader";
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BottomNav />
         <CursorBubble />
         <DotCursor />
+        <SmoothScroll />
         <SmoothAnchors />
         <ClickZoom />
         <PageTransition />

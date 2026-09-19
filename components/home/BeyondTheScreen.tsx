@@ -7,9 +7,9 @@ import { cn } from "@/lib/cn";
 // Beyond the Screen: a compact bento grid with the rowing clip in the centre (styles in
 // globals.css, .photo-bento*). Photos and the clip open in the click-to-zoom lightbox.
 // No visible title: the arc transition before this section introduces it. The section is two
-// screens tall: the first is spent on the arc revealing it, so the grid still gets a full
-// screen of its own. On phones the grid is taller than the screen, so it flows normally after
-// a screen of clearance instead of being held in place.
+// screens tall with the grid held in place: the first screen is spent on the arc revealing it,
+// so the grid still gets a full screen of its own. The grid fits one screen at every size (6 x 4
+// on desktop, 4 x 6 on phones).
 export function BeyondTheScreen() {
   return (
     <section id="photos" aria-labelledby="photos-title" className="relative min-h-[200svh]">
@@ -17,7 +17,7 @@ export function BeyondTheScreen() {
         {beyondTheScreen.heading}
       </h2>
 
-      <div className="flex min-h-svh items-center pb-16 pt-[100svh] sm:sticky sm:top-0 sm:py-24">
+      <div className="sticky top-0 flex min-h-svh items-center py-16 sm:py-24">
         {/* The grid is 6 x 4 square cells, so its height is about two thirds of its width.
             Capping the width by the screen height keeps the whole grid on one screen. */}
         <div className="photo-bento mx-auto w-full max-w-[min(1120px,calc((100svh-10rem)*1.5))] px-4 sm:px-8">
@@ -48,7 +48,7 @@ export function BeyondTheScreen() {
                     src={item.src}
                     alt={item.alt}
                     fill
-                    sizes="(max-width: 767px) 50vw, 200px"
+                    sizes="(max-width: 767px) 25vw, 200px"
                     className={cn("photo-bento__media", item.mono && "is--mono")}
                     style={item.focus ? { objectPosition: item.focus } : undefined}
                   />

@@ -2010,11 +2010,13 @@
   filter: grayscale(1);
 }
 
+/* Phones: 4 columns by 6 rows (the clip 2 x 2, the gym photo 1 x 2), so all 20 tiles fit
+   on one screen. */
 @media screen and (max-width: 767px) {
   .photo-bento__grid {
     --gap: 0.5rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: calc((100cqi - var(--gap)) / 2);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: calc((100cqi - 3 * var(--gap)) / 4);
     grid-auto-flow: row dense;
   }
 

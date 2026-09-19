@@ -44,8 +44,6 @@ export const navLinks = [
   { href: "/#work", label: "Work" },
   { href: "/#about", label: "About" },
   { href: "/#photos", label: "Photos" },
-  // TODO: add Sudhanshu's resume at public/resume.pdf; until then this link opens a "Page not found".
-  { href: "/resume.pdf", label: "Resume", newTab: true },
   { href: "/#contact", label: "Say hello", cta: true },
 ];
 
@@ -54,7 +52,7 @@ export const navSecondary = [
     label: "Socials",
     links: [
       { href: "https://www.linkedin.com/in/sudhanshu-kadu/", label: "LinkedIn" },
-      { href: "https://www.instagram.com/sudhanshu.kadu/", label: "Instagram" },
+      { href: "https://github.com/sudhanshukadu-dev", label: "GitHub" },
     ],
   },
   {
@@ -147,13 +145,7 @@ export const featuredWork = {
       tag: "01",
       title: "Expense Management System",
       summary: "A corporate expense platform built solo, end to end.",
-      chips: [
-        "Solo designer",
-        "500+ enterprise clients",
-        "4 steps to 1",
-        "Shipped production Recharts code",
-        "Employee of the Quarter × 2",
-      ],
+      chips: ["Solo designer", "500+ enterprise clients", "Shipped production Recharts code"],
       color: "blue" as const,
       href: "/work/expense-management-system",
       image: {
@@ -215,6 +207,7 @@ export const beyondTheScreen = {
       col: "3 / span 2",
       row: "2 / span 2",
       mobileCol: 2,
+      mobileRow: 2,
     },
     {
       type: "image" as const,
@@ -334,15 +327,15 @@ export const beyondTheScreen = {
 };
 
 export const contact = {
-  question: "Designing something interesting? Building something weird?",
-  cta: "Let's talk.",
+  question: "Making something interesting or weird?",
+  cta: "Let’s talk.",
   // Under the form: the prompt, then a mailto link reading "Email me at <site.email>".
   // Hovering the link shows the cursor bubble with emailCursor.
   emailPrompt: "Not a form person?",
   emailLink: "Email me at",
   emailCursor: "Open mail",
   // Draggable stickers either side of the form, like the hero's.
-  stickers: [{ src: "/images/stickers/cloud.png" }, { src: "/images/stickers/heart.png" }],
+  stickers: [{ src: "/images/stickers/keyboard.png" }, { src: "/images/stickers/heart.png" }],
   form: {
     fields: {
       name: { label: "Name", placeholder: "Your name", error: "Add your name" },
