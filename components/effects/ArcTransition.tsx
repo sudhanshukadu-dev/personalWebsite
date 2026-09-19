@@ -4,8 +4,9 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 /*
   Arc scroll transition, ported from the reference Sudhanshu shared and used as a
@@ -16,11 +17,25 @@ gsap.registerPlugin(ScrollTrigger);
   the section below pulls back up (reveal). Both are scrubbed, so they reverse on
   the way back. Under reduced motion the arcs are skipped and the panel just
   scrolls by. Styles live in globals.css (.arc-transition*).
+
+  The line also takes the variable font weight hover from another reference: it's
+  split into letters, and once the pointer moves, each letter's Geist weight follows
+  its distance from the pointer (heavier up close, lighter further out, within a
+  narrow range), eased per letter, with each letter's width locked so the line never
+  reflows. It runs only while the panel is on screen, and not on touch screens or
+  under reduced motion.
 */
 
 const VIEWBOX = 100;
 const CURVE = 12;
 const SCRUB = 0.3;
+
+// Variable font weight hover: letters within WEIGHT_RANGE px of the pointer go from
+// WEIGHT_MIN (at the edge) to WEIGHT_MAX (under it). Capped at 700 so it
+// never goes very heavy.
+const WEIGHT_MIN = 300;
+const WEIGHT_MAX = 700;
+const WEIGHT_RANGE = 400;
 
 type Mode = "cover" | "reveal";
 
@@ -33,6 +48,74 @@ const round = (value: number) => Math.round(value * 100) / 100;
 
 export function ArcTransition({ text, sticker }: ArcTransitionProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  // Variable font weight hover on the line.
+  useEffect(() => {
+    const line = textRef.current;
+    if (
+      !line ||
+      window.matchMedia("(hover: none), (pointer: coarse)").matches ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    const split = new SplitText(line, { type: "chars,words", charsClass: "char" });
+    const chars = split.chars as HTMLElement[];
+    const baseWeight = parseFloat(getComputedStyle(line).fontWeight) || 500;
+    chars.forEach((char) => {
+      char.style.setProperty("--wght", String(baseWeight));
+      char.style.fontVariationSettings = "'wght' var(--wght)";
+    });
+    const setWeight = chars.map((char) => gsap.quickTo(char, "--wght", { duration: 0.4, ease: "power2.out" }));
+
+    // Heavier weights are wider, which would reflow the line. Lock each letter to its width
+    // at the base weight (in em, so it scales with the text) once the font has loaded.
+    let cancelled = false;
+    void document.fonts.ready.then(() => {
+      if (cancelled) return;
+      const fontSize = parseFloat(getComputedStyle(line).fontSize);
+      chars.forEach((char) => {
+        char.style.display = "inline-block";
+        char.style.textAlign = "center";
+        char.style.width = `${char.getBoundingClientRect().width / fontSize}em`;
+      });
+    });
+
+    let pointer: { x: number; y: number } | null = null;
+    let onScreen = false;
+    const onPointerMove = (event: PointerEvent) => {
+      pointer = { x: event.clientX, y: event.clientY };
+    };
+
+    // Measured each frame: the line moves as the panel scrolls and rises in.
+    const tick = () => {
+      if (!pointer || !onScreen) return;
+      chars.forEach((char, index) => {
+        const rect = char.getBoundingClientRect();
+        const distance = Math.hypot(pointer!.x - (rect.left + rect.width / 2), pointer!.y - (rect.top + rect.height / 2));
+        const closeness = Math.max(0, 1 - distance / WEIGHT_RANGE);
+        setWeight[index](WEIGHT_MIN + (WEIGHT_MAX - WEIGHT_MIN) * closeness);
+      });
+    };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+    });
+    observer.observe(line);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    gsap.ticker.add(tick);
+
+    return () => {
+      cancelled = true;
+      gsap.ticker.remove(tick);
+      window.removeEventListener("pointermove", onPointerMove);
+      observer.disconnect();
+      gsap.killTweensOf(chars);
+      split.revert();
+    };
+  }, [text]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -134,7 +217,9 @@ export function ArcTransition({ text, sticker }: ArcTransitionProps) {
 
       <div className="arc-transition__panel">
         <div data-arc-text className="arc-transition__intro">
-          <p className="arc-transition__text">{text}</p>
+          <p ref={textRef} className="arc-transition__text">
+            {text}
+          </p>
           {sticker ? (
             <span aria-hidden className="arc-transition__sticker">
               <span className="sticker-float">

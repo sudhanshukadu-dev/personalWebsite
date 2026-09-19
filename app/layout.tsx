@@ -3,6 +3,7 @@ import Script from "next/script";
 import { geist, geistMono, poorStory, unbounded } from "@/app/fonts";
 import { BottomNav } from "@/components/nav/BottomNav";
 import { CursorBubble } from "@/components/cursor/CursorBubble";
+import { DotCursor } from "@/components/cursor/DotCursor";
 import { Footer } from "@/components/footer/Footer";
 import { SmoothAnchors } from "@/components/nav/SmoothAnchors";
 import { ClickZoom } from "@/components/effects/ClickZoom";
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Footer />
         <BottomNav />
         <CursorBubble />
+        <DotCursor />
         <SmoothAnchors />
         <ClickZoom />
         <PageTransition />

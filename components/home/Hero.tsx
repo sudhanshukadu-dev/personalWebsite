@@ -49,11 +49,12 @@ export function Hero() {
               <ArrowDownRight size="40%" className="btn-bubble-arrow__arrow-svg" />
             </span>
           </a>
-          <a
-            href={hero.secondaryCta.href}
-            className="inline-flex h-12 items-center rounded-full border border-bento-on-blue/40 bg-bento-blue px-5 text-[15px] font-medium text-bento-on-blue transition-[border-color,scale] duration-200 hover:border-bento-on-blue active:scale-[0.98]"
-          >
-            {hero.secondaryCta.label}
+          {/* Bouncy button, ported from Sudhanshu's reference; styles in globals.css. */}
+          <a href={hero.secondaryCta.href} className="btn-bounce">
+            <span aria-hidden className="btn-bounce-bg" />
+            <span className="btn-bounce-text__wrap">
+              <span className="btn-bounce-text">{hero.secondaryCta.label}</span>
+            </span>
           </a>
         </div>
       </div>

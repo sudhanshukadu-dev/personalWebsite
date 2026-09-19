@@ -38,6 +38,7 @@ export default function ExpenseManagementSystemPage() {
       <Reflection />
       <ArcTransition {...sectionIntros.contact} />
       <LetsTalk />
+      <ArcTransition {...sectionIntros.end} />
     </main>
   );
 }

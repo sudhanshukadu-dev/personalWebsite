@@ -2,6 +2,7 @@ import { Fragment, type CSSProperties } from "react";
 import Image from "next/image";
 import { about } from "@/content/home";
 import { GradientWaveText } from "@/components/effects/GradientWaveText";
+import { PerspectiveHover } from "@/components/effects/PerspectiveHover";
 import { PixelatedImageReveal } from "@/components/effects/PixelatedImageReveal";
 
 // Tokens in the copy: {photo} places the portrait chip, [[...]] highlights a phrase.
@@ -13,10 +14,18 @@ const PIXELS = Array.from({ length: GRID_SIZE * GRID_SIZE }, (_, index) => ({
   top: `${Math.floor(index / GRID_SIZE) * (100 / GRID_SIZE)}%`,
 }));
 
-// The portrait chip: a sketch that pixelates into the real photo on hover.
+// The portrait chip: a sketch that pixelates into the real photo on hover, and tilts in 3D
 function PhotoChip() {
   return (
-    <span role="img" aria-label={about.photo.alt} tabIndex={0} data-pixelated-image-reveal className="pixel-card">
+    <span
+      role="img"
+      aria-label={about.photo.alt}
+      tabIndex={0}
+      data-pixelated-image-reveal
+      data-3d-hover-target
+      data-max-rotate="20"
+      className="pixel-card"
+    >
       <span className="pixel-card__default">
         <Image src={about.photo.sketch} alt="" fill sizes="(max-width: 639px) 110px, 168px" className="object-cover" />
       </span>
@@ -95,6 +104,7 @@ export function About() {
       </div>
 
       <PixelatedImageReveal />
+      <PerspectiveHover />
     </section>
   );
 }

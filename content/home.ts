@@ -147,7 +147,13 @@ export const featuredWork = {
       tag: "01",
       title: "Expense Management System",
       summary: "A corporate expense platform built solo, end to end.",
-      chips: ["Solo designer", "500+ enterprise clients", "4 steps to 1", "Employee of the Quarter × 2"],
+      chips: [
+        "Solo designer",
+        "500+ enterprise clients",
+        "4 steps to 1",
+        "Shipped production Recharts code",
+        "Employee of the Quarter × 2",
+      ],
       color: "blue" as const,
       href: "/work/expense-management-system",
       image: {
@@ -330,6 +336,13 @@ export const beyondTheScreen = {
 export const contact = {
   question: "Designing something interesting? Building something weird?",
   cta: "Let's talk.",
+  // Under the form: the prompt, then a mailto link reading "Email me at <site.email>".
+  // Hovering the link shows the cursor bubble with emailCursor.
+  emailPrompt: "Not a form person?",
+  emailLink: "Email me at",
+  emailCursor: "Open mail",
+  // Draggable stickers either side of the form, like the hero's.
+  stickers: [{ src: "/images/stickers/cloud.png" }, { src: "/images/stickers/heart.png" }],
   form: {
     fields: {
       name: { label: "Name", placeholder: "Your name", error: "Add your name" },
@@ -353,10 +366,28 @@ export const sectionIntros = {
   work: { text: "A few things I've actually built and shipped", sticker: "/images/stickers/keyboard.png" },
   photos: { text: "What I get up to when I step away from the screen", sticker: "/images/stickers/camera.png" },
   contact: { text: `${contact.question} ${contact.cta}`, sticker: "/images/stickers/mailbox.png" },
+  end: { text: "The end of the scroll, but not the conversation", sticker: "/images/stickers/pencil.png" },
 };
 
 export const footer = {
-  pagesLabel: "Pages",
-  credit: "Designed and vibe coded by Sudhanshu.",
-  backToTop: "Back to top",
+  // Followed by " · <current year>", which the footer fills in from the visitor's clock.
+  credit: "Designed and built by Sudhanshu Kadu · Mumbai",
+  // TODO: add Sudhanshu's resume at public/resume.pdf; until then this opens a "Page not found".
+  resume: { label: "Resume", href: "/resume.pdf" },
+  socials: [
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/sudhanshu-kadu/", icon: "linkedin" as const },
+    { label: "GitHub", href: "https://github.com/sudhanshukadu-dev", icon: "github" as const },
+    { label: "Email", href: `mailto:${site.email}`, icon: "email" as const },
+  ],
+  // Falling stickers: each section transition's sticker, leading back to that section.
+  // Hovering one shows its label in the cursor bubble. `width`/`height` are the PNG's
+  // pixel size, used to scale it onto its physics body.
+  stickers: [
+    { src: sectionIntros.about.sticker, label: "About", id: "about", width: 260, height: 214 },
+    { src: sectionIntros.experience.sticker, label: "Experience", id: "experience", width: 408, height: 385 },
+    { src: sectionIntros.work.sticker, label: "Work", id: "work", width: 322, height: 280 },
+    { src: sectionIntros.photos.sticker, label: "Photos", id: "photos", width: 246, height: 213 },
+    { src: sectionIntros.contact.sticker, label: "Contact", id: "contact", width: 251, height: 272 },
+    { src: sectionIntros.end.sticker, label: "Back to top", id: "top", width: 242, height: 242 },
+  ],
 };

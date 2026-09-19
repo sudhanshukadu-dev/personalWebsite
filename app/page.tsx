@@ -23,6 +23,7 @@ export default function Home() {
       <BeyondTheScreen />
       <ArcTransition {...sectionIntros.contact} />
       <LetsTalk />
+      <ArcTransition {...sectionIntros.end} />
     </main>
   );
 }

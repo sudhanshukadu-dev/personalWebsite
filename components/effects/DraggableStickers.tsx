@@ -17,7 +17,9 @@ gsap.registerPlugin(Draggable);
 
 export type Sticker = { src: string };
 
-export function DraggableStickers({ stickers }: { stickers: Sticker[] }) {
+// `variant` adds an is--<variant> class to the wrap, so a section can place its stickers
+// differently from the hero's.
+export function DraggableStickers({ stickers, variant }: { stickers: Sticker[]; variant?: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,7 +58,12 @@ export function DraggableStickers({ stickers }: { stickers: Sticker[] }) {
   }, []);
 
   return (
-    <div ref={wrapRef} aria-hidden data-sticker="wrap" className="sticker-img-wrap">
+    <div
+      ref={wrapRef}
+      aria-hidden
+      data-sticker="wrap"
+      className={variant ? `sticker-img-wrap is--${variant}` : "sticker-img-wrap"}
+    >
       {stickers.map((sticker, index) => (
         <div key={sticker.src} data-sticker="item" className={`sticker-item is--${index + 1}`}>
           {/* Inner layer carries the resting shadow and the idle float, so it never
