@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { ArrowLeft } from "@phosphor-icons/react/ssr";
 import { DeviceShowcase, type ShowcaseContent } from "@/components/work/DeviceShowcase";
+import { VisualPlaceholder } from "@/components/work/VisualPlaceholder";
 
 export type CaseStudyHeroContent = {
   backLink: { label: string; href: string };
@@ -8,7 +9,10 @@ export type CaseStudyHeroContent = {
   title: string;
   subtitle: string;
   facts: { label: string; value: string }[];
-  showcase: ShowcaseContent;
+  // Quest2Travel shows its product on devices; the other case studies show a large image
+  // (a placeholder, labelled with the screen it's waiting for, until the export arrives).
+  showcase?: ShowcaseContent;
+  visual?: string;
 };
 
 const order = (i: number) => ({ "--i": i }) as CSSProperties;
@@ -75,7 +79,13 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
         </div>
 
         <div className="rise mt-14 sm:mt-16" style={order(5)}>
-          <DeviceShowcase showcase={hero.showcase} />
+          {hero.showcase ? <DeviceShowcase showcase={hero.showcase} /> : null}
+          {hero.visual ? (
+            // TODO: replace with the real hero screen once it's exported.
+            <div data-tone="card" className="case-card mx-auto max-w-[960px] p-3 sm:p-4">
+              <VisualPlaceholder label={hero.visual} className="aspect-[16/10]" />
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

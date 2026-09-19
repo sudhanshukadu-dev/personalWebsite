@@ -2225,3 +2225,66 @@ body:has([data-click-zoom]:hover) .cursor-dot {
     display: none;
   }
 }
+
+/* ---------------------------------------------------------------
+   Case study project themes. Inside [data-project-theme], the site
+   blue becomes the project's colour from Featured Work (hero, section
+   tags, highlighted cards, step numbers, the section nav), with a text
+   colour that stays readable on it. --project-ink is a shade of the
+   same colour for icons and focus rings on light cards; in dark mode
+   it switches to the bright shade.
+---------------------------------------------------------------- */
+[data-project-theme="yellow"] {
+  --bento-blue: #f5c542;
+  --bento-on-blue: #0f1012;
+  --project-ink: #8a5f00;
+}
+
+[data-project-theme="purple"] {
+  --bento-blue: #7c3aed;
+  --bento-on-blue: #f7f8fa;
+  --project-ink: #6d28d9;
+}
+
+[data-project-theme="green"] {
+  --bento-blue: #3ddc97;
+  --bento-on-blue: #0f1012;
+  --project-ink: #0f7a52;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-project-theme="yellow"] {
+    --project-ink: #f5c542;
+  }
+  :root:not([data-theme="light"]) [data-project-theme="purple"] {
+    --project-ink: #a78bfa;
+  }
+  :root:not([data-theme="light"]) [data-project-theme="green"] {
+    --project-ink: #3ddc97;
+  }
+}
+
+:root[data-theme="dark"] [data-project-theme="yellow"] {
+  --project-ink: #f5c542;
+}
+
+:root[data-theme="dark"] [data-project-theme="purple"] {
+  --project-ink: #a78bfa;
+}
+
+:root[data-theme="dark"] [data-project-theme="green"] {
+  --project-ink: #3ddc97;
+}
+
+[data-project-theme] .case-card[data-tone="card"],
+[data-project-theme] .case-card[data-tone="tint"] {
+  --card-accent: var(--project-ink);
+}
+
+[data-project-theme] :focus-visible {
+  outline-color: var(--project-ink);
+}
+
+[data-project-theme] .on-blue :focus-visible {
+  outline-color: var(--bento-on-blue);
+}
