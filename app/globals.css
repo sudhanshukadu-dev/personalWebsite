@@ -1190,6 +1190,556 @@
   outline-color: currentColor;
 }
 
+/* ---------------------------------------------------------------
+   Editorial case study layout (components/work/editorial/*), opted into with
+   `layout: "editorial"` on a case study. A breakout grid: every block sits in
+   the text column by default, wider things take `wide`, and a statement band
+   takes the whole screen. Mono labels sit out in the left margin, which is what
+   gives the page its spine. Nothing here puts a box around prose.
+---------------------------------------------------------------- */
+.case-section {
+  padding-block: clamp(3.5rem, 9vh, 6.5rem);
+}
+
+/* Alternate sections carry a faint ground, so the page reads as chapters. */
+.case-section[data-tinted] {
+  background-color: var(--bento-card);
+}
+
+.case-grid {
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(1.5rem, 1fr)
+    [wide-start] minmax(0, 6.5rem)
+    [text-start] minmax(0, 42rem)
+    [text-end] minmax(0, 6.5rem)
+    [wide-end] minmax(1.5rem, 1fr)
+    [full-end];
+  row-gap: clamp(2rem, 4.5vh, 3.25rem);
+}
+
+.case-grid > * {
+  grid-column: text;
+}
+
+/* A row of the spine: the label in the margin, the content in the text column. */
+.case-row {
+  display: grid;
+  grid-column: wide;
+  grid-template-columns: subgrid;
+}
+
+.case-row > * {
+  grid-column: text;
+}
+
+.case-row__label {
+  grid-column: wide-start / text-start;
+  margin: 0;
+  padding-top: 0.35rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bento-muted);
+  text-wrap: balance;
+}
+
+/* Over a wide block, the label sits above it instead of beside it. */
+.case-row__label--over {
+  grid-column: wide;
+  margin-bottom: 1rem;
+}
+
+.case-head__number {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--bento-blue);
+}
+
+.case-head__title {
+  margin: 0;
+  font-size: clamp(1.9rem, 3.4vw, 3rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.case-head__intro {
+  max-width: 58ch;
+  margin: 1.1rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--bento-muted);
+}
+
+.case-subhead {
+  margin: clamp(1rem, 2.5vh, 2rem) 0 0;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+/* Prose is prose: no card, no border, one measure down the whole page. */
+.case-prose {
+  max-width: 68ch;
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--bento-ink);
+}
+
+.case-prose + .case-prose {
+  margin-top: 1.1rem;
+}
+
+.case-lead {
+  max-width: 34ch;
+  margin: 0 0 1rem;
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+/* An aside steps in behind a rule in the project colour instead of a fill. */
+.case-aside {
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--bento-blue);
+}
+
+.case-aside .case-prose {
+  color: var(--bento-muted);
+}
+
+.case-checks {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.case-checks li {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  gap: 0.75rem;
+  margin-inline: -0.9rem;
+  padding: 0.7rem 0.9rem;
+  border-top: 1px solid var(--bento-line);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.case-checks li:last-child {
+  border-bottom: 1px solid var(--bento-line);
+}
+
+.case-checks svg {
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--bento-blue);
+}
+
+/* Numbers live in the margin, the way the section number does. */
+.case-numbers {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.case-numbers li {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  gap: 1.25rem;
+  margin-inline: -0.9rem;
+  padding: 1.1rem 0.9rem;
+  border-top: 1px solid var(--bento-line);
+}
+
+.case-numbers li:last-child {
+  border-bottom: 1px solid var(--bento-line);
+}
+
+.case-numbers__n {
+  flex: none;
+  width: 2.5rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--bento-blue);
+}
+
+.case-numbers__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.case-numbers__text {
+  max-width: 62ch;
+  margin: 0.25rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--bento-muted);
+}
+
+/* The one block that stays a panel, because it really is a side by side. */
+.case-panels {
+  display: grid;
+  grid-column: wide;
+  gap: 1px;
+  border-block: 1px solid var(--bento-line);
+  background-color: var(--bento-line);
+}
+
+@media screen and (min-width: 768px) {
+  .case-panels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .case-panels--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.case-panel {
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  background-color: var(--bento-page);
+}
+
+.case-section[data-tinted] .case-panel {
+  background-color: var(--bento-card);
+}
+
+.case-panel__label {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bento-muted);
+}
+
+.case-panel__title {
+  margin: 0;
+  font-size: 1.1875rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.case-panel__text {
+  margin: 0.6rem 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.case-panel .case-checks {
+  margin-top: 0.75rem;
+}
+
+.case-panel .case-checks li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.case-panel .case-checks li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* Directional hover, ported from the Osmo reference: the tile waits outside the row,
+   DirectionalRows.tsx drops it against the edge the cursor crossed, and this transition
+   carries it across. Everything in the row turns to the colour that reads on it. */
+[data-directional-hover-item] {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.35s var(--ease-out-expo);
+}
+
+/* The row's own content sits over the tile. */
+[data-directional-hover-item] > *:not(.dir-tile) {
+  position: relative;
+}
+
+.dir-tile {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bento-blue);
+  transform: translateY(-100%);
+  transition: transform 0.5s var(--ease-out-expo);
+  will-change: transform;
+}
+
+@media (hover: hover) {
+  [data-directional-hover-item]:hover,
+  [data-directional-hover-item]:hover .case-numbers__text,
+  [data-directional-hover-item]:hover .case-numbers__n,
+  [data-directional-hover-item]:hover svg {
+    color: var(--bento-on-blue);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dir-tile {
+    transition-duration: 0.01s;
+  }
+}
+
+/* A table, in the shape of the reference's list: eyebrow column heads over rows that
+   answer the pointer. Roles are set in the markup, since flex rows drop a table's own. */
+.case-list {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--bento-line);
+}
+
+.case-list__head,
+.case-list__item {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.case-list__head {
+  padding: 0 0.9rem 0.9rem;
+  border-bottom: 1px solid var(--bento-ink);
+}
+
+.case-list__eyebrow {
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bento-muted);
+}
+
+.case-list__item {
+  padding: 1.1rem 0.9rem;
+  border-top: 1px solid var(--bento-line);
+}
+
+.case-list__item:first-of-type {
+  border-top: 0;
+}
+
+.case-list__cell {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* First column leads, the rest share what is left. */
+.case-list__eyebrow:first-child,
+.case-list__cell:first-child {
+  flex: 0 0 32%;
+  font-weight: 500;
+}
+
+.case-list__eyebrow:not(:first-child),
+.case-list__cell:not(:first-child) {
+  flex: 1;
+}
+
+@media screen and (max-width: 639px) {
+  .case-list__head {
+    display: none;
+  }
+
+  .case-list__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .case-list__cell:first-child {
+    flex: none;
+  }
+}
+
+/* Wide blocks: tables, step flows, anything that needs more than the measure. */
+.case-wide {
+  grid-column: wide;
+}
+
+/* Statements. The blue ones cross the screen; the rest are quotes with a rule. */
+.case-band {
+  grid-column: full;
+  margin-block: clamp(1rem, 3vh, 2.5rem);
+  padding-block: clamp(3rem, 8vh, 5.5rem);
+  background-color: var(--bento-blue);
+  color: var(--bento-on-blue);
+}
+
+.case-band__inner {
+  width: min(100% - 3rem, 60rem);
+  margin-inline: auto;
+}
+
+.case-band__inner .case-row__label {
+  margin-bottom: 1rem;
+  color: var(--bento-on-blue);
+}
+
+.case-band__text {
+  max-width: 24ch;
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.case-quote {
+  grid-column: wide;
+  margin: clamp(0.5rem, 2vh, 1.5rem) 0;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--bento-blue);
+}
+
+.case-quote .case-row__label {
+  margin-bottom: 0.75rem;
+}
+
+.case-quote__text {
+  max-width: 26ch;
+  margin: 0;
+  font-size: clamp(1.4rem, 2.6vw, 2.125rem);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+/* Steps drawn along a line rather than parked in a tinted box. */
+.case-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.case-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.case-steps__step {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--bento-line);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.case-steps svg {
+  flex: none;
+  color: var(--bento-blue);
+}
+
+/* Figures for numbers, not boxes. */
+.case-stats {
+  display: grid;
+  grid-column: wide;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--bento-ink);
+}
+
+.case-stats > div {
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--bento-line);
+}
+
+@media screen and (min-width: 640px) {
+  .case-stats {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.case-stats dt {
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--bento-blue);
+}
+
+.case-stats dd {
+  max-width: 22ch;
+  margin: 0.6rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--bento-muted);
+}
+
+/* A screen breaks out past the measure, with its caption underneath. */
+.case-figure {
+  grid-column: wide;
+  margin: clamp(0.5rem, 2vh, 1.5rem) 0;
+}
+
+.case-figure__frame {
+  aspect-ratio: 16 / 10;
+  border-radius: 0.75rem;
+  background-color: var(--bento-tint);
+}
+
+.case-figure figcaption {
+  margin-top: 0.9rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bento-muted);
+}
+
+/* Phones: the margin column collapses, so labels sit above what they name. */
+@media screen and (max-width: 767px) {
+  .case-row {
+    display: block;
+  }
+
+  .case-row__label {
+    margin-bottom: 0.75rem;
+    padding-top: 0;
+  }
+
+  .case-head__number {
+    font-size: 1.5rem;
+  }
+
+  .case-numbers li {
+    gap: 0.9rem;
+  }
+
+  .case-numbers__n {
+    width: 1.75rem;
+  }
+}
+
 /* Dot grid behind image placeholders. */
 .visual-placeholder {
   background-image: radial-gradient(color-mix(in oklab, currentColor 45%, transparent) 1px, transparent 1.5px);
@@ -1641,181 +2191,34 @@
   }
 }
 
-/* ---------------------------------------------------------------
-   Sticky features (Featured Work), adapted from the reference.
-   Only the first image and text item show until
-   components/effects/StickyFeatures.tsx takes over.
----------------------------------------------------------------- */
-.sticky-features__wrap {
-  position: relative;
-  width: 100%;
-}
-
-.sticky-features__scroll {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100svh;
-}
-
-.sticky-features__container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3em;
-  width: 100%;
-  max-width: 76em;
-  margin-inline: auto;
-}
-
-.sticky-features__col {
-  position: relative;
-  flex: 1;
-}
-
-/* The image takes the larger share, capped to the screen height so the pinned block fits. */
-.sticky-features__col.is--img {
-  flex: 1.3;
-  overflow: hidden;
-  border-radius: 0.5rem;
-}
-
-.sticky-features__progress-w {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 0.25em;
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.sticky-features__progress-bar {
-  width: 100%;
-  height: 100%;
-  background-color: #fcfcfd;
-  transform: scale3d(0, 1, 1);
-  transform-origin: 0% 50%;
-}
-
-.sticky-features__img-list {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  max-height: calc(100svh - 6rem);
-  background-color: var(--bento-line);
-}
-
-/* Only the current image is visible; StickyFeatures swaps them under the pixel grid. */
-.sticky-features__img-item {
-  position: absolute;
-  inset: 0;
-  visibility: hidden;
-}
-
-[data-sticky-feature-visual-wrap]:first-of-type {
-  visibility: visible;
-}
-
-/* Pixelated image change, ported from Sudhanshu's reference: a grid of square pixels
-   over the image, anchored to its bottom, in the incoming project's colour
-   ([data-project-color] sets --project-color). StickyFeatures builds and scrubs it. */
-.sticky-features__pixels {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(var(--pixel-columns, 12), minmax(0, 1fr));
-  align-content: end;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.sticky-features__pixel {
-  aspect-ratio: 1;
-  background-color: var(--project-color, var(--bento-blue));
-  box-shadow: 0 0 0 0.5px var(--project-color, var(--bento-blue));
-  opacity: 0;
-}
-
-.sticky-features__text-list {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100%;
-  max-height: 100%;
-}
-
-.sticky-features__text-item {
-  position: absolute;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 1.5em;
-  width: 100%;
-  max-width: 27.5em;
-  margin-left: auto;
-  visibility: hidden;
-}
-
-[data-sticky-feature-item]:first-of-type {
-  visibility: visible;
-}
-
-.sticky-features__heading {
-  margin: 0;
-  color: var(--bento-ink);
-  font-size: 2.5em;
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
-}
-
-.sticky-features__p {
-  margin: 0;
-  color: var(--bento-muted);
-  font-size: 1.25em;
-  line-height: 1.35;
-}
-
-.sticky-features__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
-}
-
-.sticky-features__chip {
-  padding: 0.55em 0.85em;
-  border-radius: 999px;
-  color: var(--bento-ink);
-  background-color: color-mix(in oklab, var(--bento-ink) 6%, transparent);
-  font-size: 0.875em;
-  font-weight: 500;
-  line-height: 1;
-}
-
-/* Bubble arrow CTA on the page background (Featured Work): an ink label pill, a
-   soft grey resting circle, and a hover circle in the project's theme colour. */
+/* Each project's theme colour and the text that reads on it, set on
+   [data-project-color]: the Featured Work cards and the CTA inside them. */
 [data-project-color="blue"] {
   --project-color: var(--bento-blue);
   --project-ink: var(--bento-on-blue);
+  --project-pop: #0f1012;
+  --project-on-pop: #f7f8fa;
 }
 
 [data-project-color="yellow"] {
   --project-color: #f5c542;
   --project-ink: #0f1012;
+  --project-pop: #f7f8fa;
+  --project-on-pop: #0f1012;
 }
 
 [data-project-color="purple"] {
-  --project-color: #8b5cf6;
+  --project-color: #7c3aed;
   --project-ink: #f7f8fa;
+  --project-pop: #0f1012;
+  --project-on-pop: #f7f8fa;
 }
 
 [data-project-color="green"] {
   --project-color: var(--bento-accent);
   --project-ink: #0f1012;
+  --project-pop: #f7f8fa;
+  --project-on-pop: #0f1012;
 }
 
 .btn-bubble-arrow.is--on-page .btn-bubble-arrow__content {
@@ -1837,63 +2240,236 @@
   outline-color: var(--bento-blue);
 }
 
-.sticky-features__tag {
-  margin-bottom: 1.5em;
-  padding: 0.5em 0.625em;
-  border-radius: 0.25em;
-  background-color: color-mix(in oklab, var(--bento-ink) 8%, transparent);
-  color: var(--bento-ink);
-  font-size: 1em;
+/* ---------------------------------------------------------------
+   Featured Work stacking cards, ported from the reference Sudhanshu shared.
+   Each project is a full-screen pane in its own colour ([data-project-color]),
+   edge to edge and square. The section around it is --stack-hold taller than
+   the screen and the pane sticks to the top, so every project holds the whole
+   viewport, with its link, before the next card slides up over it.
+   StackingCards.tsx drifts the pane behind down at half speed, and tilts its
+   mockup away, while the next card arrives.
+---------------------------------------------------------------- */
+.stack-cards {
+  --stack-hold: 50svh;
+  /* The floating nav's height plus its offset, and room to breathe under the link. */
+  --stack-nav-clearance: calc(7rem + env(safe-area-inset-bottom));
+}
+
+/* Scroll space: one screen for the card, plus the hold it sticks through. */
+.stack-card {
+  height: calc(100svh + var(--stack-hold));
+}
+
+.stack-card__pane {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 100svh;
+  overflow: hidden;
+  color: var(--project-ink);
+  background: linear-gradient(160deg, color-mix(in oklab, var(--project-color) 78%, white) 0%, var(--project-color) 42%, color-mix(in oklab, var(--project-color) 80%, black) 100%);
+  background: linear-gradient(in oklab 160deg, color-mix(in oklab, var(--project-color) 78%, white) 0%, var(--project-color) 42%, color-mix(in oklab, var(--project-color) 80%, black) 100%);
+}
+
+/* The hero's light pool, drifting across the colour. */
+.stack-card__pane::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  background: radial-gradient(40% 35% at 30% 25%, rgba(255, 255, 255, 0.26) 0%, transparent 70%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stack-card__pane::before {
+    animation: hero-drift 22s ease-in-out infinite alternate;
+  }
+}
+
+.stack-card__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vh, 2.75rem) clamp(1.5rem, 5vw, 4rem) var(--stack-nav-clearance);
+  text-align: center;
+}
+
+/* A running head across the top of every card. */
+.stack-card__top {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.stack-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.9rem, 2.2vh, 1.75rem);
+  min-height: 0;
+  max-height: 100%;
+  margin-block: auto;
+}
+
+.stack-card__heading {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4.25rem);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+/* The quiet half of the heading, like the reference's faded gem name. */
+.stack-card__kicker {
+  display: block;
+  opacity: 0.5;
+}
+
+.stack-card__media {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  max-height: min(36svh, 22rem);
+  width: 100%;
+}
+
+.stack-card__mockup {
+  width: auto;
+  height: auto;
+  max-width: min(100%, 46rem);
+  max-height: 100%;
+  border-radius: calc(var(--radius-card) * 0.6);
+  box-shadow: 0 30px 60px -24px rgba(15, 16, 18, 0.65);
+  cursor: zoom-in;
+}
+
+/* The slot before a mockup exists: the case study's headline and one true stat,
+   in the same footprint a mockup would take. */
+.stack-card__poster {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+  width: auto;
+  height: min(36svh, 22rem);
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 4 / 3;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  border: 1px solid color-mix(in oklab, var(--project-ink) 30%, transparent);
+  border-radius: calc(var(--radius-card) * 0.6);
+  background-color: color-mix(in oklab, var(--project-ink) 10%, transparent);
+  text-align: left;
+}
+
+.stack-card__poster-headline {
+  max-width: 16ch;
+  margin: 0;
+  font-size: clamp(1.1rem, 2.2vw, 2rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.stack-card__poster-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in oklab, var(--project-ink) 30%, transparent);
+}
+
+.stack-card__poster-figure {
+  flex: none;
+  font-size: clamp(1.6rem, 3vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.stack-card__poster-caption {
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  line-height: 1.3;
+  opacity: 0.8;
+}
+
+.stack-card__summary {
+  max-width: 46ch;
+  margin: 0;
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+.stack-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stack-card__chip {
+  padding: 0.55em 0.85em;
+  border: 1px solid color-mix(in oklab, var(--project-ink) 35%, transparent);
+  border-radius: 999px;
+  background-color: color-mix(in oklab, var(--project-ink) 12%, transparent);
+  font-size: 0.875rem;
+  font-weight: 500;
   line-height: 1;
 }
 
-/* Mobile: image above text. The image is capped so the pinned block fits short
-   phones, and the bottom padding keeps the link clear of the floating nav. */
+/* Bubble arrow CTA on a project's colour: the label pill and the resting circle
+   are the card's ink, and the circle that grows in on hover flips to --project-pop. */
+.btn-bubble-arrow.is--on-color .btn-bubble-arrow__content,
+.btn-bubble-arrow.is--on-color .btn-bubble-arrow__arrow.is--duplicate {
+  color: var(--project-color);
+  background-color: var(--project-ink);
+}
+
+.btn-bubble-arrow.is--on-color .btn-bubble-arrow__arrow:not(.is--duplicate) {
+  color: var(--project-on-pop);
+  background-color: var(--project-pop);
+}
+
+.btn-bubble-arrow.is--on-color:focus-visible {
+  outline-color: var(--project-ink);
+}
+
+/* Phones: a shorter heading and a smaller mockup. */
 @media screen and (max-width: 767px) {
-  .sticky-features__scroll {
-    height: auto;
-    min-height: 100svh;
-    padding-top: 0.75em;
-    padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+  .stack-card__heading {
+    font-size: clamp(1.9rem, 8.5vw, 2.6rem);
   }
 
-  /* Stretch the stacked columns to full width; centring would collapse the image. */
-  .sticky-features__container {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-    gap: 1.25em;
+  .stack-card__media {
+    max-height: 30svh;
   }
 
-  .sticky-features__col.is--img {
-    flex: none;
+  .stack-card__poster {
+    height: 30svh;
   }
 
-  .sticky-features__img-list {
-    aspect-ratio: 4 / 3;
-    max-height: 34svh;
-  }
-
-  .sticky-features__text-list {
-    min-height: 22em;
-    max-height: none;
-  }
-
-  .sticky-features__text-item {
-    max-width: none;
-    gap: 1em;
-  }
-
-  .sticky-features__heading {
-    font-size: 1.75em;
-  }
-
-  .sticky-features__p {
-    font-size: 1em;
-  }
-
-  .sticky-features__tag {
-    margin-bottom: 0;
+  .stack-card__summary {
+    font-size: 1rem;
   }
 }
 

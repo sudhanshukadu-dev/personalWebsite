@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { ArrowLeft } from "@phosphor-icons/react/ssr";
+import { ArrowUpLeft } from "@phosphor-icons/react/ssr";
 import { DeviceShowcase, type ShowcaseContent } from "@/components/work/DeviceShowcase";
 import { VisualPlaceholder } from "@/components/work/VisualPlaceholder";
 
@@ -32,13 +32,17 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
 
       <div className="relative z-[1] mx-auto w-full max-w-[1320px] px-6 pb-20 pt-8 sm:px-12 sm:pb-28 sm:pt-10 lg:px-24 xl:px-36">
         <div className="on-blue">
-          <a
-            href={hero.backLink.href}
-            className="rise inline-flex h-10 items-center gap-2 rounded-full border border-bento-on-blue/40 px-4 text-[14px] font-medium text-bento-on-blue transition-[border-color,scale] duration-200 hover:border-bento-on-blue active:scale-[0.98]"
-            style={order(0)}
-          >
-            <ArrowLeft size={14} weight="bold" aria-hidden />
-            {hero.backLink.label}
+          {/* The site's bubble arrow button; its arrow swings round to point back. */}
+          <a href={hero.backLink.href} className="btn-bubble-arrow rise w-fit" style={order(0)}>
+            <span aria-hidden className="btn-bubble-arrow__arrow">
+              <ArrowUpLeft size="40%" className="btn-bubble-arrow__arrow-svg" />
+            </span>
+            <span className="btn-bubble-arrow__content">
+              <span className="btn-bubble-arrow__content-text">{hero.backLink.label}</span>
+            </span>
+            <span aria-hidden className="btn-bubble-arrow__arrow is--duplicate">
+              <ArrowUpLeft size="40%" className="btn-bubble-arrow__arrow-svg" />
+            </span>
           </a>
 
           <div className="mx-auto mt-12 flex max-w-4xl flex-col items-center text-center sm:mt-16">

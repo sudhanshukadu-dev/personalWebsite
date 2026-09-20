@@ -1,14 +1,14 @@
 import { featuredWork } from "@/content/home";
-import { StickyFeatures } from "@/components/effects/StickyFeatures";
+import { StackingCards } from "@/components/effects/StackingCards";
 
-// Featured Work: a pinned block that steps through the four projects as you scroll.
+// Featured Work: the four projects as full-screen cards that stack over each other as you scroll.
 export function FeaturedWork() {
   return (
     <section id="work" aria-labelledby="work-title">
       <h2 id="work-title" className="sr-only">
         Featured work
       </h2>
-      <StickyFeatures items={featuredWork.projects} linkLabel={featuredWork.linkLabel} />
+      <StackingCards items={featuredWork.projects} label="Featured work" linkLabel={featuredWork.linkLabel} />
     </section>
   );
 }

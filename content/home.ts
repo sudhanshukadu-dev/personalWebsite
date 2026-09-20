@@ -137,56 +137,71 @@ export const experience = {
 
 export const featuredWork = {
   linkLabel: "Open project",
-  // TODO: real project images (about 4:5 portrait) and the case study pages behind href
-  // (only the Expense Management System page exists so far).
-  // `color` is the project's theme; it tints the CTA's hover circle.
+  // Each project is a full-screen card in its colour (the same as its case study), stacked
+  // over the one before it. Add a product mockup (an image in public/images/work/) as
+  // mockup: { src, alt, width, height } and it fills the card's middle; without one that slot
+  // carries the case study's headline and stat. `kicker` is the quiet line above the title.
   projects: [
     {
       tag: "01",
       title: "Expense Management System",
+      kicker: "corporate spend",
       summary: "A corporate expense platform built solo, end to end.",
       chips: ["Solo designer", "500+ enterprise clients", "Shipped production Recharts code"],
       color: "blue" as const,
       href: "/work/expense-management-system",
-      image: {
-        src: "https://picsum.photos/seed/sk-expense-system/1200/1560",
-        alt: "Placeholder image for the Expense Management System project",
+      poster: {
+        headline: "Logging expenses shouldn't wait for a desk.",
+        figure: "500+",
+        caption: "enterprise clients on the platform",
+      },
+      mockup: {
+        src: "/images/work/expense-management-system.png",
+        alt: "Two people at a monitor showing the Add Expense screen: the receipt on the left, the expense details on the right",
+        width: 1448,
+        height: 1086,
       },
     },
     {
       tag: "02",
       title: "Shriram Life Insurance",
+      kicker: "payments and KYC",
       summary: "Payment and verification flows people had to trust.",
       chips: ["Design system from scratch", "Payment & KYC flows", "Client work"],
       color: "yellow" as const,
       href: "/work/shriram-life-insurance",
-      image: {
-        src: "https://picsum.photos/seed/sk-shriram-life/1200/1560",
-        alt: "Placeholder image for the Shriram Life Insurance project",
+      poster: {
+        headline: "Insurance is a promise. The interface has to keep it.",
+        figure: "83%",
+        caption: "of organic traffic lands on the template I shipped",
       },
     },
     {
       tag: "03",
       title: "Knode",
+      kicker: "team availability",
       summary: "A team availability tool I built for my own team.",
       chips: ["Built in 2 weeks", "Live, 12 daily users", "Solo build"],
       color: "purple" as const,
       href: "/work/knode",
-      image: {
-        src: "https://picsum.photos/seed/sk-knode/1200/1560",
-        alt: "Placeholder image for the Knode project",
+      poster: {
+        headline: "Who can take the next piece of work?",
+        figure: "12",
+        caption: "people use it daily, spreadsheet retired",
       },
     },
     {
       tag: "04",
       title: "Networth",
+      kicker: "personal finance",
       summary: "My own expense log, built exactly how I wanted it.",
       chips: ["Side project", "No bank linking", "Vibe coded"],
       color: "green" as const,
       href: "/work/networth",
-      image: {
-        src: "https://picsum.photos/seed/sk-expense-tracker/1200/1560",
-        alt: "Placeholder image for the Networth project",
+      poster: {
+        headline: "One clear view of money spread across accounts.",
+        figure: "0",
+        caption: "bank passwords asked for",
       },
     },
   ],
