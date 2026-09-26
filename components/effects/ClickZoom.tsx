@@ -107,7 +107,10 @@ export function ClickZoom() {
         zoomed.muted = true;
         zoomed.loop = true;
         zoomed.playsInline = true;
-        zoomed.controls = false;
+        // Full size is where someone actually watches it, so give them the controls,
+        // and keep clicks on them from reaching the backdrop, which closes.
+        zoomed.controls = true;
+        zoomed.addEventListener("click", (event) => event.stopPropagation());
         zoomed.currentTime = media.currentTime;
         zoomed.play().catch(() => {});
       } else if (zoomed instanceof HTMLImageElement) {

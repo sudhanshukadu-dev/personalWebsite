@@ -7,6 +7,8 @@ import type { CaseStudy } from "@/components/work/CaseStudyPage";
 export const knode: CaseStudy = {
   slug: "knode",
   theme: "purple",
+  layout: "story",
+  chrome: "own",
   meta: {
     title: "Knode, team availability",
     description:

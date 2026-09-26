@@ -9,12 +9,14 @@ type CaseSectionProps = {
 };
 
 // A case study section, after the Aboard reference: a blue tag chip, a large heading
-// and an optional intro, then the section's cards stacked with an even gap.
+// and an optional intro, then the section's cards stacked with an even gap. The heading
+// block centres on the page; what sits inside the cards below it does not, since centred
+// paragraphs and table rows are harder to read.
 export function CaseSection({ id, tag, title, intro, children }: CaseSectionProps) {
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="py-16 sm:py-24">
       <div className="mx-auto w-full max-w-[1320px] px-6 sm:px-12 lg:px-24 xl:px-36">
-        <header className="reveal max-w-3xl">
+        <header className="reveal mx-auto max-w-3xl text-center">
           <p className="inline-flex rounded-full bg-bento-blue px-3 py-1.5 text-[13px] font-medium leading-none text-bento-on-blue">
             {tag}
           </p>
@@ -25,7 +27,7 @@ export function CaseSection({ id, tag, title, intro, children }: CaseSectionProp
             {title}
           </h2>
           {intro ? (
-            <p className="mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-bento-muted sm:text-lg">{intro}</p>
+            <p className="mx-auto mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-bento-muted sm:text-lg">{intro}</p>
           ) : null}
         </header>
 
@@ -38,7 +40,7 @@ export function CaseSection({ id, tag, title, intro, children }: CaseSectionProp
 // A heading for a group of cards inside a section.
 export function CaseSubheading({ children }: { children: ReactNode }) {
   return (
-    <h3 className="reveal mt-8 text-[24px] font-medium leading-[1.15] tracking-[-0.03em] text-bento-ink first:mt-0 sm:mt-12 sm:text-[30px]">
+    <h3 className="reveal mx-auto mt-8 max-w-3xl text-center text-[24px] font-medium leading-[1.15] tracking-[-0.03em] text-bento-ink first:mt-0 sm:mt-12 sm:text-[30px]">
       {children}
     </h3>
   );

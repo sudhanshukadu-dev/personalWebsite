@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { ArrowUpLeft } from "@phosphor-icons/react/ssr";
+import { AutoplayVideo } from "@/components/effects/AutoplayVideo";
 import { DeviceShowcase, type ShowcaseContent } from "@/components/work/DeviceShowcase";
 import { VisualPlaceholder } from "@/components/work/VisualPlaceholder";
 
@@ -13,6 +14,8 @@ export type CaseStudyHeroContent = {
   // (a placeholder, labelled with the screen it's waiting for, until the export arrives).
   showcase?: ShowcaseContent;
   visual?: string;
+  // A clip in the hero's visual slot (the prototype, say). `visual` is its label.
+  video?: string;
 };
 
 const order = (i: number) => ({ "--i": i }) as CSSProperties;
@@ -20,7 +23,9 @@ const order = (i: number) => ({ "--i": i }) as CSSProperties;
 // Case study hero, after the Aboard reference: centred tag, title and line with the
 // quick facts where Aboard has its CTA, then the product on a device. Same blue
 // gradient and grain as the home hero, so the device sits across the fade.
-export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
+// hideBackLink: the page shows a fixed "Back to home" instead (components/work/chrome/BackHome.tsx),
+// so the hero keeps an empty space the same height where its own link would be.
+export function CaseStudyHero({ hero, hideBackLink }: { hero: CaseStudyHeroContent; hideBackLink?: boolean }) {
   return (
     <section
       id="top"
@@ -33,6 +38,9 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
       <div className="relative z-[1] mx-auto w-full max-w-[1320px] px-6 pb-20 pt-8 sm:px-12 sm:pb-28 sm:pt-10 lg:px-24 xl:px-36">
         <div className="on-blue">
           {/* The site's bubble arrow button; its arrow swings round to point back. */}
+          {hideBackLink ? (
+            <div aria-hidden className="h-12" />
+          ) : (
           <a href={hero.backLink.href} className="btn-bubble-arrow rise w-fit" style={order(0)}>
             <span aria-hidden className="btn-bubble-arrow__arrow">
               <ArrowUpLeft size="40%" className="btn-bubble-arrow__arrow-svg" />
@@ -44,6 +52,7 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
               <ArrowUpLeft size="40%" className="btn-bubble-arrow__arrow-svg" />
             </span>
           </a>
+          )}
 
           <div className="mx-auto mt-12 flex max-w-4xl flex-col items-center text-center sm:mt-16">
             <p
@@ -67,11 +76,11 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
             </p>
 
             <dl
-              className="rise mt-10 grid w-full max-w-3xl grid-cols-2 gap-x-6 gap-y-7 sm:mt-12 sm:grid-cols-4"
+              className="rise mt-10 flex w-full max-w-3xl flex-wrap justify-center gap-x-10 gap-y-7 sm:mt-12"
               style={order(4)}
             >
               {hero.facts.map((fact) => (
-                <div key={fact.label} className="flex flex-col items-center gap-2">
+                <div key={fact.label} className="flex min-w-[8rem] flex-1 basis-[9rem] flex-col items-center gap-2">
                   <dt className="font-mono text-[11px] uppercase leading-none tracking-[0.06em] text-bento-on-blue">
                     {fact.label}
                   </dt>
@@ -85,9 +94,21 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
         <div className="rise mt-14 sm:mt-16" style={order(5)}>
           {hero.showcase ? <DeviceShowcase showcase={hero.showcase} /> : null}
           {hero.visual ? (
-            // TODO: replace with the real hero screen once it's exported.
             <div data-tone="card" className="case-card mx-auto max-w-[960px] p-3 sm:p-4">
-              <VisualPlaceholder label={hero.visual} className="aspect-[16/10]" />
+              {hero.video ? (
+                // Click it to watch it full size (components/effects/ClickZoom.tsx).
+                <AutoplayVideo
+                  src={hero.video}
+                  label={hero.visual}
+                  className="case-visual__video"
+                  data-click-zoom=""
+                  role="button"
+                  tabIndex={0}
+                />
+              ) : (
+                // TODO: replace with the real hero screen once it's exported.
+                <VisualPlaceholder label={hero.visual} className="aspect-[16/10]" />
+              )}
             </div>
           ) : null}
         </div>

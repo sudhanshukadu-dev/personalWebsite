@@ -5,12 +5,18 @@ import { BottomNav } from "@/components/nav/BottomNav";
 import { CursorBubble } from "@/components/cursor/CursorBubble";
 import { DotCursor } from "@/components/cursor/DotCursor";
 import { Footer } from "@/components/footer/Footer";
+import { HideOnRoutes } from "@/components/nav/HideOnRoutes";
 import { SmoothAnchors } from "@/components/nav/SmoothAnchors";
 import { SmoothScroll } from "@/components/nav/SmoothScroll";
 import { ClickZoom } from "@/components/effects/ClickZoom";
 import { PageTransition } from "@/components/effects/PageTransition";
+import { Parallax } from "@/components/effects/Parallax";
 import { Loader } from "@/components/loader/Loader";
 import { hero, site } from "@/content/home";
+import { knode } from "@/content/work/knode";
+import { quest2travel } from "@/content/work/quest2travel";
+import { networth } from "@/content/work/networth";
+import { shriram } from "@/content/work/shriram";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -31,6 +37,12 @@ export const viewport: Viewport = {
 // cancels it as soon as it starts.
 const restorePreferences = `try{var d=document.documentElement,t=localStorage.getItem("theme");if(t==="light"||t==="dark")d.dataset.theme=t;if(!sessionStorage.getItem("intro-seen")||/[?&]intro\\b/.test(location.search)){d.dataset.intro="on";d.dataset.loading="on";window.__introFailsafe=setTimeout(function(){delete d.dataset.loading;delete d.dataset.intro},10000)}}catch(e){}`;
 
+// A case study marked `chrome: "own"` brings its own navigation and ending (a section
+// dock, and a link to the contact form), so the site's footer and floating nav step out.
+const OWN_CHROME = [knode, networth, quest2travel, shriram]
+  .filter((study) => study.chrome === "own")
+  .map((study) => `/work/${study.slug}`);
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -50,14 +62,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         {children}
-        <Footer />
-        <BottomNav />
+        <HideOnRoutes paths={OWN_CHROME}>
+          <Footer />
+          <BottomNav />
+        </HideOnRoutes>
         <CursorBubble />
         <DotCursor />
         <SmoothScroll />
         <SmoothAnchors />
         <ClickZoom />
         <PageTransition />
+        <Parallax />
       </body>
     </html>
   );

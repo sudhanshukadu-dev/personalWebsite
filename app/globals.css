@@ -1740,6 +1740,1446 @@
   }
 }
 
+/* ---------------------------------------------------------------
+   Bento case study layout (components/work/bento/BentoBlocks.tsx), after the
+   Aboard reference, opted into with `layout: "bento"` on a case study. Each
+   section's blocks sit on a six-column grid: a wide feature tile pairs a
+   screen with its text, and statements, stats and asides become chunky tiles
+   two or three to a row. Three tones: the neutral card, a pale wash of the
+   project colour and the solid project colour ([data-project-theme] swaps
+   --bento-blue for it). The --card-* tokens are set too, so the shared
+   VisualPlaceholder reads correctly on every tone.
+---------------------------------------------------------------- */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.3vw, 1.125rem);
+}
+
+.bento > * {
+  grid-column: span var(--span, 6);
+}
+
+.bento-heading {
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0 0.25rem;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.bento-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  border-radius: var(--radius-card);
+}
+
+.bento-tile[data-tone="card"] {
+  --tile-muted: var(--bento-muted);
+  --tile-accent: var(--project-ink, var(--bento-blue));
+  --card-soft: var(--bento-page);
+  --card-muted: var(--bento-muted);
+  background-color: var(--bento-card);
+  color: var(--bento-ink);
+}
+
+.bento-tile[data-tone="pale"] {
+  --tile-muted: var(--bento-muted);
+  --tile-accent: var(--project-ink, var(--bento-blue));
+  --card-soft: var(--bento-card);
+  --card-muted: var(--bento-muted);
+  background-color: color-mix(in oklab, var(--bento-blue) 16%, var(--bento-card));
+  color: var(--bento-ink);
+}
+
+/* Small text on the solid colour stays full strength, as on the case study cards. */
+.bento-tile[data-tone="solid"] {
+  --tile-muted: var(--bento-on-blue);
+  --tile-accent: var(--bento-on-blue);
+  --card-soft: color-mix(in oklab, var(--bento-on-blue) 14%, transparent);
+  --card-muted: var(--bento-on-blue);
+  background-color: var(--bento-blue);
+  color: var(--bento-on-blue);
+}
+
+.bento-tile__label {
+  margin: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tile-muted);
+}
+
+.bento-tile__title {
+  margin: 0;
+  font-size: clamp(1.25rem, 1.9vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.bento-tile__text {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.bento-tile__text + .bento-tile__text {
+  margin-top: 0.85rem;
+}
+
+/* The wide tile Aboard opens every section with: the screen left, its text right. */
+.bento-tile--feature {
+  display: grid;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 3rem);
+}
+
+@media screen and (min-width: 768px) {
+  .bento-tile--feature {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+}
+
+.bento-tile__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bento-tile__copy .bento-tile__text + .bento-tile__text {
+  margin-top: 0;
+}
+
+.bento-tile__visual {
+  aspect-ratio: 4 / 3;
+}
+
+.bento-tile--screen {
+  padding: clamp(0.75rem, 1.2vw, 1rem);
+}
+
+.bento-tile--screen .bento-tile__visual {
+  aspect-ratio: 16 / 9;
+}
+
+/* A wide run of prose sets in two columns, like a page of a magazine. */
+@media screen and (min-width: 1024px) {
+  .bento-tile__columns {
+    columns: 2;
+    column-gap: clamp(2rem, 3.5vw, 3.5rem);
+  }
+
+  .bento-tile__columns .bento-tile__text {
+    break-inside: avoid;
+    margin-bottom: 0.85rem;
+  }
+
+  .bento-tile__columns .bento-tile__text + .bento-tile__text {
+    margin-top: 0;
+  }
+}
+
+.bento-tile--prose .bento-tile__text {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+/* Chunky tiles: a statement or a figure, the label on top and the words at the foot. */
+.bento-tile--statement,
+.bento-tile--stat {
+  justify-content: space-between;
+  min-height: clamp(13rem, 21vw, 19rem);
+}
+
+.bento-tile__statement {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.1vw, 1.9rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+/* One of the site's stickers, sitting in the top corner like Aboard's characters. */
+.bento-tile__sticker {
+  position: absolute;
+  top: clamp(0.75rem, 1.5vw, 1.25rem);
+  right: clamp(0.75rem, 1.5vw, 1.25rem);
+  width: clamp(4rem, 7vw, 6.25rem);
+  height: auto;
+  rotate: var(--tilt, -8deg);
+  filter: drop-shadow(0 10px 14px rgba(15, 16, 18, 0.22));
+  pointer-events: none;
+}
+
+/* The statement starts below the sticker, so a long one never runs under it. */
+.bento-tile--statement:has(.bento-tile__sticker) {
+  padding-top: clamp(5rem, 8vw, 7rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bento-tile__sticker {
+    animation: sticker-float 6s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes sticker-float {
+  to {
+    translate: 0 -6px;
+  }
+}
+
+.bento-tile__figure {
+  margin: 0;
+  font-size: clamp(3.25rem, 6.5vw, 5.5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.bento-tile__caption {
+  max-width: 20ch;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.bento-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bento-checks li {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.bento-checks svg {
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--tile-accent);
+}
+
+/* Aboard's "bits and pieces": a centred cloud of chips, on the page itself. */
+.bento-chips {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding-block: clamp(1rem, 3vw, 2.5rem);
+  text-align: center;
+}
+
+.bento-chips ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  max-width: 52rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bento-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  background-color: var(--bento-card);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.bento-chips svg {
+  flex: none;
+  color: var(--project-ink, var(--bento-blue));
+}
+
+/* Numbered decisions sit three across on a wide tile. */
+.bento-numbered {
+  display: grid;
+  gap: 1.25rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media screen and (min-width: 1024px) {
+  .bento-numbered {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.bento-numbered__n {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.9rem;
+  border-radius: 999px;
+  background-color: var(--bento-blue);
+  color: var(--bento-on-blue);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.bento-numbered__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.bento-numbered__text {
+  margin: 0.4rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--tile-muted);
+}
+
+.bento-table {
+  overflow-x: auto;
+}
+
+.bento-table table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.bento-table th,
+.bento-table td {
+  padding: 0.8rem 1rem 0.8rem 0;
+  border-top: 1px solid var(--bento-line);
+  vertical-align: top;
+}
+
+.bento-table thead th {
+  padding-top: 0;
+  border-top: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tile-muted);
+}
+
+/* User flows as pills and lines, after the flow map Sudhanshu shared
+   (components/work/bento/FlowTree.tsx). Dark pills for steps, the project colour
+   for the people the flows belong to, and thin rounded lines between them. */
+.flow-tree,
+.flow-chain {
+  --node-h: 2.25rem;
+  --link: 1.5rem;
+  --row-gap: 0.75rem;
+  --elbow: 0.85rem;
+  --line: 1.5px;
+  --line-color: color-mix(in oklab, var(--bento-ink) 38%, transparent);
+}
+
+.flow-node {
+  display: inline-flex;
+  align-items: center;
+  height: var(--node-h);
+  padding: 0 1rem;
+  border-radius: 999px;
+  background-color: var(--bento-inverse);
+  color: var(--bento-on-inverse);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.flow-node--role {
+  flex: none;
+  background-color: var(--bento-blue);
+  color: var(--bento-on-blue);
+}
+
+/* A chain of steps. Each step draws the line to its left; the list sits one line's
+   length to the left inside a clipping box, so a line that would start a wrapped row
+   is cut off rather than left dangling. */
+.flow-chain {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.flow-chain__list {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: var(--row-gap);
+  margin: 0 0 0 calc(-1 * var(--link));
+  padding: 0;
+  list-style: none;
+}
+
+.flow-chain__list > li {
+  position: relative;
+  flex: none;
+  padding-left: var(--link);
+}
+
+.flow-chain__list > li::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--node-h) / 2 - var(--line) / 2);
+  left: 0;
+  width: var(--link);
+  border-top: var(--line) solid var(--line-color);
+}
+
+/* The tree: the product at the root, level with the first person, a trunk down to
+   the rest, and each person's steps running on from them. */
+.flow-tree {
+  display: flex;
+  align-items: flex-start;
+}
+
+.flow-tree__root {
+  position: relative;
+  flex: none;
+  padding-right: var(--link);
+}
+
+.flow-tree__root::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--node-h) / 2 - var(--line) / 2);
+  right: 0;
+  width: var(--link);
+  border-top: var(--line) solid var(--line-color);
+}
+
+.flow-tree__branches {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--row-gap) 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.flow-tree__branch {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  padding-left: var(--link);
+}
+
+/* ::before is this branch's stretch of the trunk, ::after its way off it. */
+.flow-tree__branch::before,
+.flow-tree__branch::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.flow-tree__branch::before {
+  top: 0;
+  bottom: calc(-1 * var(--row-gap));
+  border-left: var(--line) solid var(--line-color);
+}
+
+.flow-tree__branch:last-child::before {
+  bottom: auto;
+  height: calc(var(--node-h) / 2 - var(--elbow));
+}
+
+.flow-tree__branch:only-child::before {
+  display: none;
+}
+
+/* A rounded elbow off the trunk into the person. */
+.flow-tree__branch::after {
+  top: calc(var(--node-h) / 2 - var(--elbow));
+  width: var(--link);
+  height: var(--elbow);
+  border-bottom: var(--line) solid var(--line-color);
+  border-left: var(--line) solid var(--line-color);
+  border-bottom-left-radius: var(--elbow);
+}
+
+/* From the person to their first step. */
+.flow-tree__link {
+  flex: none;
+  width: var(--link);
+  height: var(--node-h);
+  background: linear-gradient(var(--line-color), var(--line-color)) center / 100% var(--line) no-repeat;
+}
+
+/* The chain inside a branch starts from the link, so it needs no line of its own. */
+.flow-tree__branch .flow-chain__list > li:first-child::before {
+  display: none;
+}
+
+/* Wide screens: the root sits level with the first person, so the first branch
+   runs straight on from it and the trunk only drops from there. */
+@media screen and (min-width: 640px) {
+  .flow-tree__branch:first-child::before {
+    top: calc(var(--node-h) / 2);
+  }
+
+  .flow-tree__branch:first-child::after {
+    top: calc(var(--node-h) / 2 - var(--line) / 2);
+    height: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-top: var(--line) solid var(--line-color);
+    border-radius: 0;
+  }
+}
+
+/* Phones: the root on top with the trunk hanging from it, and each person's steps
+   on the lines below them, so nothing has to scroll sideways. */
+@media screen and (max-width: 639px) {
+  .flow-tree {
+    flex-direction: column;
+  }
+
+  .flow-tree__root {
+    padding-right: 0;
+    padding-bottom: var(--row-gap);
+  }
+
+  .flow-tree__root::after {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 1.1rem;
+    width: 0;
+    height: var(--row-gap);
+    border-top: 0;
+    border-left: var(--line) solid var(--line-color);
+  }
+
+  .flow-tree__branches {
+    margin-left: 1.1rem;
+  }
+
+  .flow-tree__branch {
+    flex-wrap: wrap;
+  }
+
+  .flow-tree__link {
+    display: none;
+  }
+
+  .flow-tree__branch .flow-chain {
+    flex: 0 0 100%;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Phones: one tile per row, and tiles only as tall as what they hold. */
+@media screen and (max-width: 767px) {
+  .bento > * {
+    grid-column: span 6;
+  }
+
+  .bento-tile--statement,
+  .bento-tile--stat {
+    min-height: 0;
+  }
+
+}
+
+/* ---------------------------------------------------------------
+   Case study chrome for the bento layout (components/work/chrome/*). Inside
+   [data-project-theme], --bento-blue is the project's colour, so the bar, the
+   dock's indicator and the closing arrow all take it.
+---------------------------------------------------------------- */
+
+/* Scroll progress bar, ported from the reference: a thin line filling across the
+   top as the page is read. The whole 1.5rem strip is its click target; under the
+   pointer the track shades and the bar thickens to fill it, so it reads as
+   something to scrub. Touch screens get just the line, and taps pass through. */
+.progress-bar-wrap {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--z-nav);
+  width: 100%;
+  height: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.progress-bar-wrap:hover {
+  background-color: color-mix(in oklab, var(--bento-ink) 5%, transparent);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 5px;
+  background-color: var(--bento-blue);
+  transform: scale3d(0, 1, 1);
+  transform-origin: 0%;
+  transition: height 0.3s var(--ease-out-expo);
+}
+
+.progress-bar-wrap:hover .progress-bar {
+  height: 100%;
+}
+
+@media (hover: none) {
+  .progress-bar-wrap {
+    height: 5px;
+    pointer-events: none;
+  }
+}
+
+/* "All work", fixed under the progress bar's click strip for the whole page.
+   Doubled up to win over .btn-bubble-arrow, which sets position: relative later
+   in this file. With no strip on touch screens, it sits higher. */
+.btn-bubble-arrow.back-link {
+  position: fixed;
+  top: calc(1.5rem + clamp(0.75rem, 1.5vw, 1.25rem));
+  left: clamp(1rem, 3vw, 2.5rem);
+  z-index: var(--z-nav);
+}
+
+@media (hover: none) {
+  .btn-bubble-arrow.back-link {
+    top: calc(5px + 0.75rem);
+  }
+}
+
+/* At rest the circle carries the site's keyboard sticker, the way the home page marks
+   the work; only the arrow that sweeps in on hover swings round. */
+.btn-bubble-arrow.is--back .btn-bubble-arrow__arrow.is--duplicate .btn-bubble-arrow__arrow-svg {
+  transform: none;
+}
+
+.back-link__sticker {
+  width: 62%;
+  height: auto;
+  filter: drop-shadow(0 2px 3px rgba(15, 16, 18, 0.35));
+}
+
+/* Past the hero (BackLink sets data-compact) the label folds away, leaving the
+   circle; hover or keyboard focus opens it back out. */
+.btn-bubble-arrow.back-link .btn-bubble-arrow__content {
+  max-width: 14em;
+  overflow: hidden;
+  white-space: nowrap;
+  transition:
+    transform 0.735s cubic-bezier(0.625, 0.05, 0, 1),
+    max-width 0.5s var(--ease-out-expo),
+    padding 0.5s var(--ease-out-expo),
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Colour by what's behind it (BackLink sets data-on as the page scrolls). Over the
+   hero it keeps the site's white pill and dark circle. Literal colours, not the
+   theme tokens, because the surface decides here, not the colour scheme. A soft
+   shadow keeps it off busy backgrounds either way. */
+.btn-bubble-arrow.back-link .btn-bubble-arrow__content,
+.btn-bubble-arrow.back-link .btn-bubble-arrow__arrow.is--duplicate {
+  box-shadow: 0 8px 22px -10px rgba(15, 16, 18, 0.5);
+}
+
+.btn-bubble-arrow.back-link .btn-bubble-arrow__arrow.is--duplicate {
+  transition:
+    transform 0.735s cubic-bezier(0.625, 0.05, 0, 1),
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.btn-bubble-arrow.back-link[data-on="light"] .btn-bubble-arrow__content,
+.btn-bubble-arrow.back-link[data-on="light"] .btn-bubble-arrow__arrow.is--duplicate {
+  background-color: #0f1012;
+  color: #f7f8fa;
+}
+
+.btn-bubble-arrow.back-link[data-on="dark"] .btn-bubble-arrow__content {
+  background-color: #f7f8fa;
+  color: var(--bento-blue);
+}
+
+.btn-bubble-arrow.back-link[data-on="dark"] .btn-bubble-arrow__arrow.is--duplicate {
+  background-color: #f7f8fa;
+  color: #0f1012;
+}
+
+.btn-bubble-arrow.back-link[data-compact]:not(:hover, :focus-visible) .btn-bubble-arrow__content {
+  max-width: 0;
+  padding-inline: 0;
+  opacity: 0;
+}
+
+/* Section anchor dock, ported from the reference, in the floating nav's place
+   and colours: a dark pill naming the current section, opening to all of them. */
+.section-dock {
+  position: fixed;
+  right: 0;
+  bottom: 1.5rem;
+  left: 0;
+  z-index: var(--z-nav);
+  width: fit-content;
+  margin-inline: auto;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+@media screen and (min-width: 768px) {
+  .section-dock {
+    bottom: 2rem;
+  }
+}
+
+.section-dock__pill {
+  overflow: hidden;
+  border-radius: 1.5em;
+  background-color: var(--bento-inverse);
+  color: var(--bento-on-inverse);
+  box-shadow: 0 18px 40px -20px rgba(15, 16, 18, 0.55);
+}
+
+.section-dock__toggle {
+  display: block;
+  padding: 0.85em 1.5em;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+}
+
+.section-dock__label-wrap {
+  position: relative;
+  display: block;
+  height: 1.5em;
+  overflow: hidden;
+}
+
+.section-dock__label {
+  display: block;
+  line-height: 1.5;
+}
+
+.section-dock__link-num {
+  position: relative;
+  bottom: 0.05em;
+  display: inline-block;
+  margin-right: 0.6em;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75em;
+  line-height: 1;
+  color: color-mix(in oklab, var(--bento-on-inverse) 55%, transparent);
+}
+
+[data-section-dock-link][data-active] .section-dock__link-num {
+  color: color-mix(in oklab, var(--bento-on-blue) 70%, transparent);
+}
+
+.section-dock__list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  padding: 0.5em;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.section-dock__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 2em;
+  height: 2em;
+  border-radius: 100em;
+  background-color: var(--bento-blue);
+  pointer-events: none;
+}
+
+.section-dock__items {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.section-dock__link {
+  position: relative;
+  z-index: 2;
+  display: block;
+  padding: 0.5em 1em;
+  border-radius: 100em;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+[data-section-dock-link][data-active] {
+  color: var(--bento-on-blue);
+}
+
+.section-dock__link:focus-visible,
+.section-dock__toggle:focus-visible {
+  outline: 2px solid var(--bento-blue);
+  outline-offset: -2px;
+}
+
+/* The end of the case study: the home page's question, and one link to its form. */
+.case-outro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  min-height: 70svh;
+  padding: clamp(5rem, 12vh, 9rem) 1.5rem;
+  background-color: var(--bento-card);
+  text-align: center;
+}
+
+.case-outro__kicker {
+  margin: 0;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  color: var(--bento-muted);
+}
+
+.case-outro__title {
+  margin: 0;
+}
+
+.case-outro__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15em;
+  color: var(--bento-ink);
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-decoration: none;
+}
+
+.case-outro__link svg {
+  flex: none;
+  width: 0.7em;
+  height: 0.7em;
+  color: var(--bento-blue);
+  transition: translate 0.5s var(--ease-out-expo);
+}
+
+.case-outro__link:hover svg,
+.case-outro__link:focus-visible svg {
+  translate: 0.08em -0.08em;
+}
+
+.case-outro__links {
+  margin-top: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+/* ---------------------------------------------------------------
+   Story case study layout (components/work/story/StoryBlocks.tsx), after the
+   Hubhopper case study: after the bento overview, each section is told down one
+   column in large type with nothing boxed around it. Words stay at a reading
+   measure (46rem); comparisons, screens, the flow diagram and runs of chips
+   take the section's full width, so pictures sit a little wider than the text.
+   Hubhopper sets its copy at 28px over a short page; Knode says five times as
+   much, so the story type tops out at 21px.
+---------------------------------------------------------------- */
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.story > :is(.story-prose, .story-subhead, .story-pull, .story-list, .story-numbered, .story-flow, .story-note, .story-statement) {
+  width: 100%;
+  max-width: 46rem;
+}
+
+.story-label {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bento-muted);
+}
+
+.story-prose p {
+  margin: 0;
+  font-size: clamp(1.125rem, 0.95rem + 0.55vw, 1.3125rem);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.story-prose p + p {
+  margin-top: 1.1em;
+}
+
+.story-lead {
+  margin: 0 0 0.8em;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.story-subhead {
+  margin: clamp(1.25rem, 4vw, 3rem) 0 0;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* A line pulled out of the story in type, the way Hubhopper sets its equations. */
+.story-pull {
+  margin: clamp(0.25rem, 1.5vw, 1rem) 0;
+}
+
+.story-pull blockquote {
+  margin: 0;
+}
+
+.story-pull p {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+/* Lists bulleted with a spark, as Hubhopper lists its findings. */
+.story-list ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story-list li {
+  position: relative;
+  padding-left: 1.6em;
+  font-size: clamp(1.0625rem, 0.9rem + 0.45vw, 1.25rem);
+  line-height: 1.5;
+}
+
+.story-list li::before {
+  content: "✧";
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--project-ink, var(--bento-blue));
+}
+
+.story-numbered ol {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: story-step;
+}
+
+.story-numbered li {
+  position: relative;
+  padding-left: 2.75rem;
+  counter-increment: story-step;
+}
+
+.story-numbered li::before {
+  content: counter(story-step, decimal-leading-zero);
+  position: absolute;
+  top: 0.2rem;
+  left: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  color: var(--project-ink, var(--bento-blue));
+}
+
+.story-numbered li p {
+  margin: 0.3rem 0 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--bento-muted);
+}
+
+.story-numbered li .story-numbered__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--bento-ink);
+}
+
+/* Figures for numbers, set big with nothing around them. */
+.story-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1.5rem 2.5rem;
+  margin: 0;
+}
+
+.story-stats dt {
+  font-size: clamp(2.75rem, 5vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--project-ink, var(--bento-blue));
+}
+
+.story-stats dd {
+  max-width: 22ch;
+  margin: 0.5rem 0 0;
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  color: var(--bento-muted);
+}
+
+/* A comparison keeps its tiles, two to a row. */
+.story-pair {
+  display: grid;
+  gap: clamp(0.75rem, 1.3vw, 1.125rem);
+}
+
+@media screen and (min-width: 768px) {
+  .story-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.story-note .bento-tile__text {
+  font-size: 1.0625rem;
+}
+
+/* Screens: a little wider than the words, with a caption under them. */
+.story-figure {
+  --card-soft: color-mix(in oklab, var(--bento-blue) 12%, var(--bento-card));
+  --card-muted: var(--bento-muted);
+  margin: clamp(0.25rem, 1.5vw, 1rem) 0;
+}
+
+.story-figure__frame {
+  aspect-ratio: 16 / 9;
+  border-radius: calc(var(--radius-card) * 0.75);
+}
+
+.story-figure figcaption {
+  margin-top: 0.85rem;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--bento-muted);
+}
+
+.story-chips {
+  padding-block: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.story-table {
+  --tile-muted: var(--bento-muted);
+}
+
+/* ---------------------------------------------------------------
+   Wavy logo marquee (components/work/blocks/LogoMarquee.tsx), ported from the
+   reference: round cards running along a sine wave. It breaks out to the full
+   width of the screen, since a wall of marks wants the room. Before the script
+   runs, and under reduced motion, the static row is what shows.
+---------------------------------------------------------------- */
+.logo-marquee {
+  position: relative;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+  overflow: clip;
+  cursor: grab;
+}
+
+.logo-marquee__row {
+  display: flex;
+  gap: clamp(0.75rem, 1.2vw, 2rem);
+  align-items: center;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  touch-action: pan-y;
+}
+
+.logo-marquee__row.is--source {
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+
+/* Once the script has built the loop, it replaces the static row. */
+.logo-marquee[data-ready] .logo-marquee__row.is--source {
+  display: none;
+}
+
+.logo-marquee:not([data-ready]) .logo-marquee__row.is--loop {
+  display: none;
+}
+
+/* The cards stay light in both themes: client marks are drawn for white, and on a
+   dark card most of them disappear. */
+.logo-card {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: clamp(5.5rem, 9vw, 9rem);
+  aspect-ratio: 1;
+  border-radius: 50em;
+  background-color: #fbfbfc;
+  user-select: none;
+}
+
+.logo-card__img {
+  width: 62%;
+  height: auto;
+  max-height: 34%;
+  object-fit: contain;
+}
+
+/* Stand-in for a client's mark: the site's dot screen inside the circle, with a
+   bar where the wordmark will sit. */
+.logo-card__placeholder {
+  width: 58%;
+  height: 22%;
+  border-radius: 999px;
+  background-color: rgba(15, 16, 18, 0.12);
+}
+
+.logo-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(15, 16, 18, 0.08);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------
+   What someone said (components/work/blocks/Testimonials.tsx), after the
+   reference Sudhanshu shared: the quote set large on a card, who said it
+   underneath, and dots that fill as the clock runs when there are several.
+   Used anywhere a person is quoted, whether that is one line or a set.
+---------------------------------------------------------------- */
+.quote-card {
+  width: 100%;
+}
+
+.quote-card__label {
+  margin: 0 0 0.9rem;
+  text-align: center;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bento-muted);
+}
+
+.quote-card__card {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  padding: clamp(1.5rem, 3.5vw, 3rem);
+  border-radius: var(--radius-card);
+  background-color: var(--bento-card);
+  box-shadow: inset 0 0 0 1px var(--bento-line);
+}
+
+/* Every quote sits in the same cell, so the card never jumps as they change. */
+.quote-card__list {
+  display: grid;
+}
+
+.quote-card__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.25rem, 2.5vw, 2.25rem);
+  grid-area: 1 / 1;
+  align-self: start;
+  margin: 0;
+  visibility: hidden;
+}
+
+.quote-card__item[data-status="active"],
+.quote-card__item[data-status="leaving"] {
+  visibility: visible;
+}
+
+.quote-card__logo-slot {
+  display: flex;
+  height: 2rem;
+  overflow: hidden;
+}
+
+.quote-card__logo {
+  display: block;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+
+.quote-card__quote {
+  /* Where the browser supports it, the opening mark hangs in the margin so the
+     first line still starts on the same edge as everything else. */
+  hanging-punctuation: first last;
+  margin: 0;
+  font-size: clamp(1.4rem, 2.8vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-wrap: pretty;
+}
+
+.quote-card__who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.quote-card__name {
+  font-size: 1.0625rem;
+  line-height: 1.3;
+}
+
+.quote-card__role {
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--bento-muted);
+}
+
+.quote-card__dots {
+  display: flex;
+  align-items: center;
+  margin-left: -0.375rem;
+}
+
+.quote-card__dot {
+  padding: 0.375rem;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.quote-card__dot:hover {
+  opacity: 0.6;
+}
+
+.quote-card__dot:focus-visible {
+  border-radius: 1em;
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+  opacity: 0.6;
+}
+
+.quote-card__dot-bar {
+  position: relative;
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 1em;
+  background-color: color-mix(in oklab, var(--bento-blue) 25%, var(--bento-page));
+  transition:
+    width 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+    background-color 0.3s ease;
+}
+
+/* The running one stretches out, so the clock has somewhere to fill. */
+.quote-card__dot[data-status="active"] .quote-card__dot-bar {
+  width: 3rem;
+}
+
+.quote-card__dot-fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: inherit;
+  background-color: var(--bento-blue);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* ---------------------------------------------------------------
+   Comparison table, after the reference Sudhanshu shared: a head that sticks as
+   the rows pass under it, banded rows, and a first column that names the row.
+   Used for every table in a case study. On a phone each row stacks, so nothing
+   has to scroll sideways.
+---------------------------------------------------------------- */
+.compare {
+  width: 100%;
+}
+
+.compare__label {
+  margin-bottom: 0.9rem;
+}
+
+.compare table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.compare thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--bento-ink) 25%, transparent);
+  background-color: var(--bento-page);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bento-muted);
+}
+
+.compare tbody tr {
+  border-bottom: 1px solid var(--bento-line);
+}
+
+.compare tbody tr:nth-child(even) {
+  background-color: color-mix(in oklab, var(--bento-blue) 5%, transparent);
+}
+
+.compare tbody th,
+.compare tbody td {
+  padding: 1.1rem 1.25rem;
+  vertical-align: top;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.compare tbody th {
+  width: 28%;
+  font-weight: 500;
+}
+
+.compare tbody td {
+  color: var(--bento-muted);
+}
+
+@media screen and (max-width: 767px) {
+  .compare thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .compare tbody tr,
+  .compare tbody th,
+  .compare tbody td {
+    display: block;
+    width: auto;
+  }
+
+  .compare tbody tr {
+    padding-block: 0.5rem;
+  }
+
+  .compare tbody th {
+    padding-bottom: 0.35rem;
+  }
+
+  .compare tbody td {
+    padding-top: 0;
+  }
+}
+
+/* A clip in a case study visual slot, opening full size on click like the images.
+   --video-crop is the shape of the frame it is shown in: narrower than the clip
+   itself, so the empty margins either side of the recording are cropped away rather
+   than sitting there as bars. Set it per clip when the next one is framed differently. */
+.case-visual__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--video-crop, 1.39);
+  object-fit: cover;
+  border-radius: calc(var(--radius-card) * 0.6);
+  cursor: zoom-in;
+}
+
+/* Real images in a case study visual slot: one on its own, or a set laid out as a
+   grid (the storyboard). Each one opens full size on click. */
+.case-figures {
+  display: grid;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+}
+
+@media screen and (min-width: 640px) {
+  .case-figures--grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.case-figures__item {
+  margin: 0;
+}
+
+.case-figures__item figcaption {
+  margin-top: 0.7rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--card-muted, var(--bento-muted));
+}
+
+.case-figures__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--radius-card) * 0.5);
+  cursor: zoom-in;
+}
+
 /* Dot grid behind image placeholders. */
 .visual-placeholder {
   background-image: radial-gradient(color-mix(in oklab, currentColor 45%, transparent) 1px, transparent 1.5px);

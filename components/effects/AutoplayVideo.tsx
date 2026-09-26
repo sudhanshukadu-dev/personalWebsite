@@ -4,7 +4,16 @@ import { useEffect, useRef } from "react";
 
 // A muted, looping clip that plays only while it's on screen. Under reduced motion it
 // doesn't autoplay and shows controls instead.
-export function AutoplayVideo({ src, label, className }: { src: string; label: string; className?: string }) {
+export function AutoplayVideo({
+  src,
+  label,
+  className,
+  ...rest
+}: {
+  src: string;
+  label: string;
+  className?: string;
+} & React.ComponentPropsWithoutRef<"video">) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -29,6 +38,7 @@ export function AutoplayVideo({ src, label, className }: { src: string; label: s
 
   return (
     <video
+      {...rest}
       ref={videoRef}
       src={src}
       aria-label={label}

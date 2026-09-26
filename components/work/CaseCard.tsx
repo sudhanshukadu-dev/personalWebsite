@@ -17,6 +17,8 @@ type CaseCardProps = {
   as?: ElementType;
   className?: string;
   children: ReactNode;
+  // Anything else (the parallax attributes, for one) lands on the element itself.
+  [attribute: `data-${string}`]: unknown;
 };
 
 /*
@@ -25,9 +27,16 @@ type CaseCardProps = {
   readable on it), --card-accent (icons) and --card-soft (inset panels); see
   .case-card in globals.css. Cards rise in as they scroll into view.
 */
-export function CaseCard({ tone = "card", padding = "default", as: Tag = "div", className, children }: CaseCardProps) {
+export function CaseCard({
+  tone = "card",
+  padding = "default",
+  as: Tag = "div",
+  className,
+  children,
+  ...rest
+}: CaseCardProps) {
   return (
-    <Tag data-tone={tone} className={cn("case-card reveal", PADDING[padding], className)}>
+    <Tag {...rest} data-tone={tone} className={cn("case-card reveal", PADDING[padding], className)}>
       {children}
     </Tag>
   );

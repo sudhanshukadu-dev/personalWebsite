@@ -1,628 +1,633 @@
-// Quest2Travel case study copy. Source: Downloads/Quest2Travel_Case_Study_FINAL_v11.md,
-// with the em dashes rewritten as commas, colons or full stops to match the site's voice.
-// Lives at /work/expense-management-system, the link on the home page's Featured Work card.
+import type { CaseStudy } from "@/components/work/CaseStudyPage";
 
-export const quest2travel = {
+// Quest2Travel case study copy. Source: Downloads/Quest2Travel_Case_Study_Condensed (1).md,
+// the condensed rewrite, followed marker for marker: CALLOUT becomes a statement, VISUAL and
+// VIDEO become labelled image slots, STAT ROW becomes stats, FLOW DIAGRAM becomes the two
+// flows drawn as one diagram. Lives at /work/expense-management-system, the link on the
+// home page's Featured Work card. It keeps the site's blue, since this project is the blue
+// one in Featured Work. TODO: every visual is a placeholder until the screens are exported.
+
+export const quest2travel: CaseStudy = {
   slug: "expense-management-system",
+  chrome: "own",
   meta: {
-    title: "Expense Management System, Quest2Travel",
+    title: "Quest2Travel, expense platform",
     description:
-      "Redesigning Quest2Travel's legacy expense platform around a simple truth: expenses happen in motion, submissions happen at a desk.",
-  },
-
-  // Sticky nav; ids match each section's id below.
-  sectionNav: {
-    label: "Case study sections",
-    menuLabel: "Current section",
-    items: [
-      { id: "summary", label: "Summary" },
-      { id: "context", label: "Context", number: "01" },
-      { id: "problem", label: "Problem", number: "02" },
-      { id: "discovery", label: "Discovery", number: "03" },
-      { id: "users", label: "Users", number: "04" },
-      { id: "process", label: "Process", number: "05" },
-      { id: "solution", label: "Solution", number: "06" },
-      { id: "impact", label: "Impact", number: "07" },
-      { id: "reflection", label: "Reflection", number: "08" },
-    ],
+      "Redesigning Quest2Travel's expense platform around a simple truth: expenses happen in motion, submissions happen at a desk.",
   },
 
   hero: {
     backLink: { label: "All work", href: "/#work" },
     tag: "Case study",
-    title: "Logging expenses shouldn't wait for a desk.",
+    title: "Logging expenses shouldn't wait for a desk",
     subtitle:
-      "Redesigning Quest2Travel's legacy expense platform around a simple truth: expenses happen in motion, submissions happen at a desk.",
+      "Redesigning Quest2Travel's expense platform around a simple truth: expenses happen in motion, submissions happen at a desk.",
     facts: [
       { label: "Role", value: "Sole Product Designer" },
-      { label: "Company", value: "Quest2Travel by MakeMyTrip" },
-      { label: "Duration", value: "11–12 months" },
-      { label: "Platform", value: "Responsive web, desktop-first" },
+      { label: "Client", value: "Quest2Travel by MakeMyTrip" },
+      { label: "Timeline", value: "11 to 12 months" },
+      { label: "Platform", value: "Responsive web, desktop first" },
+      { label: "Scope", value: "My primary project across 1.5 years" },
     ],
-    // TODO: swap the skeleton screens for the real desktop and mobile expense-creation screens.
-    showcase: {
-      label: "Preview on",
-      views: [
-        {
-          id: "desktop" as const,
-          label: "Desktop",
-          caption: "One screen. OCR-first. Designed to a sub-30-second capture target.",
-          description:
-            "Desktop expense creation: a receipt upload read by OCR, the expense fields, and the Tips panel beside them.",
-        },
-        {
-          id: "mobile" as const,
-          label: "Mobile",
-          caption: "Capture it, build the report, submit it. All from a phone.",
-          description: "Mobile expense capture: the camera framing a receipt, with the expense details sheet below.",
-        },
-      ],
-    },
+    visual: "Prototype: logging an expense on the desktop platform",
+    video: "/video/add-expense.mp4",
   },
 
-  summary: {
-    tag: "Summary",
-    title: "The 90-second version",
-    intro: "Everything that matters, before you decide to read on. The full case study follows.",
-    problems: [
-      {
-        label: "The business problem",
-        text: "Quest2Travel earns its revenue from travel fulfillment. The expense module isn't sold standalone: it's the bundled lock-in that keeps a client's entire travel spend booking in-platform. The module was weak, so not every travel client adopted it, and every client running expenses on a competitor's tool had a wedge in the account that a full T&E suite could widen to take the travel business too.",
-      },
-      {
-        label: "The user problem",
-        text: "The platform was report-first: a report had to exist before a single expense could be logged. On-the-go filing was architecturally impossible, there was no policy guidance at the point of entry, and the product felt nothing like the travel tool the same users already knew.",
-      },
-    ],
-    did: {
-      label: "What I did",
-      lead: "Sole designer, 4 roles, 11–12 months, discovery to handoff.",
-      items: [
+  sections: [
+    {
+      id: "problem",
+      nav: "The problem",
+      number: "01",
+      title: "It was never a UX problem first. It was a revenue problem.",
+      blocks: [
         {
-          title: "Shipped a hygiene pass on the legacy system first",
-          text: "So live enterprise clients weren't stranded during the months-long rebuild.",
-        },
-        { title: "Standalone expense creation", text: "Log the moment it happens, compile the report later." },
-        {
-          title: "Borrowed the travel product's 3-step mental model",
-          text: "For expense reports: near-zero learning curve, no training rollout.",
-        },
-        {
-          title: "Split enforcement by context",
-          text: "Save freely in motion, block at submission, because creation and submission happen in different environments.",
-        },
-        {
-          title: "Turned a static OCR prompt into the Tips panel",
-          text: "Category-aware policy guidance at the moment of entry. It came from a live client session, not a brief.",
-        },
-      ],
-    },
-    result: {
-      label: "The result",
-      figure: "4 → 1",
-      figureSpoken: "From 4 to 1",
-      caption: "steps to log an expense",
-      line: "Designed to a sub-30-second capture target. Employee of the Quarter, twice.",
-    },
-    landed: {
-      label: "Where it landed",
-      items: [
-        "Hygiene pass live in production",
-        "Standalone creation and the Reports dashboard developed",
-        "The rest handed off with complete flow diagrams, walked through in person",
-        "Validated in prototype sessions with Adani, Toyota and Dr. Reddy's contacts",
-        "Dashboard charts shipped as production-ready Recharts code",
-      ],
-    },
-    measure: {
-      label: "What I'd measure",
-      note: "Defined, not yet collected: I left before launch metrics accrued.",
-      items: [
-        { metric: "Expense-module adoption", test: "The lock-in test" },
-        { metric: "Expenses logged within 24h of spend", test: "The on-the-go test" },
-        { metric: "First-submission rejection rate", test: "The Tips panel test" },
-        { metric: "Time-to-reimbursement", test: "The pipeline test" },
-      ],
-    },
-    change: {
-      label: "What I'd change",
-      text: "The Tips panel insight arrived in month 8, from a client session. It belonged in month 1, from research I should have owned.",
-    },
-  },
-
-  context: {
-    tag: "01 · Context",
-    title: "A modern travel product, and an expense module that wasn't",
-    intro:
-      "Quest2Travel is one of India's largest corporate travel platforms, operating within the MakeMyTrip ecosystem and trusted for over 15 years by enterprises across 20+ industries.",
-    stats: [
-      { value: "500+", label: "Enterprise clients" },
-      { value: "20M+", label: "Cumulative employee trips managed" },
-      { value: "20+", label: "Industries served" },
-      { value: "15+", label: "Years of industry trust" },
-    ],
-    clients: {
-      label: "Trusted by",
-      names: ["Sony", "Infosys", "PepsiCo", "HDFC Bank", "Air India", "Tata Motors", "Adani", "Toyota", "Dr. Reddy's"],
-      more: "and hundreds more",
-    },
-    urgency: {
-      label: "Why it was urgent",
-      lead: "The travel booking product was modern, fast, and mobile-ready. The expense module attached to it was not.",
-      paragraphs: [
-        "A broken expense system doesn't just frustrate users. It stalls reimbursement cycles across thousands of employees per organisation.",
-        "Quest2Travel earns the overwhelming majority of its revenue from travel fulfillment: commissions and fees on flights, hotels, and ground transport. The expense module isn't sold standalone. It's bundled into the T&E platform as the lock-in that keeps 100% of a client's travel spend booking through Quest2Travel. A weak expense module broke that lock. Not every enterprise that bought travel adopted expense, and clients running expenses on a standalone competitor had a wedge in the account, one any full T&E suite could widen to take the travel spend too.",
-      ],
-      punchline:
-        "Fixing the expense experience wasn't about selling expense software. It was about defending the travel revenue, and completing the bundle sales could lead with.",
-    },
-    reality: {
-      label: "Product reality",
-      text: "Quest2Travel is B2B2C. Enterprises buy it, but the end users are employees who expect consumer-app speed. Enterprise compliance on one side, consumer-grade usability on the other: that dual pressure shaped every decision in this project.",
-    },
-    scope: {
-      label: "My scope",
-      text: "The only designer on the product. Four stakeholder workflows (Employee, Approver, Financial Auditor, and Admin) from discovery through complete development handoff.",
-    },
-  },
-
-  problem: {
-    tag: "02 · Problem",
-    title: "The daily reality, and a platform making it worse",
-    frustrationsTitle: "Manohar's four frustrations",
-    frustrations: [
-      { label: "Manual entry", quote: "Another trip. Another pile of receipts to log, one by one." },
-      { label: "Lost receipts", quote: "I know I kept the hotel receipt right here. It's gone." },
-      { label: "Unclear policies", quote: "Is this client meal reimbursable? The platform gives no hint." },
-      { label: "Approval delays", quote: "Still waiting. Finance hasn't responded. Again." },
-    ],
-    issuesTitle: "The platform was making it worse",
-    issues: [
-      {
-        issue: "Report-first architecture",
-        impact: "A report had to exist before a single expense could be logged. Impossible in motion.",
-      },
-      { issue: "Zero mobile UX", impact: "Layouts broke on small screens, the exact environment travelers work in." },
-      {
-        issue: "No policy guidance",
-        impact: "Employees guessed what was reimbursable and discovered rejections weeks later.",
-      },
-      { issue: "Disconnected from Travel", impact: "Same login, completely different product. Jarring at every crossing." },
-    ],
-    question: {
-      label: "The design problem underneath the business case",
-      text: "How do you rebuild an enterprise expense platform without breaking the mental models of employees already using the travel product?",
-    },
-  },
-
-  discovery: {
-    tag: "03 · Discovery",
-    title: "The insight that changed the product came later",
-    research: [
-      {
-        label: "What existing customers told us",
-        text: "Alongside my PM, I participated in one-on-one calls with corporate points-of-contact across the enterprise client base: the people running travel and expense operations for their organisations. The pattern was consistent. Everything useful was buried under too many clicks, the UI felt dated, and the travel–expense disconnect made one product feel like two. Customers wanted the polish of Concur or Zoho, inside the platform they already used.",
-      },
-      {
-        label: "Closing the gap informally",
-        text: "The formal research was inherited and the project moved fast, so I closed the gap the way the constraints allowed. Quest2Travel's own employees used the platform for their business travel, so I asked colleagues, informally rather than in scripted sessions, where the product felt dated and where they struggled to find functionality. The same themes surfaced from the inside: buried actions, too many clicks, a UI that felt a generation old. Not a substitute for formal user research (I address that honestly in Reflection), but it meant the redesign wasn't built purely on second-hand accounts.",
-      },
-    ],
-    platformsTitle: "What five platforms taught me, and why",
-    platformLabels: { took: "What I took", why: "Why" },
-    platforms: [
-      {
-        name: "Navan",
-        took: "OCR-first approach, standalone expense creation",
-        why: "The old system's biggest friction was report-first logging. Navan's standalone model made on-the-go filing structurally possible.",
-      },
-      {
-        name: "SAP Concur",
-        took: "Policy flagging logic",
-        why: "It validated that enterprise users expected flagging. I avoided their navigation: critical actions buried under layers, the exact complaint our customers raised.",
-      },
-      {
-        name: "Zoho Expense",
-        took: "2-tier flagging, comment threads, audit log",
-        why: "Flagging to surface violations before submission, not after. Threads to replace context-free email back-and-forth. An audit log so every action has a traceable record.",
-      },
-      {
-        name: "Expensify",
-        took: "OCR speed validation",
-        why: "It confirmed OCR execution was achievable at the speed on-the-go filing demands.",
-      },
-      {
-        name: "Happay",
-        took: "India-specific approval complexity",
-        why: "Then a separate platform within the MakeMyTrip group, serving a different corporate segment. The closest reference point for how Indian enterprises actually structure multi-level approvals, and confirmation that generic global patterns don't fit this market.",
-      },
-    ],
-    finding: {
-      label: "Central finding",
-      text: "Every platform offered similar features. The real challenge was presenting them inside an ecosystem users already knew, something no competitor had solved, because none of them were embedded in a travel platform.",
-    },
-    insight: {
-      label: "The insight that changed the product",
-      lead: "The Tips panel didn't exist in any brief or benchmark. It came from a live prototype session with enterprise clients, where one concern surfaced independently from multiple contacts:",
-      quote: "Our employees aren't submitting wrong expenses to cheat. They genuinely don't know what the policy allows.",
-      after: "One sentence. New feature. More on it in the Solution.",
-    },
-  },
-
-  users: {
-    tag: "04 · Users",
-    title: "Not a single-user app: four roles, one reimbursement pipeline",
-    personaTitle: "The traveler at the center",
-    persona: {
-      initial: "M",
-      name: "Manohar",
-      meta: "37 · Corporate professional · Mumbai",
-      summary: "Frequent business traveler. High travel frequency, limited time, zero patience for desktop-only tools.",
-      basis:
-        "A composite built from buyer-side customer calls, client conversations, and informal conversations with Quest2Travel colleagues who used the platform for their own business travel. Every source described the same core frustration: a desk-bound, document-heavy workflow for a job that happens in transit. The evidence base has limits, and I name them in Reflection rather than let a reader find them.",
-      goals: {
-        label: "Goals",
-        items: [
-          "Log expenses in motion, not at a desk days later",
-          "Know reimbursable limits before spending, not after a rejection",
-          "Track claim status after submission",
-        ],
-      },
-      frustrations: {
-        label: "Frustrations",
-        items: [
-          "Report-first flow made on-the-go filing impossible by design",
-          "Policy silence meant guessing, and guessing meant rejections",
-          "Zero visibility once a report was submitted",
-        ],
-      },
-    },
-    rolesTitle: "The ecosystem",
-    roles: [
-      { role: "Employee", need: "Log expenses in motion, request advances, submit reports in 3 steps" },
-      { role: "Approver / Manager", need: "Action reports fast, with policy flags pre-highlighted" },
-      { role: "Financial Auditor", need: "Validate compliance, manage aging claims, override when needed" },
-      { role: "Travel / Finance Admin", need: "Configure policies, roles, branding, and approval chains per enterprise" },
-    ],
-  },
-
-  process: {
-    tag: "05 · Process",
-    title: "The most important decision came from the ecosystem, not the competitors",
-    phase0: {
-      label: "Phase 0",
-      title: "Stabilise the old before building the new",
-      text: "A full redesign takes months, and live enterprise clients can't wait that long. So before the redesign work, I shipped a hygiene pass on the legacy system: targeted, low-risk usability fixes that could go live without structural or backend change, keeping the current experience workable while the real fix was built. It also forced me deep into every corner of the legacy product early, which paid off throughout the redesign. I wasn't designing against a system I'd only seen in screenshots.",
-      // TODO: replace with the before/after hygiene pass screens.
-      visual: "Hygiene pass: a legacy screen beside the same screen after the fixes",
-    },
-    v1: {
-      label: "V1",
-      title: "The wrong benchmark",
-      text: "My first design was clean and well-executed: OCR-first, standalone creation, modelled closely on Navan. By expense-platform standards, it worked. My PM's feedback was precise:",
-      quote: "It looks like a modern expense platform. But it doesn't feel like Quest2Travel.",
-      quoteBy: "My PM, on V1",
-      after: "That sentence forced the question the competitive analysis never could.",
-      // TODO: replace with the V1 screenshot.
-      visual: "V1: the Navan-style iteration that prompted this feedback",
-    },
-    pattern: {
-      label: "The structural insight",
-      title: "Design for the ecosystem, not the screen",
-      text: "The travel platform had a 3-step mental model existing users already knew instinctively. I applied it directly to expense reports.",
-      legend: { travel: "Travel request", expense: "Expense report" },
-      steps: [
-        { step: "Step 1", travel: "Travel Info", expense: "Report Info" },
-        { step: "Step 2", travel: "Add Services", expense: "Add Expenses" },
-        { step: "Step 3", travel: "Review & Submit", expense: "Review & Submit" },
-      ],
-      after:
-        "Same pattern. Two products. Near-zero learning curve, with no training rollout needed across enterprise clients. This wasn't aesthetic consistency; it was cognitive consistency. The most important decision of the project, and it came from looking at the ecosystem, not the competitors.",
-    },
-    flagging: {
-      label: "Corrected mid-flight",
-      title: "The flagging architecture",
-      text: "My initial proposal surfaced warnings during creation and critical issues only at submission. My PM's correction produced the final architecture: both tiers surface during expense creation, and the same deviations reappear at final review and in the report screens. The user is never surprised at submission.",
-      tiers: { warning: "Warning", critical: "Critical" },
-      moments: ["At creation", "At final review", "At submission"],
-      versions: [
-        {
-          name: "My initial proposal",
-          cells: [
-            { warning: true, critical: false },
-            { warning: false, critical: false, note: "Nothing surfaces" },
-            { warning: false, critical: true, note: "First sight" },
+          type: "text",
+          paragraphs: [
+            "Quest2Travel earns the overwhelming majority of its revenue from travel fulfillment: commissions and fees on flights, hotels and ground transport. The expense module is not sold standalone. It is bundled into the platform as the lock in that keeps a client's entire travel spend booking through Quest2Travel.",
+            "That lock was broken. Not every enterprise that bought travel adopted expense, and any client running expenses on a competitor's tool handed that competitor a foothold inside the account, one it could widen to take the travel business too.",
           ],
         },
         {
-          name: "Final, after my PM's correction",
-          cells: [
-            { warning: true, critical: true },
-            { warning: true, critical: true },
-            { warning: false, critical: false, note: "No surprises" },
+          type: "statement",
+          tone: "blue",
+          text: "Fixing the expense experience was not about selling expense software. It was about defending the travel revenue.",
+        },
+        {
+          type: "stats",
+          items: [
+            { figure: "500+", caption: "enterprise clients" },
+            { figure: "20M+", caption: "cumulative trips" },
+            { figure: "20+", caption: "industries served" },
+            { figure: "15+", caption: "years" },
+          ],
+        },
+        {
+          type: "logos",
+          label: "A few of the enterprises on the platform",
+          items: [
+            { name: "Adani", src: "/images/work/logos/adani.svg", width: 32, height: 11 },
+            { name: "Aegon", src: "/images/work/logos/aegon.svg", width: 1134, height: 454 },
+            { name: "Air India", src: "/images/work/logos/air-india.svg", width: 2304, height: 674 },
+            { name: "Ansys", src: "/images/work/logos/ansys.svg", width: 161, height: 51 },
+            { name: "Axis Bank", src: "/images/work/logos/axis-bank.svg", width: 1000, height: 257 },
+            { name: "Bandhan Bank", src: "/images/work/logos/bandhan-bank.svg", width: 147, height: 31 },
+            { name: "Bharti Airtel", src: "/images/work/logos/bharti-airtel.svg", width: 724, height: 730 },
+            { name: "Borosil", src: "/images/work/logos/borosil.svg", width: 495, height: 138 },
+            { name: "Dr. Reddy's", src: "/images/work/logos/dr-reddy-s.jpg", width: 812, height: 250 },
+            { name: "Elkem", src: "/images/work/logos/elkem.svg", width: 918, height: 231 },
+            { name: "Grant Thornton", src: "/images/work/logos/grant-thornton.svg", width: 700, height: 88 },
+            { name: "HDFC Bank", src: "/images/work/logos/hdfc-bank.svg", width: 289, height: 50 },
+            { name: "HDFC ERGO", src: "/images/work/logos/hdfc-ergo.svg", width: 124, height: 130 },
+            { name: "HDFC Life", src: "/images/work/logos/hdfc-life.png", width: 1200, height: 773 },
+            { name: "Hapag-Lloyd", src: "/images/work/logos/hapag-lloyd.svg", width: 130, height: 20 },
+            { name: "Indian Oil", src: "/images/work/logos/indian-oil.svg", width: 200, height: 239 },
+            { name: "Infosys", src: "/images/work/logos/infosys.svg", width: 400, height: 160 },
+            { name: "JSW Group", src: "/images/work/logos/jsw-group.svg", width: 300, height: 142 },
+            { name: "Jaguar", src: "/images/work/logos/jaguar.svg", width: 162, height: 20 },
+            { name: "Land Rover", src: "/images/work/logos/land-rover.svg", width: 227, height: 119 },
+            { name: "Nayara Energy", src: "/images/work/logos/nayara-energy.jpg", width: 3540, height: 3024 },
+            { name: "Mahindra Logistics", src: "/images/work/logos/mahindra-logistics.jpg", width: 3406, height: 1412 },
+            { name: "PepsiCo", src: "/images/work/logos/pepsico.svg", width: 576, height: 133 },
+            { name: "Reliance Capital", src: "/images/work/logos/reliance-capital.svg", width: 172, height: 56 },
+            { name: "Reserve Bank of India", src: "/images/work/logos/reserve-bank-of-india.svg", width: 13773, height: 4798 },
+            { name: "Sony", src: "/images/work/logos/sony.svg", width: 1280, height: 225 },
+            { name: "Tata Capital", src: "/images/work/logos/tata-capital.jpg", width: 3334, height: 1334 },
+            { name: "Tata Motors", src: "/images/work/logos/tata-motors.svg", width: 602, height: 93 },
+            { name: "Tata Play", src: "/images/work/logos/tata-play.svg", width: 1158, height: 136 },
+            { name: "Tata Tele", src: "/images/work/logos/tata-tele.svg", width: 150, height: 11 },
+            { name: "Toyota", src: "/images/work/logos/toyota.svg", width: 136, height: 24 },
+            { name: "UltraTech", src: "/images/work/logos/ultratech.jpg", width: 716, height: 220 },
+            { name: "Viacom18 Studios", src: "/images/work/logos/viacom18-studios.png", width: 1071, height: 369 },
+            { name: "Vistara", src: "/images/work/logos/vistara.svg", width: 150, height: 108 },
+            { name: "Xiaomi", src: "/images/work/logos/xiaomi.svg", width: 60, height: 16 },
+            { name: "Yum! Brands", src: "/images/work/logos/yum-brands.svg", width: 120, height: 100 },
+          ],
+        },
+
+        { type: "subheading", text: "The product was built backwards" },
+        {
+          type: "text",
+          paragraphs: [
+            "The platform was report first. A report had to exist before a single expense could be logged, which made filing in motion impossible by design.",
+          ],
+        },
+        {
+          type: "table",
+          head: ["Issue", "Consequence"],
+          rows: [
+            ["Report first architecture", "Logging an expense required creating a report first. 4 steps, desktop only"],
+            ["Zero mobile UX", "Layouts broke on the exact screens travelers use"],
+            ["No policy guidance", "Employees guessed what was reimbursable, then discovered rejections weeks later"],
+            ["Disconnected from travel", "Same login, completely different product, jarring at every crossing"],
+          ],
+        },
+        {
+          type: "visual",
+          label: "The old way, in four moments: manual entry, lost receipts, unclear policies, approval delays",
+          images: [
+            {
+              src: "/images/work/storyboard/manual-entry.png",
+              alt: "Manual entry",
+              caption: "Manual entry",
+              width: 1376,
+              height: 768,
+            },
+            {
+              src: "/images/work/storyboard/lost-receipt.png",
+              alt: "Lost receipts",
+              caption: "Lost receipts",
+              width: 1376,
+              height: 768,
+            },
+            {
+              src: "/images/work/storyboard/unclear-policy.png",
+              alt: "Unclear policies",
+              caption: "Unclear policies",
+              width: 1376,
+              height: 768,
+            },
+            {
+              src: "/images/work/storyboard/approval-delays.png",
+              alt: "Approval delays",
+              caption: "Approval delays",
+              width: 1376,
+              height: 768,
+            },
+          ],
+        },
+        {
+          type: "statement",
+          text: "The design problem underneath the business case: how do you rebuild an enterprise expense platform without breaking the mental models of employees already using the travel product?",
+        },
+      ],
+    },
+
+    {
+      id: "research",
+      nav: "Confirming the problem",
+      number: "02",
+      title: "Three sources, one pattern",
+      blocks: [
+        {
+          type: "text",
+          paragraphs: [
+            "**Customer calls.** With my PM, one on one calls with corporate points of contact across the client base. Consistent pattern: everything useful buried under too many clicks, a dated UI, and a travel to expense disconnect that made one product feel like two.",
+            "**Colleagues who were also users.** Quest2Travel employees used the platform for their own business travel, so I asked them informally where it felt dated and where they struggled. The same themes surfaced from the inside. Not formal research, which I address in the conclusion, but it meant the redesign was not built purely on second hand accounts.",
+            "**Secondary research.** Published material on how corporate reimbursement actually works, across Ramp, Digital Edge, Washington State's audit office and practitioner threads. I had assumed reimbursement was broadly standardised. It is not. Policies, limits and approval chains vary widely between companies, which is why the system had to be configurable by the client rather than opinionated by us.",
+            "**Competitive teardown.** Five platforms, each for a specific reason.",
+          ],
+        },
+        {
+          type: "table",
+          head: ["Platform", "What I took", "Why"],
+          rows: [
+            ["Navan", "OCR first, standalone expense creation", "Made on the go filing structurally possible"],
+            [
+              "SAP Concur",
+              "Policy flagging logic",
+              "Confirmed enterprise users expect flagging. Avoided their buried navigation",
+            ],
+            [
+              "Zoho Expense",
+              "Two tier flagging, comment threads, audit log",
+              "Surface violations before submission, replace email chains, keep every action traceable",
+            ],
+            ["Expensify", "OCR speed validation", "Confirmed the speed on the go filing demands was achievable"],
+            [
+              "Happay",
+              "India specific approval complexity",
+              "A separate platform in the MakeMyTrip group. The closest reference for how Indian enterprises structure multi level approvals",
+            ],
+          ],
+        },
+        {
+          type: "statement",
+          text: "Every platform offered similar features. None had solved presenting them inside an ecosystem users already knew, because none of them were embedded in a travel platform.",
+        },
+
+        { type: "subheading", text: "The insight that changed the product" },
+        {
+          type: "text",
+          paragraphs: [
+            "It did not come from any brief or benchmark. It came from a live prototype session with enterprise clients, where the same concern surfaced independently from multiple contacts.",
+          ],
+        },
+        {
+          type: "testimonials",
+          items: [
+            {
+              quote: "Our employees aren't submitting wrong expenses to cheat. They genuinely don't know what the policy allows.",
+              name: "Enterprise client",
+              role: "Live prototype session",
+            },
+          ],
+        },
+        { type: "text", paragraphs: ["One sentence created the Tips panel."] },
+
+        { type: "subheading", text: "Who I was designing for" },
+        {
+          type: "text",
+          paragraphs: [
+            "**Manohar, 37, corporate professional, Mumbai.** A composite from those calls and conversations. High travel frequency, limited time, zero patience for desktop only tools. He needs to log expenses in motion, know limits before spending rather than after a rejection, and track claim status after submission.",
+            "And he is only one of four roles. Employee, Approver, Financial Auditor and Admin all share one reimbursement pipeline.",
           ],
         },
       ],
     },
-    constraintsTitle: "Constraints as design direction",
-    constraintLabels: { constraint: "Constraint", response: "Design response" },
-    constraints: [
-      {
-        constraint: "OCR API cost per scan",
-        response: "A Primary Receipt selector: one OCR scan per expense, with remaining files kept as supporting docs.",
-      },
-      {
-        constraint: "No side panel in the layout system",
-        response: "Moved all primary navigation into the top bar, leaving the full width of the screen to the working area.",
-      },
-      {
-        constraint: "Travelers needed the flow to work on the go",
-        response: "Designed desktop and mobile in parallel: a card-based UI with thumb-friendly CTAs on mobile screens.",
-      },
-      {
-        constraint: "S3-hosted icons couldn't be colour-themed dynamically",
-        response: "Made the Figma component library non-negotiable, not a nice-to-have.",
-      },
-      {
-        constraint: "Dev team built on Tailwind CSS",
-        response: "Structured the design system to mirror Tailwind's exact values and naming. Spacing, colour, and type tokens matched 1:1, so devs could read a Figma inspect panel and write the class from it.",
-      },
-    ],
-    constraintsClose: "Every significant constraint produced a cleaner solution than the default approach would have.",
-  },
 
-  solution: {
-    tag: "06 · Solution",
-    title: "Travelers think in receipts, not reports",
-    storyTitle: "After: the new experience",
-    story: ["The meal happens", "The bill arrives", "Camera ready", "Logged in under 30 seconds"],
-    standalone: {
-      label: "01",
+    {
+      id: "process",
+      nav: "Process and iteration",
+      number: "03",
+      title: "Phase 0. Stabilise the old before building the new",
+      blocks: [
+        {
+          type: "text",
+          paragraphs: [
+            "A full redesign takes months and live enterprise clients cannot wait that long. So before the redesign work began, I shipped a hygiene pass on the legacy system: targeted fixes across all three roles, Requester, Approver and Accountant, on desktop and mobile, that could go live without structural or backend change.",
+          ],
+        },
+        {
+          type: "numbered",
+          items: [
+            {
+              title: "Named the screen you are on",
+              text: "Listing pages gained a page title and a back affordance, and the titles became role specific. Expense Management, which everyone saw, became Expense Approvals for approvers and Expense Settlements for accountants.",
+            },
+            {
+              title: "Gave the actions a hierarchy",
+              text: "The old toolbar was a row of identically weighted outline buttons, so nothing read as more important than anything else. Secondary actions collapsed into icons and one filled primary button, Create New, took the lead.",
+            },
+            {
+              title: "Put the claim's identity at the top",
+              text: "Detail screens opened without telling you which claim you were looking at. The claim number and title now head the page.",
+            },
+            {
+              title: "Fixed the mobile table",
+              text: "The listing was a desktop table squeezed onto a phone, with the remaining columns hidden behind a floating overlay. Expandable rows now reveal those fields in place.",
+            },
+            {
+              title: "Grouped the expense form",
+              text: "Add Expenditure was a loose set of fields ending in a single Save. It became a bounded card with its own instruction and an Add More action beside Save, so logging several expenses no longer meant re reading the whole form each time.",
+            },
+            {
+              title: "Stacked the decision buttons on mobile",
+              text: "Reconsider, Approve and Deny wrapped awkwardly at small widths. Full width stacked buttons made the approver's three choices unambiguous on a phone.",
+            },
+          ],
+        },
+        {
+          type: "text",
+          tone: "tint",
+          paragraphs: [
+            "None of it touched the architecture. That was the point. Keep the current experience workable while the real fix is built. It also forced me deep into every corner of the legacy product early, which paid off through the rest of the project.",
+          ],
+        },
+        { type: "visual", label: "Hygiene pass, before and after across Requester, Approver and Accountant screens" },
+
+        { type: "subheading", text: "V1 was the wrong benchmark" },
+        {
+          type: "text",
+          paragraphs: [
+            "My first design was clean and well executed: OCR first, standalone creation, modelled closely on Navan. By expense platform standards it worked.",
+          ],
+        },
+        {
+          type: "testimonials",
+          items: [
+            {
+              quote: "It looks like a modern expense platform. But it doesn't feel like Quest2Travel.",
+              name: "My PM",
+              role: "V1 review",
+            },
+          ],
+        },
+        { type: "visual", label: "V1 screenshot, the rejected Navan style iteration" },
+
+        { type: "subheading", text: "The structural insight" },
+        {
+          type: "text",
+          paragraphs: [
+            "The travel platform had a three step mental model that existing users already knew instinctively. I applied it directly to expense reports.",
+          ],
+        },
+        { type: "flow", label: "Travel request", steps: ["Travel Info", "Add Services", "Review and Submit"] },
+        { type: "flow", label: "Expense report", steps: ["Report Info", "Add Expenses", "Review and Submit"] },
+        {
+          type: "text",
+          paragraphs: ["Same pattern. Two products. Near zero learning curve, and no training rollout needed across enterprise clients."],
+        },
+        {
+          type: "statement",
+          tone: "blue",
+          text: "This was not aesthetic consistency. It was cognitive consistency. The most important decision of the project, and it came from studying the ecosystem rather than the competitors.",
+        },
+        { type: "visual", label: "The three step expense report flow" },
+
+        { type: "subheading", text: "Corrected mid flight" },
+        {
+          type: "text",
+          paragraphs: [
+            "My initial proposal surfaced warnings during creation and critical issues only at submission. My PM's correction produced the final architecture: both tiers surface during creation, and the same deviations reappear at review. The user is never surprised at submission.",
+          ],
+        },
+
+        { type: "subheading", text: "Constraints as design direction" },
+        {
+          type: "table",
+          head: ["Constraint", "Response"],
+          rows: [
+            [
+              "OCR ran on a third party service, billed per scan",
+              "The business wanted to limit both the cost and the dependency. I designed the Primary Receipt selector: the user nominates one receipt to be scanned, and every other file attaches as a supporting document. One scan per expense, no loss of evidence",
+            ],
+            [
+              "No side panel in the layout system",
+              "Split navigation across two rows. The top bar carries identity and primary actions only. A second row below holds filters and view controls, sticky as the user scrolls, so the full width of the screen stays available to the working area",
+            ],
+            ["Travelers work on the go", "Designed desktop and mobile in parallel, card based UI with thumb friendly CTAs"],
+            ["S3 icons could not be themed dynamically", "Made the Figma component library non negotiable"],
+            [
+              "Dev team built on Tailwind",
+              "Mirrored Tailwind's exact values and naming in the design system, so devs could read a Figma inspect panel and write the class from it",
+            ],
+          ],
+        },
+      ],
+    },
+
+    {
+      id: "design",
+      nav: "The design",
+      number: "04",
       title: "Standalone expense creation",
-      text: "Expenses are logged the moment they happen, no report required. Reports are compiled later, at a desk, with time to review. On-the-go filing went from architecturally impossible to possible by design. Travelers think in receipts, not reports; the architecture finally agreed.",
-      // TODO: replace the skeleton phone with the strongest 2–3 mobile frames.
-      visual: "Mobile expense capture: the camera framing a receipt, with the expense details sheet below.",
-    },
-    responsive: {
-      title: "Responsive where the work moves, desktop where the work sits",
-      text: "An employee can capture an expense, build a report, and submit it from a phone, and an approver can review and action reports the same way. Auditors work across dense data tables and aging-claim queues; admins configure policies, roles, and approval chains where one wrong toggle affects an entire organisation. Both are high-stakes, low-frequency, wide-canvas tasks done at a desk, and compressing them onto a phone would add risk without adding value.",
-      groups: [
-        { label: "Fully responsive", roles: ["Employee", "Approver"] },
-        { label: "Desktop-only by design", roles: ["Financial Auditor", "Admin"] },
-      ],
-    },
-    reportFlow: {
-      label: "02",
-      title: "The 3-step report flow",
-      text: "Matching the travel platform's mental model meant enterprise employees needed zero onboarding to submit their first report. Continuity is a feature.",
-    },
-    hardestCall: {
-      label: "03",
-      title: "The hardest call: save with critical issues",
-      parts: [
+      blocks: [
+        { type: "visual", label: "Four frame storyboard: meal happens, bill arrives, camera ready, logged in under 30 seconds" },
         {
-          label: "The tension",
-          text: "Block saving to keep data clean, or allow saving to protect the on-the-go use case?",
+          type: "text",
+          paragraphs: [
+            "Expenses are logged the moment they happen. No report required. Reports are compiled later, at a desk, with time to review.",
+          ],
         },
         {
-          label: "The resolution",
-          text: "Creation happens in motion: airports, taxis, between meetings. Submission happens at a desk, with time to act. The same enforcement applied to both moments destroys one of them. The right friction belongs where the user can actually respond to it.",
-        },
-      ],
-      decisionLabel: "The decision",
-      decisions: [
-        { context: "In motion", rule: "Save freely during travel" },
-        { context: "At a desk", rule: "Block report submission until every critical issue is resolved" },
-      ],
-    },
-    flagging: {
-      label: "04",
-      title: "2-tier policy flagging",
-      tiers: [
-        {
-          level: "critical" as const,
-          name: "Critical",
-          when: "Surfaced at creation, hard-blocked at submission.",
-          text: "Over-limit amounts, missing documentation, out-of-policy categories: errors finance cannot process.",
+          type: "statement",
+          text: "Solves: report first architecture. On the go filing went from impossible to possible by design. Travelers think in receipts, not reports.",
         },
         {
-          level: "warning" as const,
-          name: "Warning",
-          when: "Surfaced at creation, never blocked.",
-          text: "Near-limit spends, receipts that appear altered, categories needing notes: judgment calls, not violations. The user is informed, and responsibility shifts to them.",
+          type: "text",
+          paragraphs: [
+            "**Responsive where the work moves, desktop where the work sits.** Employee and approver experiences are fully responsive, so an expense can be captured, built into a report and submitted from a phone. Financial Auditor and Admin stay desktop only by design: dense data tables, aging claim queues, and configuration where one wrong toggle affects an entire organisation. Compressing those onto a phone adds risk without adding value.",
+            "**Corporate cards feed the same surface.** Card transactions sync in as Incomplete Expenses on both desktop and mobile. The user reviews, edits and links them to a report rather than re entering what the bank already knows. Capture by camera, capture by card, same destination.",
+          ],
         },
-      ],
-      after: "Enforcement severity matches issue severity, and every flag appears at the moment it can be acted on.",
-    },
-    tips: {
-      label: "05",
-      title: "The Tips panel: from OCR prompt to policy intelligence",
-      text: "Originally a static prompt nudging users to try OCR. The client-session insight transformed it into a dynamic, category-aware policy guide: the moment OCR identifies a receipt as “Client Meal”, the panel surfaces the reimbursable limit, exclusions, and documentation requirements, before the user hits save.",
-      shift: [
-        { label: "Before: reactive", text: "A rejection three weeks later" },
-        { label: "After: proactive", text: "Guidance at the moment of decision" },
-      ],
-      // TODO: replace the skeleton laptop with the full expense form and live Tips panel.
-      visual: "The full expense form, with the Tips panel updating beside the fields.",
-    },
-    roles: {
-      title: "Designing for four roles, where roles are relative, not fixed",
-      text: "A structural reality shaped this system: hierarchy is recursive. An employee can be an approver for the people under them, and every approver is an employee to the approver above them. So Employee and Approver don't get separate products. They share one dashboard, and approvers gain an additional My Approvals section. Capabilities layer onto a single interface instead of forking it, which is what keeps the system scalable as enterprises reshape their approval chains.",
-      layers: {
-        added: "My Approvals",
-        addedNote: "Layered on for approvers",
-        base: "One shared dashboard",
-        baseItems: ["Log expense", "Submit report", "Check status"],
-      },
-      details: [
-        {
-          role: "Employee",
-          text: "The most mobile-critical flow. Every primary action (log expense, submit report, check status) reachable within two taps of home. Coach marks onboard first-time users inline.",
-        },
-        {
-          role: "Approver",
-          text: "Same dashboard, plus a My Approvals section built for decisions under time pressure: pending reports surfaced immediately, policy flags pre-highlighted so approvers don't read every line, comments at the individual-expense level before returning a report.",
-        },
-        {
-          role: "Financial Auditor",
-          text: "Authority without administrative clutter: override approvals, skip levels, request re-approvals. Aging-claim prioritisation surfaces the oldest unresolved reports first for high-volume finance teams.",
-        },
-        {
-          role: "Admin",
-          text: "The hardest role, because admins configure what everyone else uses: policies, roles, approval chains, per-client branding, card-provider integrations. The design principle: every admin change must be immediately legible in the employee-facing UI, so configuration can be verified without waiting for breakage reports.",
-        },
-      ],
-    },
-    dashboard: {
-      label: "Q2T Reports Corner",
-      title: "The Accountant Dashboard",
-      text: "A Personal tab for individual history and an Organisation tab for finance teams, both filterable across Flight, Hotel, Cab, Bus, Train, and Other.",
-      question:
-        "The Organisation view is built around one question: what does a finance lead need to answer within 30 seconds of opening it? How much are we spending, how many claims deviate from policy, and how much savings are we leaving on the table. Those three answers own the first row: Net Booking Value, Policy Deviations, and Savings vs. Missed Savings. Travel patterns, lead-time benchmarks, and compliance rates live behind tabs and filters.",
-      tabs: ["Personal", "Organisation"],
-      filters: ["Flight", "Hotel", "Cab", "Bus", "Train", "Other"],
-      kpis: ["Net Booking Value", "Policy Deviations", "Savings vs. Missed Savings"],
-    },
-    charts: {
-      label: "Beyond handoff",
-      title: "Shipping the charts myself",
-      text: "As a Computer Engineering graduate, I didn't stop at specs for the dashboard's data visualisations. I customised the Recharts configurations (colours, sizing, styling) to match the Figma designs exactly and handed working code to the dev team, eliminating the usual gap where complex visualisations get simplified during implementation.",
-      highlight: "1:1 fidelity between design and shipped product.",
-    },
-  },
+        { type: "visual", label: "Card import, Incomplete Expenses on desktop and mobile" },
+        { type: "visual", label: "Responsive employee views, strongest 2 to 3 mobile frames" },
 
-  impact: {
-    tag: "07 · Impact",
-    title: "What shipped, and what changed",
-    shipped: {
-      label: "What shipped",
-      text: "The hygiene pass on the legacy system shipped to production early in the project: real fixes, live for real clients, while the redesign was underway. By the time I left, standalone expense creation was developed and the Reports dashboard was fully developed, with the remaining modules in active development against a complete, documented handoff. Every flow, edge case, and screen state was walked through with the dev team in person, supported by complete flow diagrams for each module.",
-      statuses: [
-        { item: "Hygiene pass on the legacy system", status: "Live", kind: "live" as const },
-        { item: "Standalone expense creation", status: "Developed", kind: "developed" as const },
-        { item: "Reports dashboard", status: "Developed", kind: "developed" as const },
-        { item: "Remaining modules", status: "In development", kind: "progress" as const },
+        { type: "subheading", text: "02. The three step report flow" },
+        {
+          type: "text",
+          paragraphs: [
+            "Matching the travel platform's mental model meant enterprise employees needed zero onboarding to submit their first report.",
+          ],
+        },
+        { type: "statement", text: "Solves: the travel to expense disconnect. Continuity is a feature." },
+        {
+          type: "text",
+          paragraphs: [
+            "Step 2 is where the two products actually meet. Alongside adding expenses, the user can **link a pre approved travel request** and auto import the expenses already attached to it, and **reconcile advances**, linking approved ones, adding manual entries, or surrendering funds they did not spend.",
+          ],
+        },
+        {
+          type: "statement",
+          text: "The three step pattern borrowed the travel platform's shape. Linking the travel request borrowed its data. That is what turns two products sharing a login into one product.",
+        },
+        { type: "visual", label: "Report creation step 2, adding expenses, linking a travel request, reconciling advances" },
+
+        { type: "subheading", text: "03. Save with critical issues, the hardest call" },
+        {
+          type: "text",
+          paragraphs: [
+            "**The tension:** block saving to keep data clean, or allow saving to protect the on the go use case.",
+            "**The resolution:** creation happens in motion, in airports and taxis. Submission happens at a desk with time to act. The same enforcement applied to both moments destroys one of them.",
+            "**The decision:** save freely during travel. Block report submission until every critical issue is resolved.",
+          ],
+        },
+        {
+          type: "statement",
+          tone: "blue",
+          text: "The right friction belongs where the user can actually respond to it.",
+        },
+
+        { type: "subheading", text: "04. Two tier policy flagging" },
+        {
+          type: "cards",
+          items: [
+            {
+              label: "Critical",
+              text: "Surfaced at creation, hard blocked at submission. Over limit amounts, missing documentation, out of policy categories. Errors finance cannot process.",
+            },
+            {
+              label: "Warning",
+              text: "Surfaced at creation, never blocked. Near limit spends, receipts that appear altered, categories needing notes. Judgment calls, not violations.",
+            },
+          ],
+        },
+        {
+          type: "statement",
+          text: "Enforcement severity matches issue severity, and every flag appears at the moment it can be acted on.",
+        },
+        { type: "visual", label: "Critical state beside warning state on the expense form" },
+
+        { type: "subheading", text: "05. The Tips panel" },
+        {
+          type: "text",
+          paragraphs: [
+            "Originally a static prompt nudging users to try OCR. The client session insight turned it into a dynamic, category aware policy guide. The moment OCR identifies a receipt as a client meal, the panel surfaces the reimbursable limit, exclusions and documentation requirements, before the user hits save.",
+          ],
+        },
+        {
+          type: "statement",
+          text: "Solves: no policy guidance. Policy awareness moved from reactive, a rejection three weeks later, to proactive, guidance at the moment of decision.",
+        },
+        { type: "visual", label: "Expense form with the live Tips panel" },
+        { type: "visual", label: "Video: end to end employee user flow" },
+
+        { type: "subheading", text: "Designing for four roles, where roles are relative" },
+        {
+          type: "text",
+          paragraphs: [
+            "Hierarchy is recursive. An employee can be an approver for people under them, and every approver is an employee to the approver above them. So Employee and Approver do not get separate products. They share one dashboard, and approvers gain an additional My Approvals section.",
+          ],
+        },
+        {
+          type: "statement",
+          text: "Capabilities layer onto a single interface instead of forking it, which keeps the system scalable as enterprises reshape their approval chains.",
+        },
+        {
+          type: "text",
+          paragraphs: [
+            "The dashboard makes that literal. It splits into **Raised by You** and **To Be Approved by You**, so a manager sees both halves of their own working life on one screen rather than switching accounts or modes.",
+          ],
+        },
+        { type: "visual", label: "Employee and approver dashboard, Raised by You beside To Be Approved by You" },
+        {
+          type: "table",
+          head: ["Role", "Built for"],
+          rows: [
+            ["Employee", "Every primary action within two taps of home. Inline coach marks for first time users"],
+            [
+              "Approver",
+              "Same dashboard plus My Approvals. Decisions under time pressure, flags pre highlighted, comments at expense level",
+            ],
+            [
+              "Financial Auditor",
+              "Override approvals, skip levels, request re approvals. Aging claim prioritisation surfaces the oldest unresolved reports first",
+            ],
+            [
+              "Admin",
+              "Every admin change must be immediately legible in the employee facing UI, so configuration can be verified without waiting for breakage reports",
+            ],
+          ],
+        },
+
+        { type: "subheading", text: "Also in scope" },
+        {
+          type: "text",
+          paragraphs: [
+            "Mileage logging with map based route entry and a visible reimbursement calculation. Advance requests as a guided two step flow with their own listing and detail views. Category driven field defaults the user can override, duplicate expense detection, approval chain visibility showing who has approved and who is next, and a full audit trail with comments on every report.",
+          ],
+        },
+
+        { type: "subheading", text: "The accountant dashboard" },
+        {
+          type: "text",
+          paragraphs: [
+            "Built around one question: what does a finance lead need to answer within 30 seconds of opening it. Net Booking Value, Policy Deviations, and Savings versus Missed Savings own the first row. Everything else lives behind tabs and filters. The approval queue beneath it carries the actions a finance team actually needs, including **assign to self** and **release assignment**, because in a shared queue the first problem is not deciding, it is knowing who owns what.",
+          ],
+        },
+        { type: "visual", label: "Q2T Reports Corner, organisation tab, and the approval queue beneath it" },
+        {
+          type: "text",
+          tone: "tint",
+          label: "Beyond handoff",
+          paragraphs: [
+            "The dev team were building the dashboard graphs in Recharts. Rather than writing a spec and hoping the output matched, I worked directly in the library they had already chosen, altering the configurations myself: my colour tokens, corner radii, sizing and styling props, adjusted until the charts rendered exactly as designed. I handed over the configured code rather than a description of it. Complex visualisations usually get simplified in implementation. These did not.",
+          ],
+        },
       ],
     },
-    changedTitle: "What changed",
-    changeLabels: { before: "Before", after: "After" },
-    changes: [
-      {
-        before:
-          "Logging took 4 sequential steps (create report, fill details, create expense, fill details), with desktop context required",
-        afterHeadline: "4 steps → 1",
-        afterHeadlineSpoken: "From 4 steps to 1.",
-        after:
-          "Standalone OCR capture designed to a sub-30-second target, the number we set for on-the-go entry, and hit consistently in live client demos",
-      },
-      { before: "On-the-go filing architecturally impossible", after: "Feasible by design via standalone creation" },
-      {
-        before: "Zero policy guidance, with violations discovered weeks later",
-        after: "Category-specific limits surface in the Tips panel the moment OCR reads the receipt",
-      },
-      {
-        before: "Policy flags appeared only at submission, too late to act",
-        after: "Both tiers surface at creation and reappear at review. No surprises at submission",
-      },
-      { before: "Visualisation handoff via written specs", after: "1:1 fidelity via production-ready Recharts code" },
-    ],
-    outcomes: [
-      {
-        label: "Enterprise validation",
-        text: "Adani, Toyota, and Dr. Reddy's contacts confirmed during prototype reviews that the redesign addressed their core compliance and usability concerns: the same clients who had flagged the legacy system as a blocker.",
-      },
-      {
-        label: "Accessibility",
-        text: "I contrast-checked the primary colours (CTAs, flag indicators, body text) against WCAG 2.1 AA and AAA thresholds and adjusted the palette where they fell short. It matters for an enterprise user base that skews senior in age. I also pushed for dark mode, though it never got past discussion.",
-      },
-      {
-        label: "Strategically",
-        text: "The redesign gave the sales team what they were missing: an expense module that could be sold alongside the travel product instead of apologised for. A direct answer to the lock-in gap that motivated the project.",
-      },
-    ],
-    recognition: {
-      label: "Recognition",
-      title: "Employee of the Quarter, twice",
-      text: "Awarded by the IT Head for cross-functional design leadership on the redesign.",
-      polaroid: {
-        src: "/images/experience/employee-of-the-quarter.jpg",
-        alt: "Sudhanshu receiving the Employee of the Quarter certificate at Quest2Travel",
-        caption: "Employee of the Quarter",
-        width: 3120,
-        height: 4160,
-      },
-    },
-    testimonials: [
-      {
-        quote: "His handoff process is top-tier. It significantly reduced our development time.",
-        name: "Shiv",
-        role: "Sr. Software Engineer",
-      },
-      {
-        quote: "He doesn't just hand over screens. He shares the logic and user thinking behind them.",
-        name: "Suraj Jadhav",
-        role: "React JS Developer",
-      },
-      {
-        quote: "He collaborates well, is open to feedback, and consistently delivers on time.",
-        name: "Faiz Kazi",
-        role: "Frontend Developer",
-      },
-    ],
-    measureTitle: "How I'd measure success",
-    measureIntro:
-      "I left before launch metrics could accrue, so here are the four numbers I designed toward, and would pull first. Defining them was part of the design work.",
-    measures: [
-      {
-        metric: "Expense-module adoption",
-        text: "Share of travel clients actively using expense. The direct test of the lock-in thesis: is the bundle finally complete?",
-      },
-      {
-        metric: "% of expenses logged within 24h of spend",
-        text: "The on-the-go signal. If capture happens same-day instead of end-of-trip, standalone creation is doing its job.",
-      },
-      {
-        metric: "First-submission rejection rate",
-        text: "The Tips panel and 2-tier flagging test. If guidance at the moment of entry works, fewer reports bounce back.",
-      },
-      {
-        metric: "Time-to-reimbursement",
-        text: "The full-pipeline test. If approvers and auditors receive clean, pre-flagged reports, cycle time falls end to end.",
-      },
-    ],
-  },
 
-  reflection: {
-    tag: "08 · Reflection",
-    title: "The Tips panel arrived in month 8. It belonged in month 1.",
-    paragraphs: [
-      "The Tips panel became one of the most impactful features in the redesign, and it was discovered in month 8, in a prototype session, not in week 1, in research.",
-      "That timing is the specific thing I would change. Because I didn't own the research process from the start, a feature that fundamentally changed how employees understand reimbursement policy was retrofitted onto an existing form rather than built into the information architecture from the beginning. The panel works. Had the insight surfaced in month one, it would have shaped how the entire expense form was structured.",
-      "The pace played a role. There was never a formal deadline, but the culture was ship-as-soon-as-possible, and I inherited the research rather than owning it. My informal conversations with colleagues who used the platform were my attempt to close that gap within the constraints: real input, honestly gathered, but not the structured research this product deserved. Given more room, I would have pushed harder for it.",
-    ],
-    again: {
-      label: "If I ran this project again",
-      text: "I'd conduct user interviews personally before any design work begins, with actual traveling employees, not only the buyers who administer their expenses. And I'd include the support team, the people with the most unfiltered picture of where a product fails its users. That one conversation might have surfaced the policy-awareness problem before a single frame existed.",
+    {
+      id: "outcome",
+      nav: "Outcome",
+      number: "05",
+      title: "What shipped",
+      blocks: [
+        {
+          type: "text",
+          paragraphs: [
+            "The hygiene pass went live to production early in the project. By the time I left, standalone expense creation was developed and the Reports dashboard was fully developed, with remaining modules in active development against a complete documented handoff: every flow, edge case and screen state walked through in person, supported by flow diagrams for each module.",
+          ],
+        },
+        {
+          type: "table",
+          head: ["Before", "After"],
+          rows: [
+            [
+              "4 sequential steps to log one expense, desktop required",
+              "4 steps to 1. Standalone OCR capture, designed to a sub 30 second target and hit consistently in live client demos",
+            ],
+            ["On the go filing architecturally impossible", "Feasible by design"],
+            ["Zero policy guidance, violations found weeks later", "Category limits surface the moment OCR reads the receipt"],
+            ["Flags appeared only at submission, too late to act", "Both tiers surface at creation and reappear at review"],
+            ["Visualisation handoff via written specs", "1:1 fidelity. I configured the Recharts code myself and handed it over"],
+          ],
+        },
+        {
+          type: "text",
+          paragraphs: [
+            "**Validated** in prototype reviews by Adani, Toyota and Dr. Reddy's contacts, the same clients who had flagged the legacy system as a blocker.",
+            "**Accessibility.** Ran the primary colours, CTAs, flag indicators and body text through Adobe's Color Contrast Analyzer against WCAG 2.1 AA and AAA thresholds, adjusting the palette where they fell short. It matters for an enterprise user base that skews senior in age. I also pushed for dark mode, though it never got past discussion.",
+            "**Recognition.** Employee of the Quarter, twice.",
+          ],
+        },
+        { type: "visual", label: "Award photo" },
+
+        { type: "subheading", text: "How I would measure it" },
+        {
+          type: "text",
+          paragraphs: [
+            "I left before launch metrics could accrue. These are the four numbers I designed toward and would pull first.",
+          ],
+        },
+        {
+          type: "table",
+          head: ["Metric", "What it tests"],
+          rows: [
+            ["Expense module adoption", "The lock in thesis. Is the bundle finally complete"],
+            ["Expenses logged within 24h of spend", "The on the go signal. Is capture happening same day"],
+            ["First submission rejection rate", "The Tips panel and flagging. Is guidance at entry working"],
+            ["Time to reimbursement", "The full pipeline. Are approvers receiving clean reports"],
+          ],
+        },
+        {
+          type: "testimonials",
+          label: "From LinkedIn recommendations by the developers who built the work",
+          items: [
+            {
+              quote: "His handoff process is top tier. It significantly reduced our development time.",
+              name: "Shiv",
+              role: "Sr. Software Engineer, Quest2Travel",
+            },
+            {
+              quote: "He doesn't just hand over screens. He shares the logic and user thinking behind them.",
+              name: "Suraj Jadhav",
+              role: "React JS Developer, Quest2Travel",
+            },
+            {
+              quote: "He collaborates well, is open to feedback, and consistently delivers on time.",
+              name: "Faiz Kazi",
+              role: "Frontend Developer, Quest2Travel",
+            },
+          ],
+        },
+      ],
     },
-    lessonsTitle: "What this project taught me",
-    lessons: [
-      {
-        title: "Design for the ecosystem, not just the screen.",
-        text: "The most important decision came from the product users already knew, not from any competitor.",
-      },
-      {
-        title: "Context determines where constraints belong.",
-        text: "The same enforcement at the wrong moment destroys a use case; the right friction at the right moment is the actual design problem.",
-      },
-      {
-        title: "The best insights come from being in the room.",
-        text: "Build the sessions that create those moments. Don't wait for them.",
-      },
-      {
-        title: "Constraints are design direction in disguise.",
-        text: "Every hard limit in this project produced a cleaner solution than the default would have.",
-      },
-    ],
-    signoff: "Sudhanshu Kadu · Sole Product Designer · Quest2Travel by MakeMyTrip · 11–12 months",
-  },
+
+    {
+      id: "conclusion",
+      nav: "Conclusion",
+      number: "06",
+      title: "The insight arrived in month 8. It belonged in month 1.",
+      blocks: [
+        {
+          type: "text",
+          paragraphs: [
+            "The Tips panel became one of the most impactful features in the redesign, and it was discovered in a prototype session in month 8, not in research in week 1.",
+            "Because I did not own the research process from the start, a feature that changed how employees understand reimbursement policy was retrofitted onto an existing form rather than built into the information architecture. The panel works. Had the insight surfaced in month one, it would have shaped how the entire form was structured.",
+            "The pace played a role. There was no formal deadline, but the culture was ship as soon as possible, and I inherited the research rather than owning it. My conversations with colleagues were an attempt to close that gap within the constraints: real input, honestly gathered, but not the structured research this product deserved.",
+          ],
+        },
+        {
+          type: "text",
+          tone: "tint",
+          label: "If I ran this again",
+          paragraphs: [
+            "I would conduct user interviews personally before any design work begins, with actual traveling employees rather than only the buyers who administer their expenses, and I would include the support team, who hold the most unfiltered picture of where a product fails.",
+          ],
+        },
+
+        { type: "subheading", text: "What this project taught me" },
+        {
+          type: "list",
+          items: [
+            "**Design for the ecosystem, not just the screen.** The most important decision came from the product users already knew, not from any competitor.",
+            "**Context determines where constraints belong.** The same enforcement at the wrong moment destroys a use case.",
+            "**The best insights come from being in the room.** Build the sessions that create those moments rather than waiting for them.",
+            "**Constraints are design direction in disguise.** Every hard limit in this project produced a cleaner solution than the default would have.",
+          ],
+        },
+      ],
+    },
+  ],
 };

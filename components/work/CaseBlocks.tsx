@@ -1,6 +1,10 @@
 import { Fragment, type ReactNode } from "react";
 import { ArrowRight, CheckCircle } from "@phosphor-icons/react/ssr";
 import { CardLabel, CaseCard, type CardTone } from "@/components/work/CaseCard";
+import Image from "next/image";
+import { AutoplayVideo } from "@/components/effects/AutoplayVideo";
+import { LogoMarquee } from "@/components/work/blocks/LogoMarquee";
+import { Testimonials } from "@/components/work/blocks/Testimonials";
 import { CaseSubheading } from "@/components/work/CaseSection";
 import { VisualPlaceholder } from "@/components/work/VisualPlaceholder";
 import { cn } from "@/lib/cn";
@@ -26,7 +30,16 @@ export type CaseBlock =
   | { type: "statement"; label?: string; text: string; tone?: "blue" | "ink" | "tint" }
   | { type: "flow"; label?: string; steps: string[] }
   | { type: "stats"; items: { figure: string; caption: string }[] }
-  | { type: "visual"; label: string };
+  | {
+      type: "visual";
+      label: string;
+      video?: string;
+      images?: { src: string; alt: string; caption?: string; width: number; height: number }[];
+    }
+  // A wall of client marks, running along a wave (components/work/blocks/LogoMarquee.tsx).
+  | { type: "logos"; label: string; items: { name: string; src?: string; width?: number; height?: number }[] }
+  // Quotes, one at a time (components/work/blocks/Testimonials.tsx).
+  | { type: "testimonials"; label?: string; items: { quote: string; name: string; role: string }[] };
 
 // **bold** and *italic* inside copy.
 export function rich(text: string): ReactNode {
@@ -132,43 +145,35 @@ function Block({ block }: { block: CaseBlock }) {
 
     case "table":
       return (
-        <CaseCard padding="none" className="overflow-hidden">
-          {block.label ? <CardLabel className="px-6 pt-6 sm:px-8 sm:pt-8">{block.label}</CardLabel> : null}
-          <div className={cn("overflow-x-auto", block.label ? "mt-4" : "pt-2")}>
-            <table className="w-full min-w-[560px] border-collapse text-left text-[15px] leading-[1.55]">
-              <thead>
-                <tr className="border-b border-bento-line">
-                  {block.head.map((cell) => (
-                    <th
-                      key={cell}
-                      scope="col"
-                      className="px-6 py-4 font-mono text-[12px] font-normal uppercase tracking-[0.06em] text-(--card-muted) first:pl-6 sm:px-8"
-                    >
-                      {cell}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-bento-line">
-                {block.rows.map((row) => (
-                  <tr key={row.join("|")}>
-                    {row.map((cell, index) =>
-                      index === 0 ? (
-                        <th key={index} scope="row" className="px-6 py-4 align-top font-medium sm:px-8">
-                          {rich(cell)}
-                        </th>
-                      ) : (
-                        <td key={index} className="px-6 py-4 align-top sm:px-8">
-                          {rich(cell)}
-                        </td>
-                      ),
-                    )}
-                  </tr>
+        <div className="compare reveal">
+          {block.label ? <CardLabel className="compare__label">{block.label}</CardLabel> : null}
+          <table>
+            <thead>
+              <tr>
+                {block.head.map((cell) => (
+                  <th key={cell} scope="col">
+                    {cell}
+                  </th>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </CaseCard>
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row) => (
+                <tr key={row.join("|")}>
+                  {row.map((cell, index) =>
+                    index === 0 ? (
+                      <th key={index} scope="row">
+                        {rich(cell)}
+                      </th>
+                    ) : (
+                      <td key={index}>{rich(cell)}</td>
+                    ),
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
 
     case "statement":
@@ -217,11 +222,55 @@ function Block({ block }: { block: CaseBlock }) {
         </div>
       );
 
+    case "logos":
+      return <LogoMarquee items={block.items} label={block.label} />;
+
+    case "testimonials":
+      return <Testimonials items={block.items} label={block.label} />;
+
     case "visual":
       // TODO: replace each placeholder with the real screen once it's exported.
       return (
-        <CaseCard tone="tint" padding="none" className="p-3 sm:p-4">
-          <VisualPlaceholder label={block.label} className="aspect-[16/9]" />
+        <CaseCard
+          tone="tint"
+          padding="none"
+          className="p-3 sm:p-4"
+          data-parallax="trigger"
+          data-parallax-start="6"
+          data-parallax-end="-6"
+          data-parallax-disable="mobileLandscape"
+        >
+          {block.images ? (
+            <div className={cn("case-figures", block.images.length > 1 && "case-figures--grid")}>
+              {block.images.map((image) => (
+                <figure key={image.src} className="case-figures__item">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    sizes="(min-width: 768px) 45vw, 90vw"
+                    data-click-zoom=""
+                    role="button"
+                    tabIndex={0}
+                    className="case-figures__img"
+                  />
+                  {image.caption ? <figcaption>{image.caption}</figcaption> : null}
+                </figure>
+              ))}
+            </div>
+          ) : block.video ? (
+            <AutoplayVideo
+              src={block.video}
+              label={block.label}
+              className="case-visual__video"
+              data-click-zoom=""
+              role="button"
+              tabIndex={0}
+            />
+          ) : (
+            <VisualPlaceholder label={block.label} className="aspect-[16/9]" />
+          )}
         </CaseCard>
       );
   }
