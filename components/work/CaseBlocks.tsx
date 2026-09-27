@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment, type CSSProperties, type ReactNode } from "react";
 import { ArrowRight, CheckCircle } from "@phosphor-icons/react/ssr";
 import { CardLabel, CaseCard, type CardTone } from "@/components/work/CaseCard";
 import Image from "next/image";
@@ -18,7 +18,8 @@ import { cn } from "@/lib/cn";
 
 export type CaseBlock =
   | { type: "subheading"; text: string }
-  | { type: "text"; label?: string; title?: string; paragraphs: string[]; tone?: CardTone }
+  // `lead` opens a passage a size up from the body around it.
+  | { type: "text"; label?: string; title?: string; lead?: boolean; paragraphs: string[]; tone?: CardTone }
   | {
       type: "cards";
       columns?: 2 | 3 | 4;
@@ -33,13 +34,18 @@ export type CaseBlock =
   | {
       type: "visual";
       label: string;
+      // How many images stand side by side on a wide screen. Two unless the images are
+      // phone screens, which fit four across at a sensible size.
+      columns?: 2 | 4;
       video?: string;
       images?: { src: string; alt: string; caption?: string; width: number; height: number }[];
     }
   // A wall of client marks, running along a wave (components/work/blocks/LogoMarquee.tsx).
   | { type: "logos"; label: string; items: { name: string; src?: string; width?: number; height?: number }[] }
   // Quotes, one at a time (components/work/blocks/Testimonials.tsx).
-  | { type: "testimonials"; label?: string; items: { quote: string; name: string; role: string }[] };
+  | { type: "testimonials"; label?: string; items: { quote: string; name: string; role: string }[] }
+  // The line a case study signs off with, in the hand the site writes its notes in.
+  | { type: "signoff"; text: string };
 
 // **bold** and *italic* inside copy.
 export function rich(text: string): ReactNode {
@@ -81,7 +87,7 @@ function Block({ block }: { block: CaseBlock }) {
           ) : null}
           <div className={cn("flex max-w-[70ch] flex-col gap-4", (block.label || block.title) && "mt-4")}>
             {block.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="text-[17px] leading-[1.65]">
+              <p key={paragraph} className={block.lead ? "text-[19px] leading-[1.6] sm:text-[21px]" : "text-[17px] leading-[1.65]"}>
                 {rich(paragraph)}
               </p>
             ))}
@@ -176,20 +182,29 @@ function Block({ block }: { block: CaseBlock }) {
         </div>
       );
 
-    case "statement":
+    case "statement": {
+      // The blue ones are the case study's quotable lines, so they take the same
+      // setting as a quote, without the marks: they are the page talking, not someone
+      // being quoted. The rest annotate the work around them and stay smaller.
+      const quoted = block.tone === "blue";
       return (
         <CaseCard tone={block.tone ?? "ink"} padding="large">
           {block.label ? <CardLabel>{block.label}</CardLabel> : null}
-          <p
-            className={cn(
-              "max-w-[36ch] text-balance text-[24px] font-medium leading-[1.3] tracking-[-0.03em] sm:text-[32px]",
-              block.label && "mt-5",
-            )}
-          >
-            {rich(block.text)}
-          </p>
+          {quoted ? (
+            <p className={cn("case-quote max-w-[38ch]", block.label && "mt-5")}>{rich(block.text)}</p>
+          ) : (
+            <p
+              className={cn(
+                "max-w-[36ch] text-balance text-[24px] font-medium leading-[1.3] tracking-[-0.03em] sm:text-[32px]",
+                block.label && "mt-5",
+              )}
+            >
+              {rich(block.text)}
+            </p>
+          )}
         </CaseCard>
       );
+    }
 
     case "flow":
       return (
@@ -228,6 +243,13 @@ function Block({ block }: { block: CaseBlock }) {
     case "testimonials":
       return <Testimonials items={block.items} label={block.label} />;
 
+    case "signoff":
+      return (
+        <p className="reveal mt-2 font-hand text-[26px] leading-[1.35] text-bento-muted sm:mt-4 sm:text-[32px]">
+          {block.text}
+        </p>
+      );
+
     case "visual":
       // TODO: replace each placeholder with the real screen once it's exported.
       return (
@@ -241,7 +263,15 @@ function Block({ block }: { block: CaseBlock }) {
           data-parallax-disable="mobileLandscape"
         >
           {block.images ? (
-            <div className={cn("case-figures", block.images.length > 1 && "case-figures--grid")}>
+            <div
+              // A lone upright photo is a photograph, not a screen, so it does not fill the card.
+              className={cn(
+                "case-figures",
+                block.images.length > 1 && "case-figures--grid",
+                block.images.length === 1 && block.images[0].height > block.images[0].width && "case-figures--portrait",
+              )}
+              style={block.columns ? ({ "--figures-columns": block.columns } as CSSProperties) : undefined}
+            >
               {block.images.map((image) => (
                 <figure key={image.src} className="case-figures__item">
                   <Image
@@ -249,7 +279,9 @@ function Block({ block }: { block: CaseBlock }) {
                     alt={image.alt}
                     width={image.width}
                     height={image.height}
-                    sizes="(min-width: 768px) 45vw, 90vw"
+                    sizes={
+                      block.columns === 4 ? "(min-width: 1024px) 23vw, (min-width: 640px) 45vw, 90vw" : "(min-width: 768px) 45vw, 90vw"
+                    }
                     data-click-zoom=""
                     role="button"
                     tabIndex={0}

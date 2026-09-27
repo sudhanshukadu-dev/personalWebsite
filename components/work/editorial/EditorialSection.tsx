@@ -5,7 +5,7 @@ type Props = {
   number?: string;
   nav: string;
   title: string;
-  intro?: string;
+  intro?: string | string[];
   // Sections alternate their background so the page reads as chapters.
   tinted?: boolean;
   children: ReactNode;
@@ -35,7 +35,13 @@ export function EditorialSection({ id, number, nav, title, intro, tinted, childr
             <h2 id={`${id}-title`} className="case-head__title reveal">
               {title}
             </h2>
-            {intro ? <p className="case-head__intro reveal">{intro}</p> : null}
+            {intro
+              ? [intro].flat().map((paragraph) => (
+                  <p key={paragraph} className="case-head__intro reveal">
+                    {paragraph}
+                  </p>
+                ))
+              : null}
           </div>
         </header>
         {children}

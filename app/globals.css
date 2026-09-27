@@ -2958,7 +2958,11 @@
   object-fit: contain;
 }
 
-.quote-card__quote {
+/* .case-quote is the same setting on a case study's own statements
+   (components/work/CaseBlocks.tsx), so a line worth quoting reads the same
+   whether someone else said it or Sudhanshu did. */
+.quote-card__quote,
+.case-quote {
   /* Where the browser supports it, the opening mark hangs in the margin so the
      first line still starts on the same edge as everything else. */
   hanging-punctuation: first last;
@@ -3156,6 +3160,20 @@
   .case-figures--grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* A set of phone screens fits more across, so each one stays phone sized. The
+   count comes from the block (--figures-columns); pairs stay next to each other
+   either way, since every setting is an even number. */
+@media screen and (min-width: 1024px) {
+  .case-figures--grid {
+    grid-template-columns: repeat(var(--figures-columns, 2), minmax(0, 1fr));
+  }
+}
+
+/* A single upright photo keeps to a photograph's width rather than the card's. */
+.case-figures--portrait {
+  max-width: 26rem;
 }
 
 .case-figures__item {
@@ -3914,33 +3932,176 @@
 }
 
 /* ---------------------------------------------------------------
-   Beyond the Screen bento grid: square cells sized from the container's
-   width (container query units), so the grid always closes into a clean
-   rectangle. Desktop: 6 x 4, with the rowing clip (2 x 2) and the gym photo
-   (1 x 2) placed by --col / --row and every other photo packed into the
-   remaining cells. Phones: 2 columns with --mcol / --mrow spans. Tiles use
-   the floating nav's corner radius.
+   Beyond the Screen carousel (components/effects/SpatialSlider.tsx):
+   photo cards standing on a circle seen in perspective, so the front one
+   faces the reader and the rest curve away. The four custom properties
+   below are the geometry the script reads; everything else is the cards
+   and the controls under them.
 ---------------------------------------------------------------- */
-.photo-bento {
-  container-type: inline-size;
-}
-
-.photo-bento__grid {
-  --gap: 1rem;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-auto-rows: calc((100cqi - 5 * var(--gap)) / 6);
-  grid-auto-flow: row dense;
-  gap: var(--gap);
-}
-
-.photo-bento__item {
+.spatial-slider {
+  --slider-gap: 2.5em;
+  --slider-curve: 30deg;
+  --slider-perspective: 120em;
+  --slider-direction: 1;
   position: relative;
-  grid-column: var(--col, auto);
-  grid-row: var(--row, auto);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  width: 100%;
+}
+
+.spatial-slider__collection {
+  position: relative;
+  max-width: 100%;
+}
+
+.spatial-slider__list {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--slider-gap);
+  max-width: 100%;
+  perspective: var(--slider-perspective);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+  user-select: none;
+  /* The drag reads sideways; up and down still scrolls the page. */
+  touch-action: pan-y;
+}
+
+/* Every card is placed by the script; the first one also gives the row its size. */
+.spatial-slider__item {
+  position: absolute;
+  flex: none;
+}
+
+.spatial-slider__list > :first-child {
+  position: relative;
+}
+
+.spatial-slider[data-spatial-slider-drag-status="grab"] .spatial-slider__collection {
+  cursor: grab;
+}
+
+.spatial-slider[data-spatial-slider-drag-status="grabbing"] .spatial-slider__collection {
+  cursor: grabbing;
+}
+
+.spatial-slider__controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.spatial-slider__btn {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 50em;
+  background-color: var(--bento-card);
+  box-shadow: inset 0 0 0 1px var(--bento-line);
+  color: var(--bento-ink);
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.spatial-slider__btn.is--next,
+.spatial-slider__btn:hover {
+  background-color: var(--bento-blue);
+  box-shadow: none;
+  color: var(--bento-on-blue);
+}
+
+.spatial-slider__dots {
+  display: flex;
+  align-items: center;
+}
+
+.spatial-slider__dot {
+  width: 0.875rem;
+  height: 0.875rem;
+  padding: 0;
+  border: 0.1875rem solid transparent;
+  border-radius: 50em;
+  background-clip: padding-box;
+  background-color: color-mix(in oklab, var(--bento-ink) 25%, transparent);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.spatial-slider__dot[data-spatial-slider-control-status="active"] {
+  background-color: var(--bento-blue);
+}
+
+.spatial-slider__dot:hover {
+  background-color: color-mix(in oklab, var(--bento-ink) 50%, transparent);
+}
+
+/* One card: a square picture with its caption under it. */
+.photo-card {
+  display: flex;
+  flex-direction: column;
+  width: 18em;
+  margin: 0;
+  padding: 0.625em 0.625em 0;
+  border-radius: 1.375em;
+  background-color: var(--bento-card);
+  box-shadow: inset 0 0 0 1px var(--bento-line);
+  color: var(--bento-ink);
+  text-align: center;
+}
+
+.photo-card__media {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
   overflow: hidden;
-  border-radius: 0.5rem;
+  border-radius: 0.75em;
   background-color: var(--bento-line);
+}
+
+.photo-card__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.photo-card__cover.is--mono {
+  filter: grayscale(1);
+}
+
+.photo-card__caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.5em;
+  padding: 0 0.75em;
+  font-size: 0.9375em;
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 767px) {
+  .spatial-slider {
+    --slider-gap: 1em;
+    --slider-curve: 45deg;
+  }
+
+  .photo-card {
+    width: 15em;
+  }
 }
 
 /* Click to zoom (ClickZoom), ported from Sudhanshu's reference: a fixed backdrop that
@@ -4014,34 +4175,6 @@
   opacity: 0;
 }
 
-.photo-bento__media {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.photo-bento__media.is--mono {
-  filter: grayscale(1);
-}
-
-/* Phones: 4 columns by 6 rows (the clip 2 x 2, the gym photo 1 x 2), so all 20 tiles fit
-   on one screen. */
-@media screen and (max-width: 767px) {
-  .photo-bento__grid {
-    --gap: 0.5rem;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: calc((100cqi - 3 * var(--gap)) / 4);
-    grid-auto-flow: row dense;
-  }
-
-  .photo-bento__item {
-    grid-column: span var(--mcol, 1);
-    grid-row: span var(--mrow, 1);
-  }
-}
-
 /* ---------------------------------------------------------------
    Dynamic text cursor (components/cursor/CursorBubble.tsx).
    The pill flips left at the right edge and above the pointer at
@@ -4097,6 +4230,41 @@
 ---------------------------------------------------------------- */
 html:not([data-intro]) .intro {
   display: none;
+}
+
+.loading-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+  background-color: #111316;
+  color: #eef0f2;
+  pointer-events: auto;
+}
+
+/* The dot and the word are sized in em from here, so one font-size scales the pair. */
+.loading-words {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  margin: 0;
+  font-size: clamp(0.7rem, 2.75vw, 1rem);
+  opacity: 0;
+}
+
+.loading-words__dot {
+  width: 0.75em;
+  height: 0.75em;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.loading-words__word {
+  font-size: 4.5em;
+  font-weight: 500;
+  line-height: 1;
 }
 
 html[data-loading] {

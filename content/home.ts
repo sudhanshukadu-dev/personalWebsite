@@ -27,15 +27,9 @@ export const hero = {
   ],
 };
 
-// Intro loader deck: Sudhanshu's own phone photos, back card first.
-// The last one sits on top of the stack and is the first to drop.
-export const introCards = [
-  "/images/intro/trees-and-moon.jpg",
-  "/images/intro/beach-waves.jpg",
-  "/images/intro/hilltop-fog.jpg",
-  "/images/intro/mirror-portrait.jpg",
-  "/images/intro/beach-sunset.jpg",
-];
+// Intro loader: the greetings it counts through, in order. The first one is also
+// what the page ships with, so the word is never blank before the script runs.
+export const introWords = ["Hello", "Bonjour", "स्वागत हे", "Ciao", "Olá", "おい", "Hallå", "Guten tag", "Hallo"];
 
 // Bottom nav: main links, then the smaller groups under the divider.
 // Rooted at "/" so they reach the home page sections from case study pages too.
@@ -207,11 +201,9 @@ export const featuredWork = {
   ],
 };
 
-// Bento grid of square cells. Desktop: 6 columns by 4 rows; the rowing clip (2 x 2, centre)
-// and the gym photo (1 x 2) are placed with `col` / `row` (CSS grid values), and every
-// other photo fills the remaining cells in this order. Phones: 2 columns in this order,
-// with `mobileCol` / `mobileRow` spans (default 1). `focus` sets the crop's
-// object-position; `mono` shows the photo in black and white.
+// The cards on the Beyond the Screen carousel, in the order they come round.
+// `label` is the caption under the picture, `focus` sets the square crop's
+// object-position, and `mono` shows the photo in black and white.
 export const beyondTheScreen = {
   heading: "Beyond the screen",
   items: [
@@ -219,18 +211,13 @@ export const beyondTheScreen = {
       type: "video" as const,
       src: "/video/clip.mp4",
       alt: "Sudhanshu rowing on an indoor rowing machine",
-      col: "3 / span 2",
-      row: "2 / span 2",
-      mobileCol: 2,
-      mobileRow: 2,
+      label: "On the rower",
     },
     {
       type: "image" as const,
       src: "/images/photos/gym-mirror.jpg",
       alt: "Mirror selfie in a white vest after a workout, in black and white",
-      col: "1",
-      row: "2 / span 2",
-      mobileRow: 2,
+      label: "After the workout",
       focus: "50% 25%",
       mono: true,
     },
@@ -238,104 +225,122 @@ export const beyondTheScreen = {
       type: "image" as const,
       src: "/images/photos/trees-backlit.jpg",
       alt: "Sun breaking through a row of tall trees, their long shadows across the grass",
+      label: "Backlit trees",
       focus: "50% 40%",
     },
     {
       type: "image" as const,
       src: "/images/photos/odd-eyed-cat.jpg",
       alt: "A white cat with one amber eye and one blue eye, being petted",
+      label: "Odd eyes",
       focus: "50% 45%",
     },
     {
       type: "image" as const,
       src: "/images/intro/hilltop-fog.jpg",
       alt: "Standing on a rock at a hilltop, looking over a forested valley in fog",
+      label: "Hilltop fog",
       focus: "50% 45%",
     },
     {
       type: "image" as const,
       src: "/images/photos/carpenter-bee.jpg",
       alt: "A carpenter bee in a lilac flower wet with rain",
+      label: "Carpenter bee",
       focus: "50% 55%",
     },
     {
       type: "image" as const,
       src: "/images/photos/kids-at-sunset.jpg",
       alt: "Two kids playing in the shallows at sunset, a footprint in the sand up close",
+      label: "Kids at sunset",
       focus: "50% 45%",
     },
     {
       type: "image" as const,
       src: "/images/photos/windmill-at-night.jpg",
       alt: "A wind turbine lit up against a starry night sky above the trees",
+      label: "Windmill at night",
       focus: "50% 55%",
     },
     {
       type: "image" as const,
       src: "/images/photos/sea-foam.jpg",
       alt: "A wave's foam sliding up dark sand",
+      label: "Sea foam",
     },
     {
       type: "image" as const,
       src: "/images/photos/stormy-beach.jpg",
       alt: "Storm clouds rolling over a wide, empty beach lined with trees",
+      label: "Storm coming in",
     },
     {
       type: "image" as const,
       src: "/images/photos/palm-trees.jpg",
       alt: "Coconut palms under a clear blue sky",
+      label: "Palms",
       focus: "50% 85%",
     },
     {
       type: "image" as const,
       src: "/images/photos/rowing-monitor.jpg",
       alt: "A rowing machine display after a 30-minute, 7,762-metre row",
+      label: "7,762 metres",
       focus: "50% 35%",
     },
     {
       type: "image" as const,
       src: "/images/photos/wispy-clouds.jpg",
       alt: "Wispy clouds streaking across a deep blue sky at golden hour",
+      label: "Wispy clouds",
     },
     {
       type: "image" as const,
       src: "/images/photos/laptop-palettes.jpg",
       alt: "A laptop showing colour palettes on a bed in a sunlit room",
+      label: "Palettes in bed",
       focus: "50% 60%",
     },
     {
       type: "image" as const,
       src: "/images/photos/dog-in-sand.jpg",
       alt: "A black dog resting its head in the sand",
+      label: "Head in the sand",
       focus: "50% 55%",
     },
     {
       type: "image" as const,
       src: "/images/photos/museum-sculpture.jpg",
       alt: "A yellow stone sculpture on a wooden plinth against a brick and stone wall",
+      label: "Museum stone",
       focus: "50% 60%",
     },
     {
       type: "image" as const,
       src: "/images/intro/beach-sunset.jpg",
       alt: "Sun setting over the sea, its reflection running across wet sand",
+      label: "Beach sunset",
       focus: "50% 55%",
     },
     {
       type: "image" as const,
       src: "/images/photos/dog-on-beach.jpg",
       alt: "A dog sitting alone on a wide, grey beach",
+      label: "Alone on the beach",
       focus: "50% 55%",
     },
     {
       type: "image" as const,
       src: "/images/intro/trees-and-moon.jpg",
       alt: "Wind-blown trees in golden light with the moon in a blue sky",
+      label: "Trees and moon",
     },
     {
       type: "image" as const,
       src: "/images/intro/mirror-portrait.jpg",
       alt: "Mirror selfie behind a potted plant, against a colourful abstract painting",
+      label: "Mirror portrait",
       focus: "50% 40%",
     },
   ],

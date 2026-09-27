@@ -21,7 +21,8 @@ export type CaseStudySection = {
   nav: string;
   number?: string;
   title: string;
-  intro?: string;
+  // Sits under the section's heading, as one paragraph or several.
+  intro?: string | string[];
   blocks: CaseBlock[];
 };
 

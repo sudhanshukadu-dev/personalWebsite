@@ -4,19 +4,20 @@ type CaseSectionProps = {
   id: string;
   tag: string;
   title: string;
-  intro?: string;
+  // One paragraph, or several when the section opens with more than a line of setup.
+  intro?: string | string[];
   children: ReactNode;
 };
 
 // A case study section, after the Aboard reference: a blue tag chip, a large heading
 // and an optional intro, then the section's cards stacked with an even gap. The heading
-// block centres on the page; what sits inside the cards below it does not, since centred
-// paragraphs and table rows are harder to read.
+// block runs the full width of the cards below it, from the same left edge, so a
+// section opens on one line rather than two.
 export function CaseSection({ id, tag, title, intro, children }: CaseSectionProps) {
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="py-16 sm:py-24">
       <div className="mx-auto w-full max-w-[1320px] px-6 sm:px-12 lg:px-24 xl:px-36">
-        <header className="reveal mx-auto max-w-3xl text-center">
+        <header className="reveal">
           <p className="inline-flex rounded-full bg-bento-blue px-3 py-1.5 text-[13px] font-medium leading-none text-bento-on-blue">
             {tag}
           </p>
@@ -26,9 +27,13 @@ export function CaseSection({ id, tag, title, intro, children }: CaseSectionProp
           >
             {title}
           </h2>
-          {intro ? (
-            <p className="mx-auto mt-5 max-w-[60ch] text-[17px] leading-[1.6] text-bento-muted sm:text-lg">{intro}</p>
-          ) : null}
+          {intro
+            ? [intro].flat().map((paragraph) => (
+                <p key={paragraph} className="mt-5 text-[17px] leading-[1.6] text-bento-muted sm:text-lg">
+                  {paragraph}
+                </p>
+              ))
+            : null}
         </header>
 
         <div className="mt-10 flex flex-col gap-4 sm:mt-14 sm:gap-5">{children}</div>
